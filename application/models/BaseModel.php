@@ -93,6 +93,11 @@ class BaseModel extends CI_Model{
     $this->db->update($this->tblRel, $data);
   }
 
+  public function Delete($id=0)
+  {
+    $this->DeleteOn($this->tblObj,$id);
+  }
+
   public function GetByIdRow($id=0)
   {
     $this->db->where('is_delete', 0);

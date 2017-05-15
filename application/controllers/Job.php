@@ -155,7 +155,7 @@ class Job extends CI_Controller{
   public function DeleteProcess()
   {
     $id  = $this->session->userdata('selectId');
-
+    $this->JobModel->Delete($id);
     redirect('Job/');
 
   }
