@@ -10,6 +10,12 @@ class OrgModel extends CI_Model{
 
     //Codeigniter : Write Less Do More
   }
+  public function GetList($beginDate='1990-01-01',$endDate='9999-12-31')
+  {
+    $keydate['begin'] = $beginDate;
+    $keydate['end']   = $endDate;
+    return $this->BaseModel->GetList('ORG',$keydate);
+  }
 
   public function Create($name='',$beginDate='1990-01-01',$endDate='9999-12-31',$parentOrg=0)
   {
@@ -121,7 +127,7 @@ class OrgModel extends CI_Model{
   public function GetPersonList($orgId=0,$keyDate='')
   {
     $relCode = array('201','301');
-    $alias   = array('post','person')
+    $alias   = array('post','person');
     return $this->BaseModel->GetTopDownRelList($orgId,$relCode,$keyDate,$alias);
 
   }
@@ -134,7 +140,7 @@ class OrgModel extends CI_Model{
   public function GetChiefPerson($orgId=0,$keyDate='')
   {
     $relCode = array('202','301');
-    $alias   = array('post','person')
+    $alias   = array('post','person');
     $count   = $this->BaseModel->CountTopDownRel($orgId,$relCode,$keyDate);
     while ($count == 0) {
       $parent = $this->GetParentOrg($orgId,$keyDate,'parent');
