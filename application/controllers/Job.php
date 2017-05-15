@@ -75,7 +75,7 @@ class Job extends CI_Controller{
     $ls = $this->JobModel->GetNameHistoryList($id,$keydate,'desc');
     $history = array();
     foreach ($ls as $row) {
-      if ($obj->id == $row->id) {
+      if ($attr->id == $row->id) {
         $class = 'info';
       } else {
         $class = '';
@@ -155,6 +155,7 @@ class Job extends CI_Controller{
   public function DeleteProcess()
   {
     $id  = $this->session->userdata('selectId');
+
     redirect('Job/');
 
   }

@@ -71,7 +71,7 @@ class BaseModel extends CI_Model{
     );
 
     // Delimit Object
-    $this->ChangeOn($this->tblObj,$objId);
+    $this->ChangeOn($this->tblObj,$objId,$data);
     // TODO Delimit Attribut terakhir yang masih aktif
     // $attrId = $this->GetLastAttr($objId,$endDate)->id;
     // $this->db->where('id',$attrId);
@@ -96,6 +96,7 @@ class BaseModel extends CI_Model{
   public function GetByIdRow($id=0)
   {
     $this->db->where('is_delete', 0);
+    $this->db->where('id', $id);
     return $this->db->get($this->tblObj, 1, 0)->row();
   }
 
