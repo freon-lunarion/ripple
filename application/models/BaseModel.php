@@ -61,6 +61,7 @@ class BaseModel extends CI_Model{
 
   public function Delimit($objId=0,$endDate='')
   {
+    $old = $this->GetByIdRow($objId);
     if ($endDate == '') {
       $endDate = date('Y-m-d');
     }
@@ -72,21 +73,23 @@ class BaseModel extends CI_Model{
     // Delimit Object
     $this->ChangeOn($this->tblObj,$objId);
     // TODO Delimit Attribut terakhir yang masih aktif
+    // $attrId = $this->GetLastAttr($objId,$endDate)->id;
+    // $this->db->where('id',$attrId);
     $this->db->where('obj_id', $objId);
     $this->db->where('is_delete', FALSE);
-    $this->db->where('end_date ', '9999-12-31');
-    $this->db->update($this->tblAttr,$attrId,$data);
+    $this->db->where('end_date ', $old->end_date);
+    $this->db->update($this->tblAttr,$data);
 
     // TODO Delimit semua relasi topDown yang masih aktif
     $this->db->where('obj_top_id', $objId);
     $this->db->where('is_delete', FALSE);
-    $this->db->where('end_date ', '9999-12-31');
+    $this->db->where('end_date ', $old->end_date);
     $this->db->update($this->tblRel, $data);
 
     // TODO Delimit semua relasi botUp yang masih aktif
     $this->db->where('obj_bottom_id', $objId);
     $this->db->where('is_delete', FALSE);
-    $this->db->where('end_date ', '9999-12-31');
+    $this->db->where('end_date ', $old->end_date);
     $this->db->update($this->tblRel, $data);
   }
 
@@ -218,7 +221,7 @@ class BaseModel extends CI_Model{
     return $this->db->get($this->tblAttr)->row();
   }
 
-  public function GetAttrList($objId=0,$keydate='')
+  public function GetAttrList($objId=0,$keydate='',$sort='asc')
   {
     $this->db->where('obj_id', $objId);
     $this->db->where('is_delete', FALSE);
@@ -250,7 +253,7 @@ class BaseModel extends CI_Model{
       $this->db->group_end();
 
     }
-    // $this->db->order_by('end_date','desc');
+    $this->db->order_by('end_date',$sort);
     return $this->db->get($this->tblAttr)->result();
   }
 

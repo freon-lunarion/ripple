@@ -13,6 +13,8 @@ class Job extends CI_Controller{
   function index()
   {
     $this->session->unset_userdata('selectId');
+    $this->session->unset_userdata('filterBegDa');
+    $this->session->unset_userdata('filterEndDa');
     $begin = $this->input->post('dt_begin');
     $end   = $this->input->post('dt_end');
 
@@ -46,10 +48,18 @@ class Job extends CI_Controller{
 
   public function View($id=0,$begin='',$end='')
   {
-    $array = array(
-      'selectId' => $id
-    );
-    $this->session->set_userdata($array);
+    if ($id == 0 && $begin == '' && $end == '') {
+      $id    = $this->session->userdata('selectId');
+      $begin = $this->session->userdata('filterBegDa');
+      $end   = $this->session->userdata('filterEndDa');
+    } else {
+      $array = array(
+        'selectId' => $id,
+        'filterBegDa' => $begin,
+        'filterEndDa' => $end,
+      );
+      $this->session->set_userdata($array);
+    }
     $keydate['begin'] = $begin;
     $keydate['end']   = $end;
 
@@ -60,7 +70,24 @@ class Job extends CI_Controller{
     $data['objBegin'] = $obj->begin_date;
     $data['objEnd']   = $obj->end_date;
     $data['objName']  = $attr->name;
-
+    $keydate['begin'] = '1990-01-01';
+    $keydate['end']   = '9999-12-31';
+    $ls = $this->JobModel->GetNameHistoryList($id,$keydate,'desc');
+    $history = array();
+    foreach ($ls as $row) {
+      if ($obj->id == $row->id) {
+        $class = 'info';
+      } else {
+        $class = '';
+      }
+      $history[] = array(
+        'historyRow'   => $class,
+        'historyBegin' => $row->begin_date,
+        'historyEnd'   => $row->end_date,
+        'historyName'  => $row->name,
+      );
+    }
+    $data['history']  = $history;
     $this->parser->parse('job/detail_view',$data);
   }
 
@@ -102,12 +129,15 @@ class Job extends CI_Controller{
     redirect('Job/View/'.$id.'/'.$validOn.'/9999-12-31');
   }
 
-  public function EditDate($id=0)
+  public function EditDate()
   {
-    $old = '';
-    $data['begin'] = date('Y-m-d');
-    $data['end']   = '';
-    $data['name']  = '';
+    $id  = $this->session->userdata('selectId');
+    if ($id == '') {
+      redirect('Job');
+    }
+    $old = $this->JobModel->GetByIdRow($id);
+    $data['end']   = $old->end_date;
+
     $data['process'] = 'Job/EditDateProcess';
     $this->load->view('job/date_form', $data);
 
@@ -115,12 +145,18 @@ class Job extends CI_Controller{
 
   public function EditDateProcess()
   {
+    $id  = $this->session->userdata('selectId');
+    $end = $this->input->post('dt_end');
+    $this->JobModel->Delimit($id,$end);
+    redirect('Job/View/');
 
   }
 
   public function DeleteProcess()
   {
-    # code...
+    $id  = $this->session->userdata('selectId');
+    redirect('Job/');
+
   }
 
 }

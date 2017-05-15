@@ -23,7 +23,7 @@
 </dl>
 
 <h2>History</h2>
-<table class="table">
+<table class="table table-striped table-hover">
   <thead>
     <tr>
       <th>Begin</th>
@@ -33,7 +33,7 @@
   </thead>
   <tbody>
     {history}
-      <tr>
+      <tr class="{historyRow}">
         <td>{historyBegin}</td>
         <td>{historyEnd}</td>
         <td>{historyName}</td>
@@ -41,5 +41,5 @@
     {/history}
   </tbody>
 </table>
-<?php echo anchor('Job','Back','class="btn btn-default"');?> <?php echo anchor('Job/Edit','Delete','class="btn btn-danger"');?>
+<?php echo anchor('Job','Back','class="btn btn-default"');?> <?php echo anchor('Job/DeleteProcess','Delete','class="btn btn-danger"');?>
 <?php $this->load->view('_template/bottom');?>

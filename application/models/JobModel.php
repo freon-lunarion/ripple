@@ -45,9 +45,9 @@ class JobModel extends CI_Model{
     return $this->BaseModel->GetLastAttr($objId,$keyDate);
   }
 
-  public function GetNameHistoryList($objId=0,$keyDate='')
+  public function GetNameHistoryList($objId=0,$keyDate='',$sort)
   {
-    return $this->BaseModel->GetAttrList($objId,$keyDate);
+    return $this->BaseModel->GetAttrList($objId,$keyDate,$sort);
   }
 
   public function CountRelatedPost($objId=0,$keyDate='')
