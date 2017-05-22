@@ -1,7 +1,7 @@
 <?php $this->load->view('_template/top');?>
 <?php echo anchor('','Main Menu', 'class="btn btn-default"');?>
 <h1 class="page-header">Job <small></small></h1>
-<?php echo anchor('Job/Add','Add' ,'class="btn btn-default"');?>
+<?php echo anchor($addLink,'Add' ,'class="btn btn-default"');?>
 <hr />
 <form action="" class="form-inline" method="post">
   <div class="form-group">

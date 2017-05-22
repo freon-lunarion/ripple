@@ -96,6 +96,9 @@ class BaseModel extends CI_Model{
   public function Delete($id=0)
   {
     $this->DeleteOn($this->tblObj,$id);
+    $this->DeleteOn($this->tblAttr,$id,'obj_id');
+    $this->DeleteOn($this->tblRel,$id,'obj_top_id');
+    $this->DeleteOn($this->tblRel,$id,'obj_bottom_id');
   }
 
   public function GetByIdRow($id=0)
@@ -189,6 +192,71 @@ class BaseModel extends CI_Model{
 
     return $this->db->get($this->tblObj)->result();
 
+  }
+
+  public function GetByNameList($name='',$keydate='',$type=NULL)
+  {
+    $this->db->from($this->tblAttr .' attr');
+    $this->db->join($this->tblObj . ' obj', 'attr.obj_id = obj.id');
+    $this->db->where('attr.is_delete', 0);
+    $this->db->where('obj.is_delete', 0);
+    $this->db->like('LOWER(attr.name)', strtolower($name));
+
+    if (!is_null($type)) {
+      if (!is_array($type)) {
+        $this->db->where('obj.type', $type);
+      } else {
+        $this->db->where_in('obj.type', $type);
+
+      }
+    }
+
+    if (!is_array($keydate)) {
+      $this->db->where('attr.begin_date >=', $keydate);
+      $this->db->where('attr.end_date <=', $keydate);
+
+      $this->db->where('obj.begin_date >=', $keydate);
+      $this->db->where('obj.end_date <=', $keydate);
+    } else {
+      $this->db->group_start();
+        $this->db->group_start();
+          $this->db->where('attr.begin_date >=', $keydate['begin']);
+          $this->db->where('attr.end_date <=', $keydate['end']);
+        $this->db->group_end();
+        $this->db->or_group_start();
+          $this->db->where('attr.end_date >=', $keydate['begin']);
+          $this->db->where('attr.end_date <=', $keydate['end']);
+        $this->db->group_end();
+        $this->db->or_group_start();
+          $this->db->where('attr.begin_date >=', $keydate['begin']);
+          $this->db->where('attr.begin_date <=', $keydate['end']);
+        $this->db->group_end();
+        $this->db->or_group_start();
+          $this->db->where('attr.begin_date <=', $keydate['begin']);
+          $this->db->where('attr.end_date >=', $keydate['end']);
+        $this->db->group_end();
+      $this->db->group_end();
+
+      $this->db->group_start();
+        $this->db->group_start();
+          $this->db->where('obj.begin_date >=', $keydate['begin']);
+          $this->db->where('obj.end_date <=', $keydate['end']);
+        $this->db->group_end();
+        $this->db->or_group_start();
+          $this->db->where('obj.end_date >=', $keydate['begin']);
+          $this->db->where('obj.end_date <=', $keydate['end']);
+        $this->db->group_end();
+        $this->db->or_group_start();
+          $this->db->where('obj.begin_date >=', $keydate['begin']);
+          $this->db->where('obj.begin_date <=', $keydate['end']);
+        $this->db->group_end();
+        $this->db->or_group_start();
+          $this->db->where('obj.begin_date <=', $keydate['begin']);
+          $this->db->where('obj.end_date >=', $keydate['end']);
+        $this->db->group_end();
+      $this->db->group_end();
+    }
+    return $this->db->get()->result();
   }
 
   public function GetLastAttr($objId=0,$keydate='')
@@ -478,10 +546,14 @@ class BaseModel extends CI_Model{
         $select = str_replace('NUM',$i,$subQuery);
         if (is_array($alias) && $alias[$i] !='') {
           $this->db->select('rel_'.$i.'.obj_bottom_id AS '. $alias[$i].'_id');
+          $this->db->select('rel_'.$i.'.begin_date AS '. $alias[$i].'_begin_date');
+          $this->db->select('rel_'.$i.'.end_date AS '. $alias[$i].'_end_date');
           $this->db->select('('.$select.') AS '. $alias[$i].'_name');
         } else {
           $this->db->select('rel_'.$i.'.obj_bottom_id AS obj_'. $i.'_id');
           $this->db->select('('.$select.') AS obj_'.$i.'_name');
+          $this->db->select('rel_'.$i.'.begin_date AS obj_'. $i.'_begin_date');
+          $this->db->select('rel_'.$i.'.end_date AS obj_'. $i.'_end_date');
 
         }
       }
@@ -534,11 +606,15 @@ class BaseModel extends CI_Model{
     } else {
       // Sub query 1
       $select = str_replace('NUM','0',$subQuery);
-      if ($alias[$i] !='') {
+      if ($alias !='') {
         $this->db->select('rel_0.obj_bottom_id AS '. $alias.'_id');
+        $this->db->select('rel_0.begin_date AS '. $alias.'_begin_date');
+        $this->db->select('rel_0.end_date AS '. $alias.'_end_date');
         $this->db->select('('.$select.') AS '. $alias.'_name');
       } else {
         $this->db->select('rel_0.obj_bottom_id AS obj_id');
+        $this->db->select('rel_0.begin_date AS obj_begin_date');
+        $this->db->select('rel_0.end_date AS obj_end_date');
         $this->db->select('('.$select.') AS obj_name');
 
       }
@@ -930,7 +1006,7 @@ class BaseModel extends CI_Model{
     } else {
       // Sub query 1
       $select = str_replace('NUM','0',$subQuery);
-      if ($alias[$i] !='') {
+      if ($alias !='') {
         $this->db->select('rel_0.obj_top_id AS '. $alias.'_id');
         $this->db->select('('.$select.') AS '. $alias.'_name');
       } else {
@@ -1012,16 +1088,16 @@ class BaseModel extends CI_Model{
     $this->db->update($tbl, $data);
   }
 
-  public function DeleteOn($tbl='',$id=0)
+  public function DeleteOn($tbl='',$id=0,$field='id')
   {
     $data  = array(
       'is_delete' => 1,
       'timestamp' => date('Y-m-d H:i:s')
     );
     if (is_array($id)) {
-      $this->db->where_in('id', $id);
+      $this->db->where_in($field, $id);
     } else {
-      $this->db->where('id', $id);
+      $this->db->where($field, $id);
     }
     $this->db->update($tbl, $data);
   }

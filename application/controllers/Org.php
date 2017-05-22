@@ -3,10 +3,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Org extends CI_Controller{
 
+  private $viewDir   = 'org/';
+  private $ctrlClass = 'Org/';
+
   public function __construct()
   {
     parent::__construct();
-    //Codeigniter : Write Less Do More
     $this->load->model('OrgModel');
 
   }
@@ -35,7 +37,7 @@ class Org extends CI_Controller{
         'begda'    => $row->begin_date,
         'endda'    => $row->end_date,
         'name'     => $row->name,
-        'viewlink' => anchor('Org/View/'.$row->id.'/'.$begin.'/'.$end,'View','class="btn btn-link" title="view"'),
+        'viewlink' => anchor($this->ctrlClass.'View/'.$row->id.'/'.$begin.'/'.$end,'View','class="btn btn-link" title="view"'),
       );
       $data['rows'][$i] = $temp;
       $i++;
@@ -43,8 +45,9 @@ class Org extends CI_Controller{
 
     $data['begin'] = $begin;
     $data['end']   = $end;
+    $data['addLink'] = $this->ctrlClass.'Add';
 
-    $this->parser->parse('org/main_view',$data);
+    $this->parser->parse($this->viewDir.'main_view',$data);
   }
 
   public function View($id=0,$begin='',$end='')
@@ -89,6 +92,63 @@ class Org extends CI_Controller{
       );
     }
     $data['history']  = $history;
-    $this->parser->parse('org/detail_view',$data);
+    if ($this->OrgModel->CountParentOrg($id,$keydate)) {
+      $parent = $this->OrgModel->GetParentOrg($id,$keydate);
+      $data['parentName'] = $parent->parent_name;
+    } else {
+      $data['parentName'] = '';
+    }
+
+    if ($this->OrgModel->CountChildrenOrg($id,$keydate)) {
+      $child = $this->OrgModel->GetChildrenOrgList($id,$keydate);
+      $children = array();
+      foreach ($child as $row) {
+        $children[] = array(
+          'childrenBegin' => $row->child_begin_date,
+          'childrenEnd'   => $row->child_end_date,
+          'childrenName'  => $row->child_name,
+        );
+      }
+      $data['children'] = $children;
+    } else {
+      $data['children'] = array();
+    }
+    $data['backLink'] = $this->ctrlClass;
+    $data['delLink']  = $this->ctrlClass.'DeleteProcess';
+    $data['editDate'] = $this->ctrlClass.'EditDate/';
+    $data['editName'] = $this->ctrlClass.'EditName/';
+    $this->parser->parse($this->viewDir.'detail_view',$data);
+  }
+
+  public function Breadcrumb($id=0)
+  {
+
+  }
+
+  public function Add()
+  {
+    $begin  = $this->session->userdata('filterBegDa');
+    $end    = $this->session->userdata('filterEndDa');
+    if (is_null($begin) OR $begin == '') {
+      $begin = date('Y-m-d');
+    }
+    if (is_null($end) OR $end == '') {
+      $end = date('Y-m-d');
+    }
+    $ls     = $this->OrgModel->GetList($begin,$end);
+    $parent = array();
+    foreach ($ls as $row) {
+      $parent[$row->id] = $row->id.' - '.$row->name;
+    }
+    $data['parentOpt'] = $parent;
+    $data['cancelLink'] = $this->ctrlClass;
+    
+    $this->load->view($this->viewDir.'add_form',$data);
+
+  }
+
+  public function AddProcess()
+  {
+    # code...
   }
 }

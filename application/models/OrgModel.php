@@ -10,6 +10,12 @@ class OrgModel extends CI_Model{
 
     //Codeigniter : Write Less Do More
   }
+
+  public function GetByIdRow($id=0)
+  {
+    return $this->BaseModel->GetByIdRow($id);
+  }
+
   public function GetList($beginDate='1990-01-01',$endDate='9999-12-31')
   {
     $keydate['begin'] = $beginDate;
@@ -115,7 +121,7 @@ class OrgModel extends CI_Model{
 
   public function GetChildrenOrgList($orgId=0,$keyDate='')
   {
-    return $this->BaseModel->GetTopDownRelList($orgId,'101',$keyDate);
+    return $this->BaseModel->GetTopDownRelList($orgId,'101',$keyDate,'child');
   }
 
   public function GetPostList($orgId=0,$keyDate='')
