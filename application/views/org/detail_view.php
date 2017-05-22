@@ -29,6 +29,19 @@
   <dd>{parentName}</dd>
 </dl>
 
+<h2>Chief</h2>
+<dl class="">
+  <dt>Position ID</dt>
+  <dd>{chiefPostId}</dd>
+  <dt>Position Name</dt>
+  <dd>{chiefPostName}</dd>
+
+  <dt>Employee ID</dt>
+  <dd>{chiefEmpId}</dd>
+  <dt>Employee Name</dt>
+  <dd>{chiefEmpName}</dd>
+</dl>
+
 <h2>Children</h2>
 <table class="table table-striped table-hover">
   <thead>
@@ -50,6 +63,30 @@
     {/children}
   </tbody>
 </table>
+
+
+<h2>Position List</h2>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Begin</th>
+      <th>End</th>
+      <th>Id</th>
+      <th>Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    {post}
+      <tr class="{historyRow}">
+        <td>{postBegin}</td>
+        <td>{postEnd}</td>
+        <td>{postId}</td>
+        <td>{postName}</td>
+      </tr>
+    {/post}
+  </tbody>
+</table>
+
 <h2>History</h2>
 <table class="table table-striped table-hover">
   <thead>
