@@ -334,7 +334,7 @@ class BaseModel extends CI_Model{
   public function CreateRel($relCode='',$topObjId=0,$botObjId=0,$begin='1990-01-01',$end='9999-12-31')
   {
     $data = array(
-      'rel_code'      => $rel_code,
+      'rel_code'      => $relCode,
       'obj_top_id'    => $topObjId,
       'obj_bottom_id' => $botObjId,
       'begin_date'    => $begin,
@@ -374,7 +374,7 @@ class BaseModel extends CI_Model{
       case 'BOTUP':
         $data             = array(
           'obj_top_id'    => $newId,
-          'obj_bottom_id' => $refId,
+          'obj_bot©tom_id' => $refId,
           'rel_code'      => $relCode,
           'begin_date'    => $validOn,
           'end_date'      => $endDate,

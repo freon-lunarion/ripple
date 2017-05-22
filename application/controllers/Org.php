@@ -94,8 +94,10 @@ class Org extends CI_Controller{
     $data['history']  = $history;
     if ($this->OrgModel->CountParentOrg($id,$keydate)) {
       $parent = $this->OrgModel->GetParentOrg($id,$keydate);
+      $data['parentId']   = $parent->parent_id;
       $data['parentName'] = $parent->parent_name;
     } else {
+      $data['parentId']   = '';
       $data['parentName'] = '';
     }
 
@@ -106,6 +108,7 @@ class Org extends CI_Controller{
         $children[] = array(
           'childrenBegin' => $row->child_begin_date,
           'childrenEnd'   => $row->child_end_date,
+          'childrenId'    => $row->child_id,
           'childrenName'  => $row->child_name,
         );
       }
@@ -142,13 +145,26 @@ class Org extends CI_Controller{
     }
     $data['parentOpt'] = $parent;
     $data['cancelLink'] = $this->ctrlClass;
-    
+
     $this->load->view($this->viewDir.'add_form',$data);
 
   }
 
   public function AddProcess()
   {
-    # code...
+    $begin  = $this->input->post('dt_begin');
+    $end    = $this->input->post('dt_end');
+    $name   = $this->input->post('txt_name');
+    $parent = $this->input->post('slc_parent');
+    $this->OrgModel->Create($name,$begin,$end,$parent);
+    redirect($this->ctrlClass);
+  }
+
+  public function DeleteProcess()
+  {
+    $id = $this->session->userdata('selectId');
+    $this->OrgModel->Delete($id);
+    redirect($this->ctrlClass);
+
   }
 }

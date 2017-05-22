@@ -22,13 +22,20 @@
   <dd>{objName}<?php echo anchor($editName,'<i class="glyphicon glyphicon-pencil"></i>','class="btn btn-link" title="Change Name"'); ?></dd>
 </dl>
 <h2>Parent</h2>
-{parentName}
+<dl class="">
+  <dt>ID</dt>
+  <dd>{parentId}</dd>
+  <dt>Name</dt>
+  <dd>{parentName}</dd>
+</dl>
+
 <h2>Children</h2>
 <table class="table table-striped table-hover">
   <thead>
     <tr>
       <th>Begin</th>
       <th>End</th>
+      <th>Id</th>
       <th>Name</th>
     </tr>
   </thead>
@@ -37,6 +44,7 @@
       <tr class="{historyRow}">
         <td>{childrenBegin}</td>
         <td>{childrenEnd}</td>
+        <td>{childrenId}</td>
         <td>{childrenName}</td>
       </tr>
     {/children}

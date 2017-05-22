@@ -107,8 +107,8 @@ class Job extends CI_Controller{
 
   public function AddProcess()
   {
-    $begin = $this->input->post('dt_begin');;
-    $end   = $this->input->post('dt_end');;
+    $begin = $this->input->post('dt_begin');
+    $end   = $this->input->post('dt_end');
     $name  = $this->input->post('txt_name');
     $this->JobModel->Create($name,$begin,$end);
     redirect($this->ctrlClass);
@@ -164,7 +164,7 @@ class Job extends CI_Controller{
 
   public function DeleteProcess()
   {
-    $id  = $this->session->userdata('selectId');
+    $id = $this->session->userdata('selectId');
     $this->JobModel->Delete($id);
     redirect($this->ctrlClass);
 
