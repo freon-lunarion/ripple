@@ -134,7 +134,7 @@ class Job extends CI_Controller{
     $validOn = $this->input->post('dt_begin');
     $newName = $this->input->post('txt_name');
     $id      = $this->session->userdata('selectId');
-
+    $this->JobModel->ChangeName($id,$newName,$validOn,'9999-12-31');
     redirect($this->ctrlClass.'View/'.$id.'/'.$validOn.'/9999-12-31');
   }
 

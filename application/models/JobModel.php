@@ -16,7 +16,7 @@ class JobModel extends CI_Model{
 
   public function ChangeName($objId=0,$newName='',$validOn='',$endDate='9999-12-31')
   {
-    $this->BaseModel->ChangeName($objId,$newName,$validO,$endDate);
+    $this->BaseModel->ChangeName($objId,$newName,$validOn,$endDate);
   }
   public function Delimit($objId=0,$endDate='')
   {

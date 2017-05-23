@@ -101,9 +101,9 @@ class Org extends CI_Controller{
       $data['parentName'] = '';
     }
 
+    $children = array();
     if ($this->OrgModel->CountChildrenOrg($id,$keydate)) {
       $child = $this->OrgModel->GetChildrenOrgList($id,$keydate);
-      $children = array();
       foreach ($child as $row) {
         $children[] = array(
           'childrenBegin' => $row->child_begin_date,
@@ -112,10 +112,26 @@ class Org extends CI_Controller{
           'childrenName'  => $row->child_name,
         );
       }
-      $data['children'] = $children;
-    } else {
-      $data['children'] = array();
     }
+    $data['children'] = $children;
+    $post = array();
+    if ($this->OrgModel->CountPost($id,$keydate)) {
+      $ls = $this->OrgModel->GetPostList($id,$keydate);
+      foreach ($ls as $row) {
+        $post[] = array(
+          'postBegin' => $row->post_begin_date,
+          'postEnd'   => $row->post_end_date,
+          'postId'    => $row->post_id,
+          'postName'  => $row->post_name,
+        );
+      }
+    }
+    $data['post']     = $post;
+
+    $chief = $this->OrgModel->GetChiefPost($id,$keydate);
+    $data['chiefPostId']   = $chief->post_id;
+    $data['chiefPostName'] = $chief->post_name;
+
     $data['backLink'] = $this->ctrlClass;
     $data['delLink']  = $this->ctrlClass.'DeleteProcess';
     $data['editDate'] = $this->ctrlClass.'EditDate/';

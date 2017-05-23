@@ -126,7 +126,7 @@ class OrgModel extends CI_Model{
 
   public function GetPostList($orgId=0,$keyDate='')
   {
-    return $this->BaseModel->GetTopDownRelList($orgId,'201',$keyDate,'Post');
+    return $this->BaseModel->GetTopDownRelList($orgId,'201',$keyDate,'post');
 
   }
 
@@ -140,7 +140,9 @@ class OrgModel extends CI_Model{
 
   public function GetChiefPost($orgId=0,$keyDate='')
   {
-    return $this->BaseModel->GetTopDownRelList($orgId,'202',$keyDate,'Post');
+
+    // return $this->BaseModel->GetTopDownRelList($orgId,'202',$keyDate,'post');
+    return $this->BaseModel->GetLastTopDownRel($orgId,'202',$keyDate,'post');
   }
 
   public function GetChiefPerson($orgId=0,$keyDate='')
