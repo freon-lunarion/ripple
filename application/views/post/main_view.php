@@ -1,6 +1,6 @@
 <?php $this->load->view('_template/top');?>
 <?php echo anchor('','Main Menu', 'class="btn btn-default"');?>
-<h1 class="page-header">Organization <small></small></h1>
+<h1 class="page-header">Postion <small></small></h1>
 <?php echo anchor($addLink,'Add' ,'class="btn btn-default"');?>
 <hr />
 <form action="" class="form-inline" method="post">

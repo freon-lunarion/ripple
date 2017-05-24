@@ -1,5 +1,5 @@
 <?php $this->load->view('_template/top');?>
-<h1 class="page-header">Organization <small>Change Date</small></h1>
+<h1 class="page-header">Position <small>Change Date</small></h1>
 <?php echo form_open($process, 'class="form"'); ?>
 
   <div class="form-group">

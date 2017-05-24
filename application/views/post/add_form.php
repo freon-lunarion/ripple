@@ -1,5 +1,5 @@
 <?php $this->load->view('_template/top');?>
-<h1 class="page-header">Organization <small>Add</small></h1>
+<h1 class="page-header">Position <small>Add</small></h1>
 <?php echo form_open('Org/AddProcess', 'class="form"'); ?>
 
   <div class="form-group">

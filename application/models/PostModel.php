@@ -154,7 +154,6 @@ class PostModel extends CI_Model{
   public function GetPeerPostList($postId=0,$keyDate='')
   {
     $chiefId = $this->GetSuperiorPost($postId,$keyDate)->post_id;
-
     $list = $this->BaseModel->GetTopDownRelList($chiefId,'102',$keyDate,'post');
 
     $result = array();

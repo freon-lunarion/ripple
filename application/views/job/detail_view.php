@@ -22,7 +22,7 @@
   <dd>{objName}<?php echo anchor($editName,'<i class="glyphicon glyphicon-pencil"></i>','class="btn btn-link" title="Change Name"'); ?></dd>
 </dl>
 
-<h2>History</h2>
+<h2>History of Name</h2>
 <table class="table table-striped table-hover">
   <thead>
     <tr>
@@ -39,6 +39,28 @@
         <td>{historyName}</td>
       </tr>
     {/history}
+  </tbody>
+</table>
+
+<h2>Related Position</h2>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Begin</th>
+      <th>End</th>
+      <th>Id</th>
+      <th>Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    {post}
+      <tr class="{historyRow}">
+        <td>{postBegin}</td>
+        <td>{postEnd}</td>
+        <td>{postId}</td>
+        <td>{postName}</td>
+      </tr>
+    {/post}
   </tbody>
 </table>
 <?php echo anchor($backLink,'Back','class="btn btn-default"');?> <?php echo anchor($delLink,'Delete','class="btn btn-danger"');?>

@@ -1,6 +1,6 @@
 <?php $this->load->view('_template/top');?>
 <?php echo anchor($backLink,'Back','class="btn btn-default"');?>
-<h1 class="page-header">Job <small>View</small></h1>
+<h1 class="page-header">Organization <small>View</small></h1>
 
 <form action="" class="form-inline" method="post">
   <div class="form-group">
@@ -21,13 +21,48 @@
   <dt>Name</dt>
   <dd>{objName}<?php echo anchor($editName,'<i class="glyphicon glyphicon-pencil"></i>','class="btn btn-link" title="Change Name"'); ?></dd>
 </dl>
-<h2>Parent</h2>
+
+<h2>History of Name</h2>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Begin</th>
+      <th>End</th>
+      <th>Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    {history}
+      <tr class="{historyRow}">
+        <td>{historyBegin}</td>
+        <td>{historyEnd}</td>
+        <td>{historyName}</td>
+      </tr>
+    {/history}
+  </tbody>
+</table>
+
+<h2>Parent Organization</h2>
 <dl class="">
   <dt>ID</dt>
   <dd>{parentId}</dd>
   <dt>Name</dt>
   <dd>{parentName}</dd>
 </dl>
+
+<h2>History of Parent</h2>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Begin</th>
+      <th>End</th>
+      <th>Name</th>
+    </tr>
+  </thead>
+  <tbody>
+
+  </tbody>
+</table>
 
 <h2>Chief</h2>
 <dl class="">
@@ -42,7 +77,24 @@
   <dd>{chiefEmpName}</dd>
 </dl>
 
-<h2>Children</h2>
+<h2>History of Chief</h2>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Begin</th>
+      <th>End</th>
+      <th>Position Id</th>
+      <th>Position Name</th>
+      <th>Employee Id</th>
+      <th>Employee Name</th>
+    </tr>
+  </thead>
+  <tbody>
+
+  </tbody>
+</table>
+
+<h2>Children Organization</h2>
 <table class="table table-striped table-hover">
   <thead>
     <tr>
@@ -87,24 +139,6 @@
   </tbody>
 </table>
 
-<h2>History</h2>
-<table class="table table-striped table-hover">
-  <thead>
-    <tr>
-      <th>Begin</th>
-      <th>End</th>
-      <th>Name</th>
-    </tr>
-  </thead>
-  <tbody>
-    {history}
-      <tr class="{historyRow}">
-        <td>{historyBegin}</td>
-        <td>{historyEnd}</td>
-        <td>{historyName}</td>
-      </tr>
-    {/history}
-  </tbody>
-</table>
+
 <?php echo anchor($backLink,'Back','class="btn btn-default"');?> <?php echo anchor($delLink,'Delete','class="btn btn-danger"');?>
 <?php $this->load->view('_template/bottom');?>

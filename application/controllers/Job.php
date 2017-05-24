@@ -74,7 +74,7 @@ class Job extends CI_Controller{
     $data['objName']  = $attr->name;
     $keydate['begin'] = '1990-01-01';
     $keydate['end']   = '9999-12-31';
-    $ls = $this->JobModel->GetNameHistoryList($id,$keydate,'desc');
+    $ls =  $this->JobModel->GetNameHistoryList($id,$keydate,'desc');
     $history = array();
     foreach ($ls as $row) {
       if ($attr->id == $row->id) {
@@ -90,6 +90,18 @@ class Job extends CI_Controller{
       );
     }
     $data['history']  = $history;
+
+    $ls = $this->JobModel->GetRelatedPostList($id,$keydate);
+    $post = array();
+    foreach ($ls as $row) {
+      $post[] = array(
+        'postBegin' => $row->post_begin_date,
+        'postEnd'   => $row->post_end_date,
+        'postId'    => $row->post_id,
+        'postName'  => $row->post_name,
+      );
+    }
+    $data['post']     = $post;
     $data['backLink'] = $this->ctrlClass;
     $data['delLink']  = $this->ctrlClass.'DeleteProcess';
     $data['editDate'] = $this->ctrlClass.'EditDate/';

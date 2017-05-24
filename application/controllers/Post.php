@@ -117,19 +117,32 @@ class Post extends CI_Controller{
     $data['history']  = $history;
 
     $sub = array();
-    $ls  = $this->PostModel->GetSubordinatePostList($id,$keydate);
-
+    $ls  = $this->PostModel->GetSubordinatePersonList($id,$keydate);
     foreach ($ls as $row) {
       $sub[] = array(
-        'subBegin' => $row->post_begin_date,
-        'subEnd'   => $row->post_end_date,
-        'subPostId'    => $row->post_id,
-        'subPostName'  => $row->post_name,
-        'subEmpId'    => $row->post_id,
-        'subEmpName'  => $row->post_name,
+        'subBegin'    => $row->post_begin_date,
+        'subEnd'      => $row->post_end_date,
+        'subPostId'   => $row->post_id,
+        'subPostName' => $row->post_name,
+        'subEmpId'    => $row->person_id,
+        'subEmpName'  => $row->person_name,
       );
     }
     $data['sub'] = $sub;
+
+    $ls = $this->PostModel->GetPeerPersonList($id,$keydate);
+    $peer = array();
+    foreach ($ls as $row) {
+      $peer[] = array(
+        'peerBegin'    => $row->post_begin_date,
+        'peerEnd'      => $row->post_end_date,
+        'peerPostId'   => $row->post_id,
+        'peerPostName' => $row->post_name,
+        'peerEmpId'    => $row->person_id,
+        'peerEmpName'  => $row->person_name,
+      );
+    }
+    $data['peer'] = $peer;
 
     $data['backLink'] = $this->ctrlClass;
     $data['delLink']  = $this->ctrlClass.'DeleteProcess';

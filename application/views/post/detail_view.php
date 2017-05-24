@@ -1,6 +1,6 @@
 <?php $this->load->view('_template/top');?>
 <?php echo anchor($backLink,'Back','class="btn btn-default"');?>
-<h1 class="page-header">Job <small>View</small></h1>
+<h1 class="page-header">Position <small>View</small></h1>
 
 <form action="" class="form-inline" method="post">
   <div class="form-group">
@@ -21,7 +21,25 @@
   <dt>Name</dt>
   <dd>{objName}<?php echo anchor($editName,'<i class="glyphicon glyphicon-pencil"></i>','class="btn btn-link" title="Change Name"'); ?></dd>
 </dl>
-
+<h2>History of Name</h2>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Begin</th>
+      <th>End</th>
+      <th>Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    {history}
+      <tr class="{historyRow}">
+        <td>{historyBegin}</td>
+        <td>{historyEnd}</td>
+        <td>{historyName}</td>
+      </tr>
+    {/history}
+  </tbody>
+</table>
 <h2>Superior</h2>
 <dl class="">
   <dt>Position ID</dt>
@@ -34,6 +52,23 @@
   <dt>Employee Name</dt>
   <dd>{sprEmpName}</dd>
 </dl>
+
+<h2>History of Superior</h2>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Begin</th>
+      <th>End</th>
+      <th>Position Id</th>
+      <th>Position Name</th>
+      <th>Employee Id</th>
+      <th>Employee Name</th>
+    </tr>
+  </thead>
+  <tbody>
+
+  </tbody>
+</table>
 
 <h2>Subordinate</h2>
 <table class="table table-striped table-hover">
@@ -61,25 +96,33 @@
   </tbody>
 </table>
 
-
-<h2>History</h2>
+<h2>Peer</h2>
 <table class="table table-striped table-hover">
   <thead>
     <tr>
       <th>Begin</th>
       <th>End</th>
-      <th>Name</th>
+      <th>Post Id</th>
+      <th>Post Name</th>
+      <th>Employee Id</th>
+      <th>Employee Name</th>
     </tr>
   </thead>
   <tbody>
-    {history}
+    {peer}
       <tr class="{historyRow}">
-        <td>{historyBegin}</td>
-        <td>{historyEnd}</td>
-        <td>{historyName}</td>
+        <td>{peerBegin}</td>
+        <td>{peerEnd}</td>
+        <td>{peerPostId}</td>
+        <td>{peerPostName}</td>
+        <td>{peerEmpId}</td>
+        <td>{peerEmpName}</td>
       </tr>
-    {/history}
+    {/peer}
   </tbody>
 </table>
+
+
+
 <?php echo anchor($backLink,'Back','class="btn btn-default"');?> <?php echo anchor($delLink,'Delete','class="btn btn-danger"');?>
 <?php $this->load->view('_template/bottom');?>
