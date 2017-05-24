@@ -138,14 +138,12 @@ class OrgModel extends CI_Model{
 
   }
 
-  public function GetChiefPost($orgId=0,$keyDate='')
+  public function GetLastChiefPost($orgId=0,$keyDate='')
   {
-
-    // return $this->BaseModel->GetTopDownRelList($orgId,'202',$keyDate,'post');
     return $this->BaseModel->GetLastTopDownRel($orgId,'202',$keyDate,'post');
   }
 
-  public function GetChiefPerson($orgId=0,$keyDate='')
+  public function GetLastChiefPerson($orgId=0,$keyDate='')
   {
     $relCode = array('202','301');
     $alias   = array('post','person');
@@ -156,7 +154,7 @@ class OrgModel extends CI_Model{
       $count  = $this->BaseModel->CountTopDownRel($orgId,$relCode,$keyDate);
 
     }
-    return $this->BaseModel->GetTopDownRelList($orgId,$relCode,$keyDate,$alias);
+    return $this->BaseModel->GetLastTopDownRel($orgId,$relCode,$keyDate,$alias);
 
   }
 }

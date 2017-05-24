@@ -58,7 +58,7 @@ class Org extends CI_Controller{
       $end   = $this->session->userdata('filterEndDa');
     } else {
       $array = array(
-        'selectId' => $id,
+        'selectId'    => $id,
         'filterBegDa' => $begin,
         'filterEndDa' => $end,
       );
@@ -127,10 +127,19 @@ class Org extends CI_Controller{
       }
     }
     $data['post']     = $post;
-
-    $chief = $this->OrgModel->GetChiefPost($id,$keydate);
-    $data['chiefPostId']   = $chief->post_id;
-    $data['chiefPostName'] = $chief->post_name;
+    if ($this->OrgModel->CountChiefPerson($id,$keydate)) {
+      $chief = $this->OrgModel->GetLastChiefPerson($id,$keydate);
+      $data['chiefPostId']   = $chief->post_id;
+      $data['chiefPostName'] = $chief->post_name;
+      $data['chiefEmpId']    = $chief->person_id;
+      $data['chiefEmpName']  = $chief->person_name;
+    } else {
+      $chief = $this->OrgModel->GetLastChiefPost($id,$keydate);
+      $data['chiefPostId']   = $chief->post_id;
+      $data['chiefPostName'] = $chief->post_name;
+      $data['chiefEmpId']    = '-';
+      $data['chiefEmpName']  = '-';
+    }
 
     $data['backLink'] = $this->ctrlClass;
     $data['delLink']  = $this->ctrlClass.'DeleteProcess';
@@ -159,7 +168,7 @@ class Org extends CI_Controller{
     foreach ($ls as $row) {
       $parent[$row->id] = $row->id.' - '.$row->name;
     }
-    $data['parentOpt'] = $parent;
+    $data['parentOpt']  = $parent;
     $data['cancelLink'] = $this->ctrlClass;
 
     $this->load->view($this->viewDir.'add_form',$data);
@@ -174,6 +183,54 @@ class Org extends CI_Controller{
     $parent = $this->input->post('slc_parent');
     $this->OrgModel->Create($name,$begin,$end,$parent);
     redirect($this->ctrlClass);
+  }
+
+  public function EditName()
+  {
+    $id  = $this->session->userdata('selectId');
+    if ($id == '') {
+      redirect($this->ctrlClass);
+    }
+    $old                = $this->OrgModel->GetLastName($id);
+    $data['begin']      = date('Y-m-d');
+    $data['name']       = $old->name;
+    $data['cancelLink'] = $this->ctrlClass.'View/';
+    $data['process']    = $this->ctrlClass.'EditNameProcess';
+    $this->load->view($this->viewDir.'name_form', $data);
+
+  }
+
+  public function EditNameProcess()
+  {
+    $validOn = $this->input->post('dt_begin');
+    $newName = $this->input->post('txt_name');
+    $id      = $this->session->userdata('selectId');
+    $this->OrgModel->ChangeName($id,$newName,$validOn,'9999-12-31');
+    redirect($this->ctrlClass.'View/'.$id.'/'.$validOn.'/9999-12-31');
+  }
+
+  public function EditDate()
+  {
+    $id  = $this->session->userdata('selectId');
+    if ($id == '') {
+      redirect($this->ctrlClass);
+    }
+    $old = $this->OrgModel->GetByIdRow($id);
+    $data['end']   = $old->end_date;
+
+    $data['cancelLink'] = $this->ctrlClass.'View/';
+    $data['process'] = $this->ctrlClass.'EditDateProcess';
+    $this->load->view($this->viewDir.'date_form', $data);
+
+  }
+
+  public function EditDateProcess()
+  {
+    $id  = $this->session->userdata('selectId');
+    $end = $this->input->post('dt_end');
+    $this->OrgModel->Delimit($id,$end);
+    redirect($this->ctrlClass.'View/');
+
   }
 
   public function DeleteProcess()

@@ -10,6 +10,18 @@ class PostModel extends CI_Model{
     $this->load->model('BaseModel');
   }
 
+  public function GetByIdRow($id=0)
+  {
+    return $this->BaseModel->GetByIdRow($id);
+  }
+
+  public function GetList($beginDate='1990-01-01',$endDate='9999-12-31')
+  {
+    $keydate['begin'] = $beginDate;
+    $keydate['end']   = $endDate;
+    return $this->BaseModel->GetList('POS',$keydate);
+  }
+
   public function Create($name='',$beginDate='1990-01-01',$endDate='9999-12-31-31',$orgId=0,$reportTo=0,$isChief=FALSE)
   {
     $postId = $this->BaseModel->Create('POS',$name,$beginDate,$endDate);
@@ -100,8 +112,16 @@ class PostModel extends CI_Model{
 
   public function CountSuperiorPerson($postId=0,$keyDate='')
   {
-    $relCode = array('102','301');
-    return $this->BaseModel->CountBotUpRel($postId,$relCode,$keyDate);
+    // $relCode = array('102','301');
+    // return $this->BaseModel->CountBotUpRel($postId,$relCode,$keyDate);
+    $res = $this->BaseModel->CountBotUpRel($postId,'102',$keyDate);
+    if ($res) {
+      $sprId = $this->BaseModel->GetLastBotUpRel($postId,'102',$keyDate)->obj_id;
+
+      return $this->BaseModel->CountTopDownRel($sprId,'301',$keyDate);
+    } else {
+      return 0;
+    }
 
   }
 
@@ -128,7 +148,7 @@ class PostModel extends CI_Model{
 
   public function GetSubordinatePostList($postId=0,$keyDate='')
   {
-    $this->BaseModel->GetTopDownRelList($postId,'102',$keyDate,'post');
+    return $this->BaseModel->GetTopDownRelList($postId,'102',$keyDate,'post');
   }
 
   public function GetPeerPostList($postId=0,$keyDate='')
@@ -151,13 +171,21 @@ class PostModel extends CI_Model{
   {
     $relCode = array('102','301');
     $alias   = array('post','person');
-    $count   = $this->BaseModel->CountBotUpRel($postId,$relCode,$keyDate);
+    // $count   = $this->BaseModel->CountBotUpRel($postId,$relCode,$keyDate);
+    $count = $this->CountSuperiorPerson($postId,$keyDate);
     while ($count == 0) {
       $postId = $this->GetSuperiorPost($postId,$keyDate)->post_id;
-      $count   = $this->BaseModel->CountBotUpRel($postId,$relCode,$keyDate);
+      $count   = $this->CountSuperiorPerson($postId,$keyDate);
     }
-
-    return $this->BaseModel->GetLastBotUpRel($postId,$relCode,$keyDate,$alias);
+    $post   = $this->GetSuperiorPost($postId,$keyDate,'post');
+    $person = $this->BaseModel->GetLastTopDownRel($post->post_id,'301',$keyDate,'person');
+    $result = array(
+      'post_id'     => $post->post_id,
+      'post_name'   => $post->post_name,
+      'person_id'   => $person->person_id,
+      'person_name' => $person->person_name,
+    );
+    return (Object) $result;
 
   }
 

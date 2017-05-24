@@ -1,14 +1,16 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Job extends CI_Controller{
+class Post extends CI_Controller{
 
-  private $viewDir   = 'job/';
-  private $ctrlClass = 'Job/';
+  private $viewDir   = 'post/';
+  private $ctrlClass = 'Post/';
+
   public function __construct()
   {
     parent::__construct();
-    $this->load->model('JobModel');
+    $this->load->model('PostModel');
+
   }
 
   function index()
@@ -26,7 +28,7 @@ class Job extends CI_Controller{
     if ($end == '') {
       $end = '9999-12-31';
     }
-    $rows = $this->JobModel->GetList($begin,$end);
+    $rows = $this->PostModel->GetList($begin,$end);
     $data['rows'] = array();
     $i = 0 ;
     foreach ($rows as $row) {
@@ -43,8 +45,8 @@ class Job extends CI_Controller{
 
     $data['begin'] = $begin;
     $data['end']   = $end;
-
     $data['addLink'] = $this->ctrlClass.'Add';
+
     $this->parser->parse($this->viewDir.'main_view',$data);
   }
 
@@ -56,7 +58,7 @@ class Job extends CI_Controller{
       $end   = $this->session->userdata('filterEndDa');
     } else {
       $array = array(
-        'selectId' => $id,
+        'selectId'    => $id,
         'filterBegDa' => $begin,
         'filterEndDa' => $end,
       );
@@ -65,8 +67,8 @@ class Job extends CI_Controller{
     $keydate['begin'] = $begin;
     $keydate['end']   = $end;
 
-    $obj  = $this->JobModel->GetByIdRow($id);
-    $attr = $this->JobModel->GetLastName($id,$keydate);
+    $obj  = $this->PostModel->GetByIdRow($id);
+    $attr = $this->PostModel->GetLastName($id,$keydate);
     $data['begin']    = $begin;
     $data['end']      = $end;
     $data['objBegin'] = $obj->begin_date;
@@ -74,7 +76,30 @@ class Job extends CI_Controller{
     $data['objName']  = $attr->name;
     $keydate['begin'] = '1990-01-01';
     $keydate['end']   = '9999-12-31';
-    $ls = $this->JobModel->GetNameHistoryList($id,$keydate,'desc');
+    $ls = $this->PostModel->GetNameHistoryList($id,$keydate,'desc');
+
+    if ($this->PostModel->CountSuperiorPerson($id,$keydate)) {
+      $spr = $this->PostModel->GetSuperiorPerson($id,$keydate);
+      $data['sprPostId']   = $spr->post_id;
+      $data['sprPostName'] = $spr->post_name;
+      $data['sprEmpId']    = $spr->person_id;
+      $data['sprEmpName']  = $spr->person_name;
+    } else {
+      if ($this->PostModel->CountSuperiorPost($id,$keydate)) {
+        $spr = $this->PostModel->GetSuperiorPost($id,$keydate);
+        $data['sprPostId']   = $spr->post_id;
+        $data['sprPostName'] = $spr->post_name;
+        $data['sprEmpId']    = '-';
+        $data['sprEmpName']  = '-';
+
+      } else {
+        $data['sprPostId']   = '-';
+        $data['sprPostName'] = '-';
+        $data['sprEmpId']    = '-';
+        $data['sprEmpName']  = '-';
+      }
+    }
+
     $history = array();
     foreach ($ls as $row) {
       if ($attr->id == $row->id) {
@@ -90,6 +115,22 @@ class Job extends CI_Controller{
       );
     }
     $data['history']  = $history;
+
+    $sub = array();
+    $ls  = $this->PostModel->GetSubordinatePostList($id,$keydate);
+
+    foreach ($ls as $row) {
+      $sub[] = array(
+        'subBegin' => $row->post_begin_date,
+        'subEnd'   => $row->post_end_date,
+        'subPostId'    => $row->post_id,
+        'subPostName'  => $row->post_name,
+        'subEmpId'    => $row->post_id,
+        'subEmpName'  => $row->post_name,
+      );
+    }
+    $data['sub'] = $sub;
+
     $data['backLink'] = $this->ctrlClass;
     $data['delLink']  = $this->ctrlClass.'DeleteProcess';
     $data['editDate'] = $this->ctrlClass.'EditDate/';
@@ -97,20 +138,40 @@ class Job extends CI_Controller{
     $this->parser->parse($this->viewDir.'detail_view',$data);
   }
 
+  public function Breadcrumb($id=0)
+  {
+
+  }
+
   public function Add()
   {
+    $begin  = $this->session->userdata('filterBegDa');
+    $end    = $this->session->userdata('filterEndDa');
+    if (is_null($begin) OR $begin == '') {
+      $begin = date('Y-m-d');
+    }
+    if (is_null($end) OR $end == '') {
+      $end = date('Y-m-d');
+    }
+    $ls     = $this->PostModel->GetList($begin,$end);
+    $parent = array();
+    foreach ($ls as $row) {
+      $parent[$row->id] = $row->id.' - '.$row->name;
+    }
+    $data['parentOpt']  = $parent;
     $data['cancelLink'] = $this->ctrlClass;
 
-    $data['process'] = $this->ctrlClass.'AddProcess';
     $this->load->view($this->viewDir.'add_form',$data);
+
   }
 
   public function AddProcess()
   {
-    $begin = $this->input->post('dt_begin');
-    $end   = $this->input->post('dt_end');
-    $name  = $this->input->post('txt_name');
-    $this->JobModel->Create($name,$begin,$end);
+    $begin  = $this->input->post('dt_begin');
+    $end    = $this->input->post('dt_end');
+    $name   = $this->input->post('txt_name');
+    $parent = $this->input->post('slc_parent');
+    $this->PostModel->Create($name,$begin,$end,$parent);
     redirect($this->ctrlClass);
   }
 
@@ -120,7 +181,7 @@ class Job extends CI_Controller{
     if ($id == '') {
       redirect($this->ctrlClass);
     }
-    $old                = $this->JobModel->GetLastName($id);
+    $old                = $this->PostModel->GetLastName($id);
     $data['begin']      = date('Y-m-d');
     $data['name']       = $old->name;
     $data['cancelLink'] = $this->ctrlClass.'View/';
@@ -134,7 +195,7 @@ class Job extends CI_Controller{
     $validOn = $this->input->post('dt_begin');
     $newName = $this->input->post('txt_name');
     $id      = $this->session->userdata('selectId');
-    $this->JobModel->ChangeName($id,$newName,$validOn,'9999-12-31');
+    $this->PostModel->ChangeName($id,$newName,$validOn,'9999-12-31');
     redirect($this->ctrlClass.'View/'.$id.'/'.$validOn.'/9999-12-31');
   }
 
@@ -144,7 +205,7 @@ class Job extends CI_Controller{
     if ($id == '') {
       redirect($this->ctrlClass);
     }
-    $old = $this->JobModel->GetByIdRow($id);
+    $old = $this->PostModel->GetByIdRow($id);
     $data['end']   = $old->end_date;
 
     $data['cancelLink'] = $this->ctrlClass.'View/';
@@ -157,7 +218,7 @@ class Job extends CI_Controller{
   {
     $id  = $this->session->userdata('selectId');
     $end = $this->input->post('dt_end');
-    $this->JobModel->Delimit($id,$end);
+    $this->PostModel->Delimit($id,$end);
     redirect($this->ctrlClass.'View/');
 
   }
@@ -165,9 +226,8 @@ class Job extends CI_Controller{
   public function DeleteProcess()
   {
     $id = $this->session->userdata('selectId');
-    $this->JobModel->Delete($id);
+    $this->PostModel->Delete($id);
     redirect($this->ctrlClass);
 
   }
-
 }
