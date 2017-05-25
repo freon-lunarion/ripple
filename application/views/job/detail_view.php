@@ -50,6 +50,7 @@
       <th>End</th>
       <th>Id</th>
       <th>Name</th>
+      <th>Delimit</th>
     </tr>
   </thead>
   <tbody>
@@ -59,6 +60,7 @@
         <td>{postEnd}</td>
         <td>{postId}</td>
         <td>{postName}</td>
+        <td><?php echo anchor('','<i class="glyphicon glyphicon-trash"></i>','class="btn btn-link" title="Delimit Relation"'); ?></td>
       </tr>
     {/post}
   </tbody>

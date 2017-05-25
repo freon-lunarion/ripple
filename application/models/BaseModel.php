@@ -519,9 +519,13 @@ class BaseModel extends CI_Model{
         if (is_array($alias) && $alias[$i] !='') {
           $this->db->select('rel_'.$i.'.obj_bottom_id AS '. $alias[$i].'_id');
           $this->db->select('('.$select.') AS '. $alias[$i].'_name');
+          $this->db->select('rel_0.begin_date AS '. $alias[$i].'_begin_date');
+          $this->db->select('rel_0.end_date AS '. $alias[$i].'_end_date');
         } else {
           $this->db->select('rel_'.$i.'.obj_bottom_id AS obj_'. $i.'_id');
           $this->db->select('('.$select.') AS obj_'.$i.'_name');
+          $this->db->select('rel_0.begin_date AS obj'. $i.'_begin_date');
+          $this->db->select('rel_0.end_date AS obj'. $i.'_end_date');
 
         }
       }
@@ -576,9 +580,13 @@ class BaseModel extends CI_Model{
       if ($alias !='') {
         $this->db->select('rel_0.obj_bottom_id AS '. $alias.'_id');
         $this->db->select('('.$select.') AS '. $alias.'_name');
+        $this->db->select('rel_0.begin_date AS '. $alias.'_begin_date');
+        $this->db->select('rel_0.end_date AS '. $alias.'_end_date');
       } else {
         $this->db->select('rel_0.obj_bottom_id AS obj_id');
         $this->db->select('('.$select.') AS obj_name');
+        $this->db->select('rel_0.begin_date AS obj_begin_date');
+        $this->db->select('rel_0.end_date AS obj_end_date');
 
       }
       //  end of Sub query 1
@@ -907,9 +915,14 @@ class BaseModel extends CI_Model{
         if (is_array($alias) && $alias[$i] !='') {
           $this->db->select('rel_'.$i.'.obj_top_id AS '. $alias[$i].'_id');
           $this->db->select('('.$select.') AS '. $alias[$i].'_name');
+
+          $this->db->select('rel_0.begin_date AS '. $alias[$i].'_begin_date');
+          $this->db->select('rel_0.end_date AS '. $alias[$i].'_end_date');
         } else {
           $this->db->select('rel_'.$i.'.obj_top_id AS obj_'. $i.'_id');
           $this->db->select('('.$select.') AS obj_'.$i.'_name');
+          $this->db->select('rel_0.begin_date AS obj_'. $i.'_begin_date');
+          $this->db->select('rel_0.end_date AS obj_'. $i.'_end_date');
         }
       }
       // end of sub query 1
@@ -960,12 +973,16 @@ class BaseModel extends CI_Model{
     } else {
       // Sub query 1
       $select = str_replace('NUM','0',$subQuery);
-      if ($alias[$i] !='') {
+      if ($alias !='') {
         $this->db->select('rel_0.obj_top_id AS '. $alias.'_id');
+        $this->db->select('rel_0.begin_date AS '. $alias.'_begin_date');
+        $this->db->select('rel_0.end_date AS '. $alias.'_end_date');
         $this->db->select('('.$select.') AS '. $alias.'_name');
       } else {
         $this->db->select('rel_0.obj_top_id AS obj_id');
         $this->db->select('('.$select.') AS obj_name');
+        $this->db->select('rel_0.begin_date AS obj_begin_date');
+        $this->db->select('rel_0.end_date AS obj_end_date');
       }
       //  end of Sub query 1
       if (!is_array($keydate)) {
@@ -1053,9 +1070,14 @@ class BaseModel extends CI_Model{
         if (is_array($alias) && $alias[$i] !='') {
           $this->db->select('rel_'.$i.'.obj_top_id AS '. $alias[$i].'_id');
           $this->db->select('('.$select.') AS '. $alias[$i].'_name');
+          $this->db->select('rel_0.begin_date AS '. $alias[$i].'_begin_date');
+          $this->db->select('rel_0.end_date AS '. $alias[$i].'_end_date');
         } else {
           $this->db->select('rel_'.$i.'.obj_top_id AS obj_'. $i.'_id');
           $this->db->select('('.$select.') AS obj_'.$i.'_name');
+
+          $this->db->select('rel_0.begin_date AS obj_'. $i.'_begin_date');
+          $this->db->select('rel_0.end_date AS obj_'. $i.'_end_date');
 
         }
       }
@@ -1110,9 +1132,13 @@ class BaseModel extends CI_Model{
       if ($alias !='') {
         $this->db->select('rel_0.obj_top_id AS '. $alias.'_id');
         $this->db->select('('.$select.') AS '. $alias.'_name');
+        $this->db->select('rel_0.begin_date AS '. $alias.'_begin_date');
+        $this->db->select('rel_0.end_date AS '. $alias.'_end_date');
       } else {
         $this->db->select('rel_0.obj_top_id AS obj_id');
         $this->db->select('('.$select.') AS obj_name');
+        $this->db->select('rel_0.begin_date AS obj_begin_date');
+        $this->db->select('rel_0.end_date AS obj_end_date');
 
       }
       //  end of Sub query 1
@@ -1202,5 +1228,12 @@ class BaseModel extends CI_Model{
     }
     $this->db->update($tbl, $data);
   }
+
+  // public function Demo($botId=0)
+  // {
+  //   $topId = $botId - 32;
+  //   $data = array('rel_code' => '301', 'obj_top_id'=> $topId,'obj_bottom_id'=>$botId);
+  //   $this->db->insert($this->tblRel, $data);
+  // }
 
 }

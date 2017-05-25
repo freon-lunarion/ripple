@@ -84,13 +84,13 @@ class PostModel extends CI_Model{
 
   public function GetLastHolder($postId=0,$keyDate='')
   {
-    return $this->BaseModel->GetLastBotUpRel($postId,'301',$keyDate,'person');
+    return $this->BaseModel->GetLastTopDownRel($postId,'301',$keyDate,'person');
 
   }
 
   public function GetHolderHistoryList($postId=0,$keyDate='')
   {
-    return $this->BaseModel->GetBotUpRelList($postId,'301',$keyDate,'person');
+    return $this->BaseModel->GetTopDownRelList($postId,'301',$keyDate,'person');
   }
 
   public function CountSuperiorPost($postId=0,$keyDate='')
@@ -112,8 +112,6 @@ class PostModel extends CI_Model{
 
   public function CountSuperiorPerson($postId=0,$keyDate='')
   {
-    // $relCode = array('102','301');
-    // return $this->BaseModel->CountBotUpRel($postId,$relCode,$keyDate);
     $res = $this->BaseModel->CountBotUpRel($postId,'102',$keyDate);
     if ($res) {
       $sprId = $this->BaseModel->GetLastBotUpRel($postId,'102',$keyDate)->obj_id;
@@ -134,10 +132,14 @@ class PostModel extends CI_Model{
 
   public function CountPeerPerson($postId=0,$keyDate='')
   {
-    $chiefId = $this->GetSuperiorPost($postId,$keyDate)->post_id;
-
-    $relCode = array('102','301');
-    return ($this->BaseModel->CountTopDownRel($postId,$relCode,$keyDate) - 1);
+    $chief = $this->GetSuperiorPost($postId,$keyDate);
+    if ($chief) {
+      $relCode = array('102','301');
+      return ($this->BaseModel->CountTopDownRel($chief->post_id,$relCode,$keyDate) - 1);
+      # code...
+    } else {
+      return false;
+    }
 
   }
 

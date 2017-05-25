@@ -78,28 +78,14 @@ class Post extends CI_Controller{
     $keydate['end']   = '9999-12-31';
     $ls = $this->PostModel->GetNameHistoryList($id,$keydate,'desc');
 
-    if ($this->PostModel->CountSuperiorPerson($id,$keydate)) {
-      $spr = $this->PostModel->GetSuperiorPerson($id,$keydate);
+    if ($this->PostModel->CountSuperiorPost($id,$keydate)) {
+      $spr = $this->PostModel->GetSuperiorPost($id,$keydate);
       $data['sprPostId']   = $spr->post_id;
       $data['sprPostName'] = $spr->post_name;
-      $data['sprEmpId']    = $spr->person_id;
-      $data['sprEmpName']  = $spr->person_name;
     } else {
-      if ($this->PostModel->CountSuperiorPost($id,$keydate)) {
-        $spr = $this->PostModel->GetSuperiorPost($id,$keydate);
-        $data['sprPostId']   = $spr->post_id;
-        $data['sprPostName'] = $spr->post_name;
-        $data['sprEmpId']    = '-';
-        $data['sprEmpName']  = '-';
-
-      } else {
-        $data['sprPostId']   = '-';
-        $data['sprPostName'] = '-';
-        $data['sprEmpId']    = '-';
-        $data['sprEmpName']  = '-';
-      }
+      $data['sprPostId']   = '-';
+      $data['sprPostName'] = '-';
     }
-
     $history = array();
     foreach ($ls as $row) {
       if ($attr->id == $row->id) {
@@ -116,38 +102,58 @@ class Post extends CI_Controller{
     }
     $data['history']  = $history;
 
+    $holder = $this->PostModel->GetLastHolder($id,$keydate);
+    $data['holderBegin'] = $holder->person_begin_date;
+    $data['holderEnd']   = $holder->person_end_date;
+    $data['holderId']    = $holder->person_id;
+    $data['holderName']  = $holder->person_name;
+
+    $ls = $this->PostModel->GetHolderHistoryList($id,$keydate);
+    $holder = array();
+    foreach ($ls as $row) {
+      $holder[] = array(
+        'holderBegin' => $row->person_begin_date,
+        'holderEnd'   => $row->person_end_date,
+        'holderId'    => $row->person_id,
+        'holderName'  => $row->person_name,
+      );
+    }
+    $data['holder'] = $holder;
+
+
     $sub = array();
-    $ls  = $this->PostModel->GetSubordinatePersonList($id,$keydate);
+    $ls  = $this->PostModel->GetSubordinatePostList($id,$keydate);
     foreach ($ls as $row) {
       $sub[] = array(
         'subBegin'    => $row->post_begin_date,
         'subEnd'      => $row->post_end_date,
         'subPostId'   => $row->post_id,
         'subPostName' => $row->post_name,
-        'subEmpId'    => $row->person_id,
-        'subEmpName'  => $row->person_name,
+
       );
     }
     $data['sub'] = $sub;
 
-    $ls = $this->PostModel->GetPeerPersonList($id,$keydate);
     $peer = array();
-    foreach ($ls as $row) {
-      $peer[] = array(
-        'peerBegin'    => $row->post_begin_date,
-        'peerEnd'      => $row->post_end_date,
-        'peerPostId'   => $row->post_id,
-        'peerPostName' => $row->post_name,
-        'peerEmpId'    => $row->person_id,
-        'peerEmpName'  => $row->person_name,
-      );
+    if ($this->PostModel->CountPeerPerson($id,$keydate)) {
+      $ls = $this->PostModel->GetPeerPostList($id,$keydate);
+      foreach ($ls as $row) {
+        $peer[] = array(
+          'peerBegin'    => $row->post_begin_date,
+          'peerEnd'      => $row->post_end_date,
+          'peerPostId'   => $row->post_id,
+          'peerPostName' => $row->post_name,
+        );
+      }
     }
     $data['peer'] = $peer;
 
-    $data['backLink'] = $this->ctrlClass;
-    $data['delLink']  = $this->ctrlClass.'DeleteProcess';
-    $data['editDate'] = $this->ctrlClass.'EditDate/';
-    $data['editName'] = $this->ctrlClass.'EditName/';
+    $data['backLink']   = $this->ctrlClass;
+    $data['delLink']    = $this->ctrlClass.'DeleteProcess';
+    $data['editDate']   = $this->ctrlClass.'EditDate/';
+    $data['editName']   = $this->ctrlClass.'EditName/';
+    $data['editHolder'] = $this->ctrlClass.'EditHolder/';
+    $data['editSpr']    = $this->ctrlClass.'EditSuperior/';
     $this->parser->parse($this->viewDir.'detail_view',$data);
   }
 

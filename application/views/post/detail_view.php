@@ -40,17 +40,43 @@
     {/history}
   </tbody>
 </table>
+
+<h2>Holder</h2>
+<dl class="">
+  <dt>Id</dt>
+  <dd>{holderId} <?php echo anchor($editHolder,'<i class="glyphicon glyphicon-pencil"></i>','class="btn btn-link" title="Change Holder"');?></dd>
+  <dt>Name</dt>
+  <dd>{holderName} </dd>
+</dl>
+<h2>History of Holder</h2>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Begin</th>
+      <th>End</th>
+      <th>Id</th>
+      <th>Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    {holder}
+      <tr class="{historyRow}">
+        <td>{holderBegin}</td>
+        <td>{holderEnd}</td>
+        <td>{holderId}</td>
+        <td>{holderName}</td>
+      </tr>
+    {/holder}
+  </tbody>
+</table>
+
 <h2>Superior</h2>
 <dl class="">
   <dt>Position ID</dt>
-  <dd>{sprPostId}</dd>
+  <dd>{sprPostId} <?php echo anchor($editSpr,'<i class="glyphicon glyphicon-pencil"></i>','class="btn btn-link" title="Change Superior"');?></dd>
   <dt>Position Name</dt>
   <dd>{sprPostName}</dd>
 
-  <dt>Employee ID</dt>
-  <dd>{sprEmpId}</dd>
-  <dt>Employee Name</dt>
-  <dd>{sprEmpName}</dd>
 </dl>
 
 <h2>History of Superior</h2>
@@ -61,8 +87,7 @@
       <th>End</th>
       <th>Position Id</th>
       <th>Position Name</th>
-      <th>Employee Id</th>
-      <th>Employee Name</th>
+
     </tr>
   </thead>
   <tbody>
@@ -78,8 +103,8 @@
       <th>End</th>
       <th>Post Id</th>
       <th>Post Name</th>
-      <th>Employee Id</th>
-      <th>Employee Name</th>
+      <th>Delimit</th>
+
     </tr>
   </thead>
   <tbody>
@@ -89,8 +114,7 @@
         <td>{subEnd}</td>
         <td>{subPostId}</td>
         <td>{subPostName}</td>
-        <td>{subEmpId}</td>
-        <td>{subEmpName}</td>
+        <td><?php echo anchor('','<i class="glyphicon glyphicon-trash"></i>','class="btn btn-link" title="Delimit Relation"'); ?></td>
       </tr>
     {/sub}
   </tbody>
@@ -104,8 +128,7 @@
       <th>End</th>
       <th>Post Id</th>
       <th>Post Name</th>
-      <th>Employee Id</th>
-      <th>Employee Name</th>
+
     </tr>
   </thead>
   <tbody>
@@ -115,8 +138,6 @@
         <td>{peerEnd}</td>
         <td>{peerPostId}</td>
         <td>{peerPostName}</td>
-        <td>{peerEmpId}</td>
-        <td>{peerEmpName}</td>
       </tr>
     {/peer}
   </tbody>

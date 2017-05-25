@@ -45,7 +45,7 @@
 <h2>Parent Organization</h2>
 <dl class="">
   <dt>ID</dt>
-  <dd>{parentId}</dd>
+  <dd>{parentId} <?php echo anchor($editParent,'<i class="glyphicon glyphicon-pencil"></i>','class="btn btn-link" title="Change Parent"'); ?></dd>
   <dt>Name</dt>
   <dd>{parentName}</dd>
 </dl>
@@ -60,21 +60,23 @@
     </tr>
   </thead>
   <tbody>
-
+    {parent}
+      <tr class="{historyRow}">
+        <td>{parentBegin}</td>
+        <td>{parentEnd}</td>
+        <td>{parentId}</td>
+        <td>{parentName}</td>
+      </tr>
+    {/parent}
   </tbody>
 </table>
 
 <h2>Chief</h2>
 <dl class="">
   <dt>Position ID</dt>
-  <dd>{chiefPostId}</dd>
+  <dd>{chiefPostId} <?php echo anchor($editChief,'<i class="glyphicon glyphicon-pencil"></i>','class="btn btn-link" title="Change Chief"'); ?></dd>
   <dt>Position Name</dt>
   <dd>{chiefPostName}</dd>
-
-  <dt>Employee ID</dt>
-  <dd>{chiefEmpId}</dd>
-  <dt>Employee Name</dt>
-  <dd>{chiefEmpName}</dd>
 </dl>
 
 <h2>History of Chief</h2>
@@ -85,12 +87,17 @@
       <th>End</th>
       <th>Position Id</th>
       <th>Position Name</th>
-      <th>Employee Id</th>
-      <th>Employee Name</th>
     </tr>
   </thead>
   <tbody>
-
+    {chief}
+      <tr class="{historyRow}">
+        <td>{chiefBegin}</td>
+        <td>{chiefEnd}</td>
+        <td>{chiefId}</td>
+        <td>{chiefName}</td>
+      </tr>
+    {/chief}
   </tbody>
 </table>
 
@@ -102,6 +109,7 @@
       <th>End</th>
       <th>Id</th>
       <th>Name</th>
+      <th>Delimit</th>
     </tr>
   </thead>
   <tbody>
@@ -111,6 +119,7 @@
         <td>{childrenEnd}</td>
         <td>{childrenId}</td>
         <td>{childrenName}</td>
+        <td><?php echo anchor('','<i class="glyphicon glyphicon-trash"></i>','class="btn btn-link" title="Delimit Relation"'); ?></td>
       </tr>
     {/children}
   </tbody>
@@ -125,6 +134,7 @@
       <th>End</th>
       <th>Id</th>
       <th>Name</th>
+      <th>Delimit</th>
     </tr>
   </thead>
   <tbody>
@@ -134,6 +144,8 @@
         <td>{postEnd}</td>
         <td>{postId}</td>
         <td>{postName}</td>
+        <td><?php echo anchor('','<i class="glyphicon glyphicon-trash"></i>','class="btn btn-link" title="Delimit Relation"'); ?></td>
+
       </tr>
     {/post}
   </tbody>

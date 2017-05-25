@@ -101,6 +101,19 @@ class Org extends CI_Controller{
       $data['parentName'] = '';
     }
 
+    $ls = $this->OrgModel->GetParentOrgList($id,$keydate);
+    $parent = array();
+    foreach ($ls as $row) {
+      $parent[] = array(
+        'parentBegin' => $row->parent_begin_date,
+        'parentEnd'   => $row->parent_end_date,
+        'parentId'    => $row->parent_id,
+        'parentName'  => $row->parent_name,
+      );
+
+    }
+    $data['parent'] = $parent;
+
     $children = array();
     if ($this->OrgModel->CountChildrenOrg($id,$keydate)) {
       $child = $this->OrgModel->GetChildrenOrgList($id,$keydate);
@@ -127,30 +140,34 @@ class Org extends CI_Controller{
       }
     }
     $data['post']     = $post;
-    if ($this->OrgModel->CountChiefPerson($id,$keydate)) {
-      $chief = $this->OrgModel->GetLastChiefPerson($id,$keydate);
-      $data['chiefPostId']   = $chief->post_id;
-      $data['chiefPostName'] = $chief->post_name;
-      $data['chiefEmpId']    = $chief->person_id;
-      $data['chiefEmpName']  = $chief->person_name;
-    } else {
+
+    if ($this->OrgModel->CountChiefPost($id,$keydate)) {
       $chief = $this->OrgModel->GetLastChiefPost($id,$keydate);
       $data['chiefPostId']   = $chief->post_id;
       $data['chiefPostName'] = $chief->post_name;
-      $data['chiefEmpId']    = '-';
-      $data['chiefEmpName']  = '-';
+    } else {
+      $data['chiefPostId']   = '-';
+      $data['chiefPostName'] = '-';
     }
+    $ls = $this->OrgModel->GetChiefPostList($id,$keydate);
+    $chief = array();
+    foreach ($ls as $row) {
+      $chief[] = array(
+        'chiefBegin' => $row->post_begin_date,
+        'chiefEnd'   => $row->post_end_date,
+        'chiefId'    => $row->post_id,
+        'chiefName'  => $row->post_name,
+      );
+    }
+    $data['chief'] = $chief;
 
-    $data['backLink'] = $this->ctrlClass;
-    $data['delLink']  = $this->ctrlClass.'DeleteProcess';
-    $data['editDate'] = $this->ctrlClass.'EditDate/';
-    $data['editName'] = $this->ctrlClass.'EditName/';
+    $data['backLink']   = $this->ctrlClass;
+    $data['delLink']    = $this->ctrlClass.'DeleteProcess';
+    $data['editDate']   = $this->ctrlClass.'EditDate/';
+    $data['editName']   = $this->ctrlClass.'EditName/';
+    $data['editParent'] = $this->ctrlClass.'EditParent/';
+    $data['editChief']  = $this->ctrlClass.'EditChief/';;
     $this->parser->parse($this->viewDir.'detail_view',$data);
-  }
-
-  public function Breadcrumb($id=0)
-  {
-
   }
 
   public function Add()
@@ -206,6 +223,30 @@ class Org extends CI_Controller{
     $newName = $this->input->post('txt_name');
     $id      = $this->session->userdata('selectId');
     $this->OrgModel->ChangeName($id,$newName,$validOn,'9999-12-31');
+    redirect($this->ctrlClass.'View/'.$id.'/'.$validOn.'/9999-12-31');
+  }
+
+  public function EditChief()
+  {
+    $id  = $this->session->userdata('selectId');
+    if ($id == '') {
+      redirect($this->ctrlClass);
+    }
+
+    $data['begin']      = date('Y-m-d');
+
+    $data['cancelLink'] = $this->ctrlClass.'View/';
+    $data['process']    = $this->ctrlClass.'EditChiefProcess';
+    $this->load->view($this->viewDir.'chief_form', $data);
+
+  }
+
+  public function EditChiefProcess()
+  {
+    $validOn  = $this->input->post('dt_begin');
+    $newChief = $this->input->post('slc_post');
+    $id       = $this->session->userdata('selectId');
+    // $this->OrgModel->ChangeChiefPost($id,$newChief,$validOn,'9999-12-31');
     redirect($this->ctrlClass.'View/'.$id.'/'.$validOn.'/9999-12-31');
   }
 
