@@ -8,7 +8,7 @@ class Job extends CI_Controller{
   public function __construct()
   {
     parent::__construct();
-    $this->load->model('JobModel');
+    $this->load->model('JobModel'); // BaseModel is included
   }
 
   function index()
@@ -93,12 +93,17 @@ class Job extends CI_Controller{
 
     $ls = $this->JobModel->GetRelatedPostList($id,$keydate);
     $post = array();
+    $delimit = site_url($this->ctrlClass.'ChangeRel/');
+    $remove  = site_url($this->ctrlClass.'RemoveRel/');
     foreach ($ls as $row) {
       $post[] = array(
+        'postRelId' => $row->post_rel_id,
         'postBegin' => $row->post_begin_date,
         'postEnd'   => $row->post_end_date,
         'postId'    => $row->post_id,
         'postName'  => $row->post_name,
+        'chgRel'    => $delimit.$row->post_rel_id,
+        'remRel'    => $remove.$row->post_rel_id,
       );
     }
     $data['post']     = $post;
@@ -157,9 +162,11 @@ class Job extends CI_Controller{
       redirect($this->ctrlClass);
     }
     $old = $this->JobModel->GetByIdRow($id);
+    $data['begin'] = $old->begin_date;
     $data['end']   = $old->end_date;
 
     $data['cancelLink'] = $this->ctrlClass.'View/';
+    $data['hidden']  = array();
     $data['process'] = $this->ctrlClass.'EditDateProcess';
     $this->load->view($this->viewDir.'date_form', $data);
 
@@ -174,10 +181,36 @@ class Job extends CI_Controller{
 
   }
 
+  public function ChangeRel($relId=0)
+  {
+    $data['hidden']  = array(
+      'rel_id' => $relId
+    );
+    $old = $this->JobModel->GetRelByIdRow($relId);
+    $data['process'] = $this->ctrlClass.'ChangeRelProcess';
+    $data['begin']   = $old->begin_date;
+    $data['end']     = $old->end_date;
+    $data['cancelLink'] = $this->ctrlClass.'View/';
+
+    $this->load->view($this->viewDir.'date_form', $data);
+  }
+
+  public function ChangeRelProcess()
+  {
+    $relId = $this->input->post('rel_id');
+    redirect($this->ctrlClass.'View/');
+  }
+
+  public function RemoveRel($relId=0)
+  {
+    $this->JobModel->DeleteRel($relId);
+    redirect($this->ctrlClass.'View/');
+  }
+
   public function DeleteProcess()
   {
     $id = $this->session->userdata('selectId');
-    $this->JobModel->Delete($id);
+    $this->BaseModel->Delete($id);
     redirect($this->ctrlClass);
 
   }

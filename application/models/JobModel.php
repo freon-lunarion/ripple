@@ -18,6 +18,12 @@ class JobModel extends CI_Model{
   {
     $this->BaseModel->ChangeName($objId,$newName,$validOn,$endDate);
   }
+
+  public function ChangeRelDate($relId=0,$beginDate='',$endDate='')
+  {
+    $this->BaseModel->ChangeRelDate($relId,$beginDate,$endDate);
+  }
+
   public function Delimit($objId=0,$endDate='')
   {
     $this->BaseModel->Delimit($objId,$endDate);
@@ -28,9 +34,19 @@ class JobModel extends CI_Model{
     $this->BaseModel->Delete($objId);
   }
 
+  public function DeleteRel($relId=0)
+  {
+    $this->BaseModel->DeleteRel($relId);
+  }
+
   public function GetByIdRow($id=0)
   {
     return $this->BaseModel->GetByIdRow($id);
+  }
+
+  public function GetRelByIdRow($relId=0)
+  {
+    return $this->BaseModel->GetRelById($relId);
   }
 
   public function GetList($beginDate='1990-01-01',$endDate='9999-12-31')

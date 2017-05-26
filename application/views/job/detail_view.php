@@ -48,9 +48,10 @@
     <tr>
       <th>Begin</th>
       <th>End</th>
+      <th>Change</th>
       <th>Id</th>
       <th>Name</th>
-      <th>Delimit</th>
+      <th class="text-danger">Delete</th>
     </tr>
   </thead>
   <tbody>
@@ -58,9 +59,11 @@
       <tr class="{historyRow}">
         <td>{postBegin}</td>
         <td>{postEnd}</td>
+        <td><a href="{chgRel}" class="btn btn-link" title="Delimit Relation"><i class="glyphicon glyphicon-time"></i></a>
         <td>{postId}</td>
         <td>{postName}</td>
-        <td><?php echo anchor('','<i class="glyphicon glyphicon-trash"></i>','class="btn btn-link" title="Delimit Relation"'); ?></td>
+        <td><a href="{remRel}" class="btn btn-link" title="Delimit Relation"><i class="glyphicon glyphicon-trash"></i></a>
+          </td>
       </tr>
     {/post}
   </tbody>

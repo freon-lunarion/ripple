@@ -58,6 +58,67 @@ class BaseModel extends CI_Model{
     $this->InsertOn($this->tblAttr,$data);
   }
 
+  public function ChangeDate($objId=0,$beginDate='',$endDate='')
+  {
+    $old = $this->GetByIdRow($objId);
+    if ($beginDate == '') {
+      $beginDate = date('Y-m-d');
+    }
+    if ($endDate == '') {
+      $endDate = date('Y-m-d');
+    }
+
+    $data = array(
+      'begin_date' => $beginDate,
+      'end_date'   => $endDate,
+      'timestamp'  => date('Y-m-d H:i:s'),
+    );
+
+    $dataBegin = array(
+      'begin_date' => $beginDate,
+      'timestamp'  => date('Y-m-d H:i:s'),
+    );
+
+    $dataEnd = array(
+      'end_date'   => $endDate,
+      'timestamp'  => date('Y-m-d H:i:s'),
+    );
+
+    $this->ChangeOn($this->tblObj,$objId,$data);
+    // Change date of Attribut
+    $this->db->where('obj_id', $objId);
+    $this->db->where('is_delete', FALSE);
+    $this->db->where('begin_date ', $old->begin_date);
+    $this->db->update($this->tblAttr,$dataBegin);
+
+    $this->db->where('obj_id', $objId);
+    $this->db->where('is_delete', FALSE);
+    $this->db->where('end_date ', $old->end_date);
+    $this->db->update($this->tblAttr,$dataEnd);
+
+    // Change date of Relation TopDown
+    $this->db->where('obj_top_id', $objId);
+    $this->db->where('is_delete', FALSE);
+    $this->db->where('begin_date ', $old->begin_date);
+    $this->db->update($this->tblRel, $dataBegin);
+
+    $this->db->where('obj_top_id', $objId);
+    $this->db->where('is_delete', FALSE);
+    $this->db->where('end_date ', $old->end_date);
+    $this->db->update($this->tblRel, $dataEnd);
+
+    // Change date of Relation BottomUp
+    $this->db->where('obj_bottom_id', $objId);
+    $this->db->where('is_delete', FALSE);
+    $this->db->where('begin_date ', $old->begin_date);
+    $this->db->update($this->tblRel, $dataBegin);
+
+    $this->db->where('obj_bottom_id', $objId);
+    $this->db->where('is_delete', FALSE);
+    $this->db->where('end_date ', $old->end_date);
+    $this->db->update($this->tblRel, $dataEnd);
+  }
+
 
   public function Delimit($objId=0,$endDate='')
   {
@@ -372,6 +433,26 @@ class BaseModel extends CI_Model{
     $this->InsertOn($this->tblRel,$data);
   }
 
+  public function ChangeRelDate($relId=0,$beginDate='',$endDate='')
+  {
+    $data = array(
+      'begin_date' => $beginDate,
+      'end_date'   => $endDate,
+    );
+
+    $this->ChangeOn($this->tblRel,$relId,$data);
+  }
+
+  public function DelimitRel($relId=0,$endDate='')
+  {
+    $this->DelimitOn($this->tblRel,$relId,$endDate);
+  }
+
+  public function DeleteRel($relId=0)
+  {
+    $this->DeleteOn($this->tblRel,$relId);
+  }
+
   public function GetRelById($relId=0)
   {
     $this->db->where('id', $relId);
@@ -675,11 +756,13 @@ class BaseModel extends CI_Model{
         $select = str_replace('NUM',$i,$subQuery);
         if (is_array($alias) && $alias[$i] !='') {
           $this->db->select('rel_'.$i.'.obj_bottom_id AS '. $alias[$i].'_id');
+          $this->db->select('rel_'.$i.'.id AS '. $alias[$i].'_rel_id');
           $this->db->select('rel_'.$i.'.begin_date AS '. $alias[$i].'_begin_date');
           $this->db->select('rel_'.$i.'.end_date AS '. $alias[$i].'_end_date');
           $this->db->select('('.$select.') AS '. $alias[$i].'_name');
         } else {
           $this->db->select('rel_'.$i.'.obj_bottom_id AS obj_'. $i.'_id');
+          $this->db->select('rel_'.$i.'.id AS obj_'. $i.'_rel_id');
           $this->db->select('('.$select.') AS obj_'.$i.'_name');
           $this->db->select('rel_'.$i.'.begin_date AS obj_'. $i.'_begin_date');
           $this->db->select('rel_'.$i.'.end_date AS obj_'. $i.'_end_date');
@@ -733,11 +816,13 @@ class BaseModel extends CI_Model{
       $select = str_replace('NUM','0',$subQuery);
       if ($alias !='') {
         $this->db->select('rel_0.obj_bottom_id AS '. $alias.'_id');
+        $this->db->select('rel_0.id AS '. $alias.'_rel_id');
         $this->db->select('rel_0.begin_date AS '. $alias.'_begin_date');
         $this->db->select('rel_0.end_date AS '. $alias.'_end_date');
         $this->db->select('('.$select.') AS '. $alias.'_name');
       } else {
         $this->db->select('rel_0.obj_bottom_id AS obj_id');
+        $this->db->select('rel_0.id AS obj_rel_id');
         $this->db->select('rel_0.begin_date AS obj_begin_date');
         $this->db->select('rel_0.end_date AS obj_end_date');
         $this->db->select('('.$select.') AS obj_name');
@@ -1229,11 +1314,5 @@ class BaseModel extends CI_Model{
     $this->db->update($tbl, $data);
   }
 
-  // public function Demo($botId=0)
-  // {
-  //   $topId = $botId - 32;
-  //   $data = array('rel_code' => '301', 'obj_top_id'=> $topId,'obj_bottom_id'=>$botId);
-  //   $this->db->insert($this->tblRel, $data);
-  // }
 
 }
