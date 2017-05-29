@@ -41,6 +41,36 @@
   </tbody>
 </table>
 
+<h2>Job Type</h2>
+<dl class="">
+  <dt>Id</dt>
+  <dd>{jobId} <?php echo anchor($editJob,'<i class="glyphicon glyphicon-pencil"></i>','class="btn btn-link" title="Change Job"');?></dd>
+  <dt>Name</dt>
+  <dd>{jobName} </dd>
+</dl>
+<h2>History of Job Type</h2>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Begin</th>
+      <th>End</th>
+      <th>Id</th>
+      <th>Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    {job}
+      <tr class="{historyRow}">
+        <td>{jobBegin}</td>
+        <td>{jobEnd}</td>
+
+        <td>{jobId}</td>
+        <td>{jobName}</td>
+      </tr>
+    {/job}
+  </tbody>
+</table>
+
 <h2>Holder</h2>
 <dl class="">
   <dt>Id</dt>
@@ -63,8 +93,11 @@
       <tr class="{historyRow}">
         <td>{holderBegin}</td>
         <td>{holderEnd}</td>
+
         <td>{holderId}</td>
         <td>{holderName}</td>
+
+
       </tr>
     {/holder}
   </tbody>
@@ -91,7 +124,15 @@
     </tr>
   </thead>
   <tbody>
+    {spr}
+    <tr>
+      <th>{sprBegin}</th>
+      <th>{sprEnd}</th>
+      <th>{sprId}</th>
+      <th>{sprName}</th>
 
+    </tr>
+    {/spr}
   </tbody>
 </table>
 
@@ -101,6 +142,8 @@
     <tr>
       <th>Begin</th>
       <th>End</th>
+      <th>Change</th>
+
       <th>Post Id</th>
       <th>Post Name</th>
       <th>Delimit</th>
@@ -112,9 +155,12 @@
       <tr class="{historyRow}">
         <td>{subBegin}</td>
         <td>{subEnd}</td>
+        <td><a href="{chgRel}" class="btn btn-link" title="Delimit Relation"><i class="glyphicon glyphicon-time"></i></a>
+
         <td>{subPostId}</td>
         <td>{subPostName}</td>
-        <td><?php echo anchor('','<i class="glyphicon glyphicon-trash"></i>','class="btn btn-link" title="Delimit Relation"'); ?></td>
+        <td><a href="{remRel}" class="btn btn-link" title="Delimit Relation"><i class="glyphicon glyphicon-trash"></i></a>
+
       </tr>
     {/sub}
   </tbody>
@@ -133,7 +179,7 @@
   </thead>
   <tbody>
     {peer}
-      <tr class="{historyRow}">
+      <tr class="">
         <td>{peerBegin}</td>
         <td>{peerEnd}</td>
         <td>{peerPostId}</td>
@@ -143,6 +189,63 @@
   </tbody>
 </table>
 
+<h2>Assignment</h2>
+<dl class="">
+  <dt>Id</dt>
+  <dd>{assId} <?php echo anchor($editAss,'<i class="glyphicon glyphicon-pencil"></i>','class="btn btn-link" title="Change Assigment"');?></dd>
+  <dt>Name</dt>
+  <dd>{assName} </dd>
+</dl>
+<h2>History of Assignment</h2>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Begin</th>
+      <th>End</th>
+      <th>Id</th>
+      <th>Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    {ass}
+      <tr class="{assRow}">
+        <td>{assBegin}</td>
+        <td>{assEnd}</td>
+        <td>{assId}</td>
+        <td>{assName}</td>
+      </tr>
+    {/ass}
+  </tbody>
+</table>
+
+<h2>Managing</h2>
+<dl class="">
+  <dt>Id</dt>
+  <dd>{manId} <?php echo anchor($editMan,'<i class="glyphicon glyphicon-pencil"></i>','class="btn btn-link" title="Change Managing"');?></dd>
+  <dt>Name</dt>
+  <dd>{manName} </dd>
+</dl>
+<h2>History of Managing</h2>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Begin</th>
+      <th>End</th>
+      <th>Id</th>
+      <th>Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    {man}
+      <tr class="manRow">
+        <td>{manBegin}</td>
+        <td>{manEnd}</td>
+        <td>{manId}</td>
+        <td>{manName}</td>
+      </tr>
+    {/man}
+  </tbody>
+</table>
 
 
 <?php echo anchor($backLink,'Back','class="btn btn-default"');?> <?php echo anchor($delLink,'Delete','class="btn btn-danger"');?>

@@ -393,7 +393,7 @@ class BaseModel extends CI_Model{
     }
 
     $this->db->select('id');
-    $this->db->where('rel_code', $rel_code);
+    $this->db->where('rel_code', $relCode);
     switch (strtoupper($mode)) {
       case 'BOTUP':
         $this->db->where('obj_bottom_id', $refId);
@@ -414,7 +414,7 @@ class BaseModel extends CI_Model{
       case 'BOTUP':
         $data             = array(
           'obj_top_id'    => $newId,
-          'obj_bot©tom_id' => $refId,
+          'obj_bottom_id' => $refId,
           'rel_code'      => $relCode,
           'begin_date'    => $validOn,
           'end_date'      => $endDate,

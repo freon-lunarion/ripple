@@ -10,6 +10,13 @@ class PersonModel extends CI_Model{
     $this->load->model('BaseModel');
   }
 
+  public function GetList($beginDate='1990-01-01',$endDate='9999-12-31')
+  {
+    $keydate['begin'] = $beginDate;
+    $keydate['end']   = $endDate;
+    return $this->BaseModel->GetList('EMP',$keydate);
+  }
+
   public function Create($name='',$postId=0,$beginDate='',$endDate='9999-12-31')
   {
     if ($beginDate == '') {

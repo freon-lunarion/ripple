@@ -50,8 +50,194 @@ class Org extends CI_Controller{
     $this->parser->parse($this->viewDir.'main_view',$data);
   }
 
+  public function Add()
+  {
+    $begin  = $this->session->userdata('filterBegDa');
+    $end    = $this->session->userdata('filterEndDa');
+    if (is_null($begin) OR $begin == '') {
+      $begin = date('Y-m-d');
+    }
+    if (is_null($end) OR $end == '') {
+      $end = date('Y-m-d');
+    }
+    $ls     = $this->OrgModel->GetList($begin,$end);
+    $parent = array();
+    foreach ($ls as $row) {
+      $parent[$row->id] = $row->id.' - '.$row->name;
+    }
+    $data['process']    = $this->ctrlClass.'AddProcess';
+    $data['parentOpt']  = $parent;
+    $data['cancelLink'] = $this->ctrlClass;
+
+    $this->load->view($this->viewDir.'add_form',$data);
+
+  }
+
+  public function AddProcess()
+  {
+    $begin  = $this->input->post('dt_begin');
+    $end    = $this->input->post('dt_end');
+    $name   = $this->input->post('txt_name');
+    $parent = $this->input->post('slc_parent');
+    $this->OrgModel->Create($name,$begin,$end,$parent);
+    redirect($this->ctrlClass);
+  }
+
+  public function EditChief()
+  {
+    $this->load->model('PostModel');
+    $id    = $this->session->userdata('selectId');
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
+    if ($id == '') {
+      redirect($this->ctrlClass);
+    }
+    $keydate['begin'] = $begin;
+    $keydate['end']   = $end;
+    $ls = $this->PostModel->GetList($begin,$end);
+    $chiefOpt = array();
+    foreach ($ls as $row) {
+      $chiefOpt[$row->id] = $row->id .' - '.$row->name;
+    }
+    $chief = $this->OrgModel->GetLastChiefPost($id,$keydate);
+    $data['chiefOpt']   = $chiefOpt;
+    $data['chiefSlc']   = $chief->post_id;
+    $data['begin']      = date('Y-m-d');
+
+    $data['cancelLink'] = $this->ctrlClass.'View/';
+    $data['process']    = $this->ctrlClass.'EditChiefProcess';
+    $this->load->view($this->viewDir.'chief_form', $data);
+
+  }
+
+  public function EditChiefProcess()
+  {
+    $validOn  = $this->input->post('dt_begin');
+    $newChief = $this->input->post('slc_chief');
+    $id       = $this->session->userdata('selectId');
+    $this->OrgModel->ChangeChiefPost($id,$newChief,$validOn,'9999-12-31');
+    redirect($this->ctrlClass.'View/');
+  }
+
+  public function EditDate()
+  {
+    $id  = $this->session->userdata('selectId');
+    if ($id == '') {
+      redirect($this->ctrlClass);
+    }
+    $old = $this->OrgModel->GetByIdRow($id);
+    $data['end']   = $old->end_date;
+
+    $data['cancelLink'] = $this->ctrlClass.'View/';
+    $data['process'] = $this->ctrlClass.'EditDateProcess';
+    $this->load->view('general/date_form', $data);
+
+  }
+
+  public function EditDateProcess()
+  {
+    $id  = $this->session->userdata('selectId');
+    $end = $this->input->post('dt_end');
+    $this->OrgModel->Delimit($id,$end);
+    redirect($this->ctrlClass.'View/');
+
+  }
+
+  public function EditName()
+  {
+    $id  = $this->session->userdata('selectId');
+    if ($id == '') {
+      redirect($this->ctrlClass);
+    }
+    $old                = $this->OrgModel->GetLastName($id);
+    $data['begin']      = date('Y-m-d');
+    $data['name']       = $old->name;
+    $data['cancelLink'] = $this->ctrlClass.'View/';
+    $data['process']    = $this->ctrlClass.'EditNameProcess';
+    $this->load->view('general/name_form', $data);
+
+  }
+
+  public function EditNameProcess()
+  {
+    $validOn = $this->input->post('dt_begin');
+    $newName = $this->input->post('txt_name');
+    $id      = $this->session->userdata('selectId');
+    $this->OrgModel->ChangeName($id,$newName,$validOn,'9999-12-31');
+    redirect($this->ctrlClass.'View/'.$id.'/'.$validOn.'/9999-12-31');
+  }
+
+  public function EditParent()
+  {
+    $id    = $this->session->userdata('selectId');
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
+    $keydate['begin'] = $begin;
+    $keydate['end']   = $end;
+    $old = $this->OrgModel->GetParentOrg($id,$keydate);
+
+    $ls     = $this->OrgModel->GetList($begin,$end);
+    $parent = array();
+    foreach ($ls as $row) {
+      $parent[$row->id] = $row->id.' - '.$row->name;
+    }
+    $data['parentOpt']  = $parent;
+    $data['parentSlc']  = $old->parent_id;
+    $data['cancelLink'] = $this->ctrlClass.'View/';
+    $data['process'] = $this->ctrlClass.'EditParentProcess/';
+    $this->load->view($this->viewDir.'parent_form', $data);
+  }
+
+  public function EditParentProcess()
+  {
+    $id = $this->session->userdata('selectId');
+    $since     = $this->input->post('dt_begin');
+    $newParent = $this->input->post('slc_parent');
+    $this->OrgModel->ChangeParent($id,$newParent,$since,'9999-12-31');
+  }
+
+  public function EditRel($relId=0)
+  {
+    $data['hidden']  = array(
+      'rel_id' => $relId
+    );
+    $old = $this->OrgModel->GetRelByIdRow($relId);
+    $data['process'] = $this->ctrlClass.'EditRelProcess';
+    $data['begin']   = $old->begin_date;
+    $data['end']     = $old->end_date;
+    $data['cancelLink'] = $this->ctrlClass.'View/';
+
+    $this->load->view('general/date_form', $data);
+  }
+
+  public function EditRelProcess()
+  {
+    $relId = $this->input->post('rel_id');
+    $begin = $this->input->post('dt_begin');
+    $end   = $this->input->post('dt_end');
+    $this->OrgModel->ChangeRelDate($relId,$begin,$end);
+    redirect($this->ctrlClass.'View/');
+  }
+
+  public function DeleteProcess()
+  {
+    $id = $this->session->userdata('selectId');
+    $this->OrgModel->Delete($id);
+    redirect($this->ctrlClass);
+
+  }
+
+  public function DeleteRelProcess($relId=0)
+  {
+    $this->OrgModel->DeleteRel($relId);
+    redirect($this->ctrlClass.'View/');
+  }
+
   public function View($id=0,$begin='',$end='')
   {
+    $delimit = site_url($this->ctrlClass.'EditRel/');
+    $remove  = site_url($this->ctrlClass.'DeleteRelProcess/');
+
     if ($id == 0 && $begin == '' && $end == '') {
       $id    = $this->session->userdata('selectId');
       $begin = $this->session->userdata('filterBegDa');
@@ -74,8 +260,8 @@ class Org extends CI_Controller{
     $data['objBegin'] = $obj->begin_date;
     $data['objEnd']   = $obj->end_date;
     $data['objName']  = $attr->name;
-    $keydate['begin'] = '1990-01-01';
-    $keydate['end']   = '9999-12-31';
+    $keydate['begin'] = $begin;
+    $keydate['end']   = $end;
     $ls = $this->OrgModel->GetNameHistoryList($id,$keydate,'desc');
     $history = array();
     foreach ($ls as $row) {
@@ -123,6 +309,8 @@ class Org extends CI_Controller{
           'childrenEnd'   => $row->child_end_date,
           'childrenId'    => $row->child_id,
           'childrenName'  => $row->child_name,
+          'chgRel'        => $delimit.$row->child_rel_id,
+          'remRel'        => $remove.$row->child_rel_id,
         );
       }
     }
@@ -136,6 +324,8 @@ class Org extends CI_Controller{
           'postEnd'   => $row->post_end_date,
           'postId'    => $row->post_id,
           'postName'  => $row->post_name,
+          'chgRel'    => $delimit.$row->post_rel_id,
+          'remRel'    => $remove.$row->post_rel_id,
         );
       }
     }
@@ -170,115 +360,5 @@ class Org extends CI_Controller{
     $this->parser->parse($this->viewDir.'detail_view',$data);
   }
 
-  public function Add()
-  {
-    $begin  = $this->session->userdata('filterBegDa');
-    $end    = $this->session->userdata('filterEndDa');
-    if (is_null($begin) OR $begin == '') {
-      $begin = date('Y-m-d');
-    }
-    if (is_null($end) OR $end == '') {
-      $end = date('Y-m-d');
-    }
-    $ls     = $this->OrgModel->GetList($begin,$end);
-    $parent = array();
-    foreach ($ls as $row) {
-      $parent[$row->id] = $row->id.' - '.$row->name;
-    }
-    $data['parentOpt']  = $parent;
-    $data['cancelLink'] = $this->ctrlClass;
 
-    $this->load->view($this->viewDir.'add_form',$data);
-
-  }
-
-  public function AddProcess()
-  {
-    $begin  = $this->input->post('dt_begin');
-    $end    = $this->input->post('dt_end');
-    $name   = $this->input->post('txt_name');
-    $parent = $this->input->post('slc_parent');
-    $this->OrgModel->Create($name,$begin,$end,$parent);
-    redirect($this->ctrlClass);
-  }
-
-  public function EditName()
-  {
-    $id  = $this->session->userdata('selectId');
-    if ($id == '') {
-      redirect($this->ctrlClass);
-    }
-    $old                = $this->OrgModel->GetLastName($id);
-    $data['begin']      = date('Y-m-d');
-    $data['name']       = $old->name;
-    $data['cancelLink'] = $this->ctrlClass.'View/';
-    $data['process']    = $this->ctrlClass.'EditNameProcess';
-    $this->load->view($this->viewDir.'name_form', $data);
-
-  }
-
-  public function EditNameProcess()
-  {
-    $validOn = $this->input->post('dt_begin');
-    $newName = $this->input->post('txt_name');
-    $id      = $this->session->userdata('selectId');
-    $this->OrgModel->ChangeName($id,$newName,$validOn,'9999-12-31');
-    redirect($this->ctrlClass.'View/'.$id.'/'.$validOn.'/9999-12-31');
-  }
-
-  public function EditChief()
-  {
-    $id  = $this->session->userdata('selectId');
-    if ($id == '') {
-      redirect($this->ctrlClass);
-    }
-
-    $data['begin']      = date('Y-m-d');
-
-    $data['cancelLink'] = $this->ctrlClass.'View/';
-    $data['process']    = $this->ctrlClass.'EditChiefProcess';
-    $this->load->view($this->viewDir.'chief_form', $data);
-
-  }
-
-  public function EditChiefProcess()
-  {
-    $validOn  = $this->input->post('dt_begin');
-    $newChief = $this->input->post('slc_post');
-    $id       = $this->session->userdata('selectId');
-    // $this->OrgModel->ChangeChiefPost($id,$newChief,$validOn,'9999-12-31');
-    redirect($this->ctrlClass.'View/'.$id.'/'.$validOn.'/9999-12-31');
-  }
-
-  public function EditDate()
-  {
-    $id  = $this->session->userdata('selectId');
-    if ($id == '') {
-      redirect($this->ctrlClass);
-    }
-    $old = $this->OrgModel->GetByIdRow($id);
-    $data['end']   = $old->end_date;
-
-    $data['cancelLink'] = $this->ctrlClass.'View/';
-    $data['process'] = $this->ctrlClass.'EditDateProcess';
-    $this->load->view($this->viewDir.'date_form', $data);
-
-  }
-
-  public function EditDateProcess()
-  {
-    $id  = $this->session->userdata('selectId');
-    $end = $this->input->post('dt_end');
-    $this->OrgModel->Delimit($id,$end);
-    redirect($this->ctrlClass.'View/');
-
-  }
-
-  public function DeleteProcess()
-  {
-    $id = $this->session->userdata('selectId');
-    $this->OrgModel->Delete($id);
-    redirect($this->ctrlClass);
-
-  }
 }

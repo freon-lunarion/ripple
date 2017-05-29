@@ -1,25 +1,30 @@
 <?php $this->load->view('_template/top');?>
 <h1 class="page-header">Position <small>Add</small></h1>
-<?php echo form_open('Org/AddProcess', 'class="form"'); ?>
+<?php echo form_open($process, 'class="form"'); ?>
 
+  <?php $this->load->view('general/add_form_elm');?>
   <div class="form-group">
-    <label for="dt_begin">Begin </label>
-    <input type="date" class="form-control" name="dt_begin" id="dt_begin" value="<?php echo date('Y-m-d')?>" >
-  </div>
-  <div class="form-group">
-    <label for="dt_end">End </label>
-    <input type="date" class="form-control" name="dt_end" id="dt_end" value="9999-12-31" >
-  </div>
-  <div class="form-group">
-    <label for="txt_name">Parent</label>
+    <label for="txt_name">Parent Organization</label>
     <?php echo form_dropdown('slc_parent',$parentOpt, '','id="slc_parent" class="form-control"'); ?>
-
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox" name="chk_chief" id="chk_chief"> Chief
+    </label>
   </div>
   <div class="form-group">
-    <label for="txt_name">Name</label>
-    <input type="text" class="form-control" id="txt_name" name="txt_name" placeholder="">
-    <p class="help-block">5-150 Characters.</p>
+    <label for="txt_name">Superior</label>
+    <?php echo form_dropdown('slc_super',$superOpt, '','id="slc_super" class="form-control"'); ?>
   </div>
-  <?php echo anchor($cancelLink,'Cancel','class="btn btn-default"');?>  <button class="btn btn-primary">Save</button>
+  <div class="form-group">
+    <label for="txt_name">Job Type</label>
+    <?php echo form_dropdown('slc_job',$jobOpt, '','id="slc_job" class="form-control"'); ?>
+  </div>
+  <div class="form-group">
+    <label for="txt_name">Employee</label>
+    <?php echo form_dropdown('slc_emp',$empOpt, '','id="slc_emp" class="form-control"'); ?>
+  </div>
+  <?php $this->load->view('general/form_act_elm'); ?>
+
 </form>
 <?php $this->load->view('_template/bottom');?>

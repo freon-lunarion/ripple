@@ -107,6 +107,8 @@
     <tr>
       <th>Begin</th>
       <th>End</th>
+      <th>Change</th>
+
       <th>Id</th>
       <th>Name</th>
       <th>Delimit</th>
@@ -117,9 +119,12 @@
       <tr class="{historyRow}">
         <td>{childrenBegin}</td>
         <td>{childrenEnd}</td>
+        <td><a href="{chgRel}" class="btn btn-link" title="Delimit Relation"><i class="glyphicon glyphicon-time"></i></a>
+
         <td>{childrenId}</td>
         <td>{childrenName}</td>
-        <td><?php echo anchor('','<i class="glyphicon glyphicon-trash"></i>','class="btn btn-link" title="Delimit Relation"'); ?></td>
+        <td><a href="{remRel}" class="btn btn-link" title="Delimit Relation"><i class="glyphicon glyphicon-trash"></i></a></td>
+
       </tr>
     {/children}
   </tbody>
@@ -132,6 +137,8 @@
     <tr>
       <th>Begin</th>
       <th>End</th>
+      <th>Change</th>
+
       <th>Id</th>
       <th>Name</th>
       <th>Delimit</th>
@@ -142,9 +149,11 @@
       <tr class="{historyRow}">
         <td>{postBegin}</td>
         <td>{postEnd}</td>
+        <td><a href="{chgRel}" class="btn btn-link" title="Delimit Relation"><i class="glyphicon glyphicon-time"></i></a>
+
         <td>{postId}</td>
         <td>{postName}</td>
-        <td><?php echo anchor('','<i class="glyphicon glyphicon-trash"></i>','class="btn btn-link" title="Delimit Relation"'); ?></td>
+        <td><a href="{remRel}" class="btn btn-link" title="Delimit Relation"><i class="glyphicon glyphicon-trash"></i></a></td>
 
       </tr>
     {/post}
