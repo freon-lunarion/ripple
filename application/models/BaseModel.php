@@ -13,6 +13,7 @@ class BaseModel extends CI_Model{
     //Codeigniter : Write Less Do More
   }
 
+  // Object
   public function Create($type='',$name='',$begin='1990-01-01',$end='9999-12-31')
   {
     $data = array(
@@ -118,7 +119,6 @@ class BaseModel extends CI_Model{
     $this->db->where('end_date ', $old->end_date);
     $this->db->update($this->tblRel, $dataEnd);
   }
-
 
   public function Delimit($objId=0,$endDate='')
   {
@@ -241,7 +241,9 @@ class BaseModel extends CI_Model{
 
     return $this->db->get($this->tblObj)->result();
   }
+  // ---------------------------------------------------------------------------
 
+  // Name / Attribute
   public function GetByNameList($name='',$keydate='',$type=NULL)
   {
     $this->db->from($this->tblAttr .' attr');
@@ -373,7 +375,9 @@ class BaseModel extends CI_Model{
     $this->db->order_by('end_date',$sort);
     return $this->db->get($this->tblAttr)->result();
   }
+  // ---------------------------------------------------------------------------
 
+  // Relation
   public function CreateRel($relCode='',$topObjId=0,$botObjId=0,$begin='1990-01-01',$end='9999-12-31')
   {
     $data = array(
@@ -459,6 +463,9 @@ class BaseModel extends CI_Model{
     $this->db->from($this->tblRel);
     return $this->db->get()->row();
   }
+  // ---------------------------------------------------------------------------
+
+  // Relation - Top Down
   public function CountTopDownRel($topObjId=0,$relCode=array(),$keydate='')
   {
     if (!is_array($keydate) && $keydate == '') {
@@ -863,7 +870,9 @@ class BaseModel extends CI_Model{
     }
     return $this->db->get()->result();
   }
+  // ---------------------------------------------------------------------------
 
+  // Relation - Bottom Up
   public function CountBotUpRel($botObjId=0,$relCode='',$keydate='')
   {
     if (!is_array($keydate) && $keydate == '') {
@@ -953,7 +962,7 @@ class BaseModel extends CI_Model{
     return $this->db->get()->row()->val;
   }
 
-  public function GetBotUpRelList($botObjId=0,$relCode='',$keydate='',$alias='')
+  public function GetBotUpRelList($botObjId=0,$relCode='',$keydate='',$alias='',$order='asc')
   {
     if (!is_array($keydate) && $keydate == '') {
       $keydate = date('Y-m-d');
@@ -998,16 +1007,18 @@ class BaseModel extends CI_Model{
       for ($i=0; $i < $count ; $i++) {
         $select = str_replace('NUM',$i,$subQuery);
         if (is_array($alias) && $alias[$i] !='') {
+          $this->db->select('rel_'.$i.'.id AS '. $alias[$i].'_rel_id');
           $this->db->select('rel_'.$i.'.obj_top_id AS '. $alias[$i].'_id');
           $this->db->select('('.$select.') AS '. $alias[$i].'_name');
 
-          $this->db->select('rel_0.begin_date AS '. $alias[$i].'_begin_date');
-          $this->db->select('rel_0.end_date AS '. $alias[$i].'_end_date');
+          $this->db->select('rel_'.$i.'.begin_date AS '. $alias[$i].'_begin_date');
+          $this->db->select('rel_'.$i.'.end_date AS '. $alias[$i].'_end_date');
         } else {
+          $this->db->select('rel_'.$i.'.id AS obj_'. $i.'_rel_id');
           $this->db->select('rel_'.$i.'.obj_top_id AS obj_'. $i.'_id');
           $this->db->select('('.$select.') AS obj_'.$i.'_name');
-          $this->db->select('rel_0.begin_date AS obj_'. $i.'_begin_date');
-          $this->db->select('rel_0.end_date AS obj_'. $i.'_end_date');
+          $this->db->select('rel_'.$i.'.begin_date AS obj_'. $i.'_begin_date');
+          $this->db->select('rel_'.$i.'.end_date AS obj_'. $i.'_end_date');
         }
       }
       // end of sub query 1
@@ -1059,11 +1070,13 @@ class BaseModel extends CI_Model{
       // Sub query 1
       $select = str_replace('NUM','0',$subQuery);
       if ($alias !='') {
+        $this->db->select('rel_0.id AS '. $alias.'_rel_id');
         $this->db->select('rel_0.obj_top_id AS '. $alias.'_id');
         $this->db->select('rel_0.begin_date AS '. $alias.'_begin_date');
         $this->db->select('rel_0.end_date AS '. $alias.'_end_date');
         $this->db->select('('.$select.') AS '. $alias.'_name');
       } else {
+        $this->db->select('rel_0.id AS obj_rel_id');
         $this->db->select('rel_0.obj_top_id AS obj_id');
         $this->db->select('('.$select.') AS obj_name');
         $this->db->select('rel_0.begin_date AS obj_begin_date');
@@ -1103,6 +1116,8 @@ class BaseModel extends CI_Model{
 
       }
     }
+    $this->db->order_by('rel_0.end_date',$order);
+    $this->db->order_by('rel_0.begin_date',$order);
     return $this->db->get()->result();
   }
 
@@ -1265,7 +1280,9 @@ class BaseModel extends CI_Model{
     $this->db->limit(1,0);
     return $this->db->get()->row();
   }
+  // ---------------------------------------------------------------------------
 
+  // Basic
   public function InsertOn($tbl='',$data=array())
   {
     $data['create_time'] = date('Y-m-d H:i:s');
@@ -1313,6 +1330,6 @@ class BaseModel extends CI_Model{
     }
     $this->db->update($tbl, $data);
   }
-
+  // ---------------------------------------------------------------------------
 
 }

@@ -21,7 +21,7 @@ class JobModel extends CI_Model{
 
   public function CountRelatedPerson($objId=0,$keyDate='')
   {
-    $relCode = array ('401','301');
+    $relCode = array('401','301');
     return $this->BaseModel->CountTopDownRel($objId,$relCode,$keyDate);
   }
 
@@ -79,7 +79,7 @@ class JobModel extends CI_Model{
 
   public function GetRelatedPersonList($objId=0,$keyDate='')
   {
-    $relCode = array ('401','301');
+    $relCode = array('401','301');
     $alias   = array('post','person');
     return $this->BaseModel->GetTopDownRelList($objId,$relCode,$keyDate,$alias);
   }

@@ -17,9 +17,9 @@
 <h2>Detail</h2>
 <dl class="">
   <dt>Begin - End</dt>
-  <dd>{objBegin} - {objEnd}<?php echo anchor($editDate,'<i class="glyphicon glyphicon-pencil"></i>','class="btn btn-link" title="Change Date"');?></dd>
+  <dd>{objBegin} - {objEnd}<?php echo anchor($editDate,'Change','class="btn btn-link" title="Change Date"');?></dd>
   <dt>Name</dt>
-  <dd>{objName}<?php echo anchor($editName,'<i class="glyphicon glyphicon-pencil"></i>','class="btn btn-link" title="Change Name"'); ?></dd>
+  <dd>{objName}<?php echo anchor($editName,'Change','class="btn btn-link" title="Change Name"'); ?></dd>
 </dl>
 
 <h2>History of Name</h2>
@@ -45,7 +45,7 @@
 <h2>Parent Organization</h2>
 <dl class="">
   <dt>ID</dt>
-  <dd>{parentId} <?php echo anchor($editParent,'<i class="glyphicon glyphicon-pencil"></i>','class="btn btn-link" title="Change Parent"'); ?></dd>
+  <dd>{parentId} <?php echo anchor($editParent,'Change','class="btn btn-link" title="Change Parent"'); ?></dd>
   <dt>Name</dt>
   <dd>{parentName}</dd>
 </dl>
@@ -74,7 +74,7 @@
 <h2>Chief</h2>
 <dl class="">
   <dt>Position ID</dt>
-  <dd>{chiefPostId} <?php echo anchor($editChief,'<i class="glyphicon glyphicon-pencil"></i>','class="btn btn-link" title="Change Chief"'); ?></dd>
+  <dd>{chiefPostId} <?php echo anchor($editChief,'Change','class="btn btn-link" title="Change Chief"'); ?></dd>
   <dt>Position Name</dt>
   <dd>{chiefPostName}</dd>
 </dl>
@@ -119,11 +119,11 @@
       <tr class="{historyRow}">
         <td>{childrenBegin}</td>
         <td>{childrenEnd}</td>
-        <td><a href="{chgRel}" class="btn btn-link" title="Delimit Relation"><i class="glyphicon glyphicon-time"></i></a>
+        <td><a href="{chgRel}" class="btn btn-link" title="Change Date">Chg. Date</a>
 
         <td>{childrenId}</td>
         <td>{childrenName}</td>
-        <td><a href="{remRel}" class="btn btn-link" title="Delimit Relation"><i class="glyphicon glyphicon-trash"></i></a></td>
+        <td><a href="{remRel}" class="btn btn-link" title="Change Date">Delete</a></td>
 
       </tr>
     {/children}
@@ -149,11 +149,11 @@
       <tr class="{historyRow}">
         <td>{postBegin}</td>
         <td>{postEnd}</td>
-        <td><a href="{chgRel}" class="btn btn-link" title="Delimit Relation"><i class="glyphicon glyphicon-time"></i></a>
+        <td><a href="{chgRel}" class="btn btn-link" title="Change Date">Chg. Date</a>
 
         <td>{postId}</td>
         <td>{postName}</td>
-        <td><a href="{remRel}" class="btn btn-link" title="Delimit Relation"><i class="glyphicon glyphicon-trash"></i></a></td>
+        <td><a href="{remRel}" class="btn btn-link" title="Change Date">Delete</a></td>
 
       </tr>
     {/post}

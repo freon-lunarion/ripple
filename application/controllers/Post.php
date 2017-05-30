@@ -52,7 +52,7 @@ class Post extends CI_Controller{
 
   public function Add()
   {
-    $this->load->model(array('OrgModel','JobModel','PersonModel'));
+    $this->load->model(array('OrgModel','JobModel','PersModel'));
     $begin  = $this->session->userdata('filterBegDa');
     $end    = $this->session->userdata('filterEndDa');
     if (is_null($begin) OR $begin == '') {
@@ -78,7 +78,7 @@ class Post extends CI_Controller{
       $job[$row->id] = $row->id.' - '.$row->name;
     }
 
-    $ls  = $this->PersonModel->GetList($begin,$end);
+    $ls  = $this->PersModel->GetList($begin,$end);
     $emp = array(''=>'');
     foreach ($ls as $row) {
       $emp[$row->id] = $row->id.' - '.$row->name;
@@ -178,7 +178,7 @@ class Post extends CI_Controller{
 
   public function EditHolder()
   {
-    $this->load->model('PersonModel');
+    $this->load->model('PersModel');
     $id    = $this->session->userdata('selectId');
     $begin = $this->session->userdata('filterBegDa');
     $end   = $this->session->userdata('filterEndDa');
@@ -189,7 +189,7 @@ class Post extends CI_Controller{
     $keydate['begin'] = $begin;
     $keydate['end']   = $end;
 
-    $ls = $this->PersonModel->GetList($begin,$end);
+    $ls = $this->PersModel->GetList($begin,$end);
     $empOpt = array();
     foreach ($ls as $row) {
       $empOpt[$row->id] = $row->id .' - '.$row->name;

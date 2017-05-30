@@ -17,9 +17,9 @@
 <h2>Detail</h2>
 <dl class="">
   <dt>Begin - End</dt>
-  <dd>{objBegin} - {objEnd}<?php echo anchor($editDate,'<i class="glyphicon glyphicon-pencil"></i>','class="btn btn-link" title="Change Date"');?></dd>
+  <dd>{objBegin} - {objEnd}<?php echo anchor($editDate,'Change','class="btn btn-link" title="Change Date"');?></dd>
   <dt>Name</dt>
-  <dd>{objName}<?php echo anchor($editName,'<i class="glyphicon glyphicon-pencil"></i>','class="btn btn-link" title="Change Name"'); ?></dd>
+  <dd>{objName}<?php echo anchor($editName,'Change','class="btn btn-link" title="Change Name"'); ?></dd>
 </dl>
 <h2>History of Name</h2>
 <table class="table table-striped table-hover">
@@ -44,7 +44,7 @@
 <h2>Job Type</h2>
 <dl class="">
   <dt>Id</dt>
-  <dd>{jobId} <?php echo anchor($editJob,'<i class="glyphicon glyphicon-pencil"></i>','class="btn btn-link" title="Change Job"');?></dd>
+  <dd>{jobId} <?php echo anchor($editJob,'Change','class="btn btn-link" title="Change Job"');?></dd>
   <dt>Name</dt>
   <dd>{jobName} </dd>
 </dl>
@@ -74,7 +74,7 @@
 <h2>Holder</h2>
 <dl class="">
   <dt>Id</dt>
-  <dd>{holderId} <?php echo anchor($editHolder,'<i class="glyphicon glyphicon-pencil"></i>','class="btn btn-link" title="Change Holder"');?></dd>
+  <dd>{holderId} <?php echo anchor($editHolder,'Change','class="btn btn-link" title="Change Holder"');?></dd>
   <dt>Name</dt>
   <dd>{holderName} </dd>
 </dl>
@@ -106,7 +106,7 @@
 <h2>Superior</h2>
 <dl class="">
   <dt>Position ID</dt>
-  <dd>{sprPostId} <?php echo anchor($editSpr,'<i class="glyphicon glyphicon-pencil"></i>','class="btn btn-link" title="Change Superior"');?></dd>
+  <dd>{sprPostId} <?php echo anchor($editSpr,'Change','class="btn btn-link" title="Change Superior"');?></dd>
   <dt>Position Name</dt>
   <dd>{sprPostName}</dd>
 
@@ -155,11 +155,11 @@
       <tr class="{historyRow}">
         <td>{subBegin}</td>
         <td>{subEnd}</td>
-        <td><a href="{chgRel}" class="btn btn-link" title="Delimit Relation"><i class="glyphicon glyphicon-time"></i></a>
+        <td><a href="{chgRel}" class="btn btn-link" title="Change Date">Chg. Date</a>
 
         <td>{subPostId}</td>
         <td>{subPostName}</td>
-        <td><a href="{remRel}" class="btn btn-link" title="Delimit Relation"><i class="glyphicon glyphicon-trash"></i></a>
+        <td><a href="{remRel}" class="btn btn-link" title="Change Date">Delete</a>
 
       </tr>
     {/sub}
@@ -192,7 +192,7 @@
 <h2>Assignment</h2>
 <dl class="">
   <dt>Id</dt>
-  <dd>{assId} <?php echo anchor($editAss,'<i class="glyphicon glyphicon-pencil"></i>','class="btn btn-link" title="Change Assigment"');?></dd>
+  <dd>{assId} <?php echo anchor($editAss,'Change','class="btn btn-link" title="Change Assigment"');?></dd>
   <dt>Name</dt>
   <dd>{assName} </dd>
 </dl>
@@ -221,7 +221,7 @@
 <h2>Managing</h2>
 <dl class="">
   <dt>Id</dt>
-  <dd>{manId} <?php echo anchor($editMan,'<i class="glyphicon glyphicon-pencil"></i>','class="btn btn-link" title="Change Managing"');?></dd>
+  <dd>{manId} <?php echo anchor($editMan,'Change','class="btn btn-link" title="Change Managing"');?></dd>
   <dt>Name</dt>
   <dd>{manName} </dd>
 </dl>

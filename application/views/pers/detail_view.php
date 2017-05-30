@@ -1,6 +1,6 @@
 <?php $this->load->view('_template/top');?>
 <?php echo anchor($backLink,'Back','class="btn btn-default"');?>
-<h1 class="page-header">Job <small>View</small></h1>
+<h1 class="page-header">Person <small>View</small></h1>
 
 <form action="" class="form-inline" method="post">
   <div class="form-group">
@@ -43,7 +43,11 @@
 </table>
 
 <h2>Related Position</h2>
-
+<div class="row">
+  <div class="col-xs-12">
+    <?php echo anchor($addJob,'Add','class="btn btn-default"');?>
+  </div>
+</div>
 <table class="table table-striped table-hover">
   <thead>
     <tr>
