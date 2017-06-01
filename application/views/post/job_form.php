@@ -1,5 +1,5 @@
 <?php $this->load->view('_template/top');?>
-<h1 class="page-header">Position <small>Change Job</small></h1>
+<h1 class="page-header">Job <small>Change Job</small></h1>
 <?php echo form_open($process, 'class="form"'); ?>
 
   <div class="form-group">
@@ -12,7 +12,7 @@
     <?php echo form_dropdown('slc_job',$jobOpt, $jobSlc,'id="slc_job" class="form-control"'); ?>
 
   </div>
-  <?php $this->load->view('general/form_act_elm'); ?>
+  <?php $this->load->view('element/form_act'); ?>
 
 </form>
 <?php $this->load->view('_template/bottom');?>

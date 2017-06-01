@@ -14,8 +14,6 @@ class Pers extends CI_Controller{
   function index()
   {
     $this->session->unset_userdata('selectId');
-    $this->session->unset_userdata('filterBegDa');
-    $this->session->unset_userdata('filterEndDa');
     $begin = $this->input->post('dt_begin');
     $end   = $this->input->post('dt_end');
 
@@ -50,10 +48,51 @@ class Pers extends CI_Controller{
 
   public function Add()
   {
+    $this->load->model('PostModel');
+    $begin = date('Y-m-d');
+    $end   = date('Y-m-d');
+
+    $ls    = $this->PostModel->GetList($begin,$end);
+    $post  = array(''=>'');
+    foreach ($ls as $row) {
+      $post[$row->id] = $row->id.' - '.$row->name;
+    }
+    $data['postOpt']    = $post;
+    $data['postSlc']    = '';
     $data['cancelLink'] = $this->ctrlClass;
 
     $data['process'] = $this->ctrlClass.'AddProcess';
     $this->load->view($this->viewDir.'add_form',$data);
+  }
+
+  public function AddPost()
+  {
+    $this->load->model('PostModel');
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
+    $ls    = $this->PostModel->GetList($begin,$end);
+    $post  = array();
+    foreach ($ls as $row) {
+      $post[$row->id] = $row->id.' - '.$row->name;
+    }
+    $data['postOpt']    = $post;
+    $data['postSlc']    = '';
+    $data['begin']      = date('Y-m-d');
+    $data['end']        = '9999-12-31';
+    $data['cancelLink'] = $this->ctrlClass.'View/';
+    $data['process']    = $this->ctrlClass.'AddPostProcess';
+    $this->load->view($this->viewDir.'post_form',$data);
+
+  }
+
+  public function AddPostProcess()
+  {
+    $persId = $this->session->userdata('selectId');;
+    $begin  = $this->input->post('dt_begin');
+    $end    = $this->input->post('dt_end');
+    $postId = $this->input->post('slc_post');
+    $this->PersModel->AddPost($persId,$postId,$begin,$end);
+    redirect($this->ctrlClass);
   }
 
   public function AddProcess()
@@ -151,7 +190,6 @@ class Pers extends CI_Controller{
     redirect($this->ctrlClass.'View/');
   }
 
-
   public function View($id=0,$begin='',$end='')
   {
     $delimit = site_url($this->ctrlClass.'EditRel/');
@@ -163,7 +201,7 @@ class Pers extends CI_Controller{
       $end   = $this->session->userdata('filterEndDa');
     } else {
       $array = array(
-        'selectId' => $id,
+        'selectId'    => $id,
         'filterBegDa' => $begin,
         'filterEndDa' => $end,
       );
@@ -179,8 +217,8 @@ class Pers extends CI_Controller{
     $data['objBegin'] = $obj->begin_date;
     $data['objEnd']   = $obj->end_date;
     $data['objName']  = $attr->name;
-    $keydate['begin'] = '1990-01-01';
-    $keydate['end']   = '9999-12-31';
+    $keydate['begin'] = $begin;
+    $keydate['end']   = $end;
     $ls =  $this->PersModel->GetNameHistoryList($id,$keydate,'desc');
     $history = array();
     foreach ($ls as $row) {
@@ -214,7 +252,7 @@ class Pers extends CI_Controller{
     $data['post']     = $post;
     $data['backLink'] = $this->ctrlClass;
     $data['delLink']  = $this->ctrlClass.'DeleteProcess';
-    $data['addJob']   = $this->ctrlClass.'AddJob/';
+    $data['addPost']  = $this->ctrlClass.'AddPost/';
     $data['editDate'] = $this->ctrlClass.'EditDate/';
     $data['editName'] = $this->ctrlClass.'EditName/';
     $this->parser->parse($this->viewDir.'detail_view',$data);

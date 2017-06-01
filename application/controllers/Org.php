@@ -16,8 +16,6 @@ class Org extends CI_Controller{
   function index()
   {
     $this->session->unset_userdata('selectId');
-    $this->session->unset_userdata('filterBegDa');
-    $this->session->unset_userdata('filterEndDa');
     $begin = $this->input->post('dt_begin');
     $end   = $this->input->post('dt_end');
 
@@ -130,7 +128,7 @@ class Org extends CI_Controller{
 
     $data['cancelLink'] = $this->ctrlClass.'View/';
     $data['process'] = $this->ctrlClass.'EditDateProcess';
-    $this->load->view('general/date_form', $data);
+    $this->load->view('element/date_form', $data);
 
   }
 
@@ -154,7 +152,7 @@ class Org extends CI_Controller{
     $data['name']       = $old->name;
     $data['cancelLink'] = $this->ctrlClass.'View/';
     $data['process']    = $this->ctrlClass.'EditNameProcess';
-    $this->load->view('general/name_form', $data);
+    $this->load->view('element/name_form', $data);
 
   }
 
@@ -207,7 +205,7 @@ class Org extends CI_Controller{
     $data['end']     = $old->end_date;
     $data['cancelLink'] = $this->ctrlClass.'View/';
 
-    $this->load->view('general/date_form', $data);
+    $this->load->view('element/date_form', $data);
   }
 
   public function EditRelProcess()

@@ -16,8 +16,6 @@ class Post extends CI_Controller{
   function index()
   {
     $this->session->unset_userdata('selectId');
-    $this->session->unset_userdata('filterBegDa');
-    $this->session->unset_userdata('filterEndDa');
     $begin = $this->input->post('dt_begin');
     $end   = $this->input->post('dt_end');
 
@@ -190,13 +188,20 @@ class Post extends CI_Controller{
     $keydate['end']   = $end;
 
     $ls = $this->PersModel->GetList($begin,$end);
-    $empOpt = array();
+    $empOpt = array(''=>'');
     foreach ($ls as $row) {
       $empOpt[$row->id] = $row->id .' - '.$row->name;
     }
+
+    if ($this->PostModel->CountHolder($id,$keydate)) {
+      $holder = $this->PostModel->GetLastHolder($id,$keydate);
+      $emp = $this->PostModel->GetLastHolder($id,$keydate)->person_id;
+    } else {
+      $emp = '';
+    }
     $emp = $this->PostModel->GetLastHolder($id,$keydate);
     $data['empOpt']   = $empOpt;
-    $data['empSlc']   = $emp->person_id;
+    $data['empSlc']   = $emp;
     $data['cancelLink'] = $this->ctrlClass.'View/';
     $data['process']  = $this->ctrlClass.'EditHolderProcess/';
     $this->load->view($this->viewDir.'holder_form', $data);
@@ -392,8 +397,8 @@ class Post extends CI_Controller{
     $data['objBegin'] = $obj->begin_date;
     $data['objEnd']   = $obj->end_date;
     $data['objName']  = $attr->name;
-    $keydate['begin'] = '1990-01-01';
-    $keydate['end']   = '9999-12-31';
+    $keydate['begin'] = $begin;
+    $keydate['end']   = $end;
     $ls = $this->PostModel->GetNameHistoryList($id,$keydate,'desc');
     $history = array();
     foreach ($ls as $row) {
@@ -430,12 +435,18 @@ class Post extends CI_Controller{
       );
     }
     $data['spr'] = $spr;
-
-    $holder = $this->PostModel->GetLastHolder($id,$keydate);
-    $data['holderBegin'] = $holder->person_begin_date;
-    $data['holderEnd']   = $holder->person_end_date;
-    $data['holderId']    = $holder->person_id;
-    $data['holderName']  = $holder->person_name;
+    if ($this->PostModel->CountHolder($id,$keydate)) {
+      $holder = $this->PostModel->GetLastHolder($id,$keydate);
+      $data['holderBegin'] = $holder->person_begin_date;
+      $data['holderEnd']   = $holder->person_end_date;
+      $data['holderId']    = $holder->person_id;
+      $data['holderName']  = $holder->person_name;
+    } else {
+      $data['holderBegin'] = '';
+      $data['holderEnd']   = '';
+      $data['holderId']    = '';
+      $data['holderName']  = '';
+    }
 
     $ls = $this->PostModel->GetHolderHistoryList($id,$keydate);
     $holder = array();
@@ -445,8 +456,6 @@ class Post extends CI_Controller{
         'holderEnd'   => $row->person_end_date,
         'holderId'    => $row->person_id,
         'holderName'  => $row->person_name,
-        // 'chgRel'      => $delimit.$row->person_rel_id,
-        // 'remRel'      => $remove.$row->person_rel_id,
       );
     }
     $data['holder'] = $holder;
@@ -537,8 +546,6 @@ class Post extends CI_Controller{
       );
     }
     $data['ass']     = $ass;
-
-
     $data['backLink']   = $this->ctrlClass;
     $data['delLink']    = $this->ctrlClass.'DeleteProcess';
     $data['editAss']    = $this->ctrlClass.'EditAssignment/';

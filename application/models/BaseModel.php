@@ -414,8 +414,9 @@ class BaseModel extends CI_Model{
       'end_date' => date('Y-m-d',strtotime($validOn . '-1 days')),
     );
     $this->ChangeOn($this->tblRel,$relId,$data);
-    switch (strtoupper($mode)) {
-      case 'BOTUP':
+    if ($newId == TRUE && $newId !='' && $newId > 0) {
+      switch (strtoupper($mode)) {
+        case 'BOTUP':
         $data             = array(
           'obj_top_id'    => $newId,
           'obj_bottom_id' => $refId,
@@ -424,7 +425,7 @@ class BaseModel extends CI_Model{
           'end_date'      => $endDate,
         );
         break;
-      default:
+        default:
         $data             = array(
           'obj_top_id'    => $refId,
           'obj_bottom_id' => $newId,
@@ -433,8 +434,9 @@ class BaseModel extends CI_Model{
           'end_date'      => $endDate,
         );
         break;
+      }
+      $this->InsertOn($this->tblRel,$data);
     }
-    $this->InsertOn($this->tblRel,$data);
   }
 
   public function ChangeRelDate($relId=0,$beginDate='',$endDate='')

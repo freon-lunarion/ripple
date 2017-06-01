@@ -18,7 +18,7 @@ class PersModel extends CI_Model{
     $this->BaseModel->CreateRel('301',$postId,$persId,$beginDate,$endDate);
   }
 
-  public function ChangePost($relId=0$beginDate='',$endDate='9999-12-31')
+  public function ChangePost($relId=0,$beginDate='',$endDate='9999-12-31')
   {
     if ($beginDate == '') {
       $beginDate = date('Y-m-d');
@@ -31,20 +31,25 @@ class PersModel extends CI_Model{
     $this->BaseModel->ChangeName($persId,$newName,$validOn,$endDate);
   }
 
+  public function ChangeRelDate($relId=0,$beginDate='',$endDate='')
+  {
+    $this->BaseModel->ChangeRelDate($relId,$beginDate,$endDate);
+  }
+
   public function CountPost($persId=0,$keyDate='')
   {
     return $this->BaseModel->CountBotUpRel($persId,'301',$keyDate);
   }
 
-  public function Create($name='',$postId=0,$beginDate='',$endDate='9999-12-31')
+  public function Create($name='',$postId=FALSE,$beginDate='',$endDate='9999-12-31')
   {
     if ($beginDate == '') {
       $beginDate = date('Y-m-d');
     }
     $persId = $this->BaseModel->Create('EMP',$name,$beginDate,$endDate);
-
-    $this->BaseModel->CreateRel('301',$postId,$persId,$beginDate,$endDate);
-
+    if ($postId) {
+      $this->BaseModel->CreateRel('301',$postId,$persId,$beginDate,$endDate);
+    }
   }
 
   public function Delete($persId=0)
@@ -79,9 +84,9 @@ class PersModel extends CI_Model{
     return $this->BaseModel->GetAttrList($objId,$keyDate,$sort);
   }
 
-  public function GetPostList($persId=0,$keyDate='')
+  public function GetPostList($persId=0,$keyDate='',$order = 'asc')
   {
-    return $this->BaseModel->GetBotUpRelList($persId,'301',$keyDate,'post');
+    return $this->BaseModel->GetBotUpRelList($persId,'301',$keyDate,'post' ,$order);
   }
 
   public function GetRelByIdRow($relId=0)

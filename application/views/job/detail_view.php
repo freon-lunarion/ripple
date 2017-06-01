@@ -2,45 +2,11 @@
 <?php echo anchor($backLink,'Back','class="btn btn-default"');?>
 <h1 class="page-header">Job <small>View</small></h1>
 
-<form action="" class="form-inline" method="post">
-  <div class="form-group">
-    <label for="dt_begin">Begin </label>
-    <input type="date" class="form-control" name="dt_begin" id="dt_begin" value="{begin}" >
-  </div>
-  <div class="form-group">
-    <label for="dt_end">End </label>
-    <input type="date" class="form-control" name="dt_end" id="dt_end" value="{end}" >
-  </div>
-  <button type="submit" value="search" class="btn btn-default">View</button>
-</form>
+<?php $this->load->view('element/rangedate_view.php'); ?>
 
-<h2>Detail</h2>
-<dl class="">
-  <dt>Begin - End</dt>
-  <dd>{objBegin} - {objEnd}<?php echo anchor($editDate,'Change','class="btn btn-link" title="Change Date"');?></dd>
-  <dt>Name</dt>
-  <dd>{objName}<?php echo anchor($editName,'Change','class="btn btn-link" title="Change Name"'); ?></dd>
-</dl>
+<?php $this->load->view('element/obj_detail');?>
 
-<h2>History of Name</h2>
-<table class="table table-striped table-hover">
-  <thead>
-    <tr>
-      <th>Begin</th>
-      <th>End</th>
-      <th>Name</th>
-    </tr>
-  </thead>
-  <tbody>
-    {history}
-      <tr class="{historyRow}">
-        <td>{historyBegin}</td>
-        <td>{historyEnd}</td>
-        <td>{historyName}</td>
-      </tr>
-    {/history}
-  </tbody>
-</table>
+<?php $this->load->view('element/hisname_tbl');?>
 
 <h2>Related Position</h2>
 

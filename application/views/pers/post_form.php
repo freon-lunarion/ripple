@@ -1,11 +1,14 @@
 <?php $this->load->view('_template/top');?>
-<h1 class="page-header">Person <small>Add</small></h1>
+<h1 class="page-header">Person <small>Position</small></h1>
 <?php echo form_open($process, 'class="form"'); ?>
 
-  <?php $this->load->view('element/add_form');?>
+  <?php $this->load->view('element/date_form');?>
+
+
   <div class="form-group">
     <label for="txt_name">Position</label>
     <?php echo form_dropdown('slc_post',$postOpt, $postSlc,'id="slc_parent" class="form-control"'); ?>
+
   </div>
   <?php $this->load->view('element/form_act'); ?>
 

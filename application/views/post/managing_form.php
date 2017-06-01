@@ -12,7 +12,7 @@
     <?php echo form_dropdown('slc_org',$orgOpt, $orgSlc,'id="slc_org" class="form-control"'); ?>
 
   </div>
-  <?php $this->load->view('general/form_act_elm'); ?>
+  <?php $this->load->view('element/form_act'); ?>
 
 </form>
 <?php $this->load->view('_template/bottom');?>

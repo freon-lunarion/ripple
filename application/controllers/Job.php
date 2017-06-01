@@ -14,8 +14,6 @@ class Job extends CI_Controller{
   function index()
   {
     $this->session->unset_userdata('selectId');
-    $this->session->unset_userdata('filterBegDa');
-    $this->session->unset_userdata('filterEndDa');
     $begin = $this->input->post('dt_begin');
     $end   = $this->input->post('dt_end');
 
@@ -179,8 +177,8 @@ class Job extends CI_Controller{
     $data['objBegin'] = $obj->begin_date;
     $data['objEnd']   = $obj->end_date;
     $data['objName']  = $attr->name;
-    $keydate['begin'] = '1990-01-01';
-    $keydate['end']   = '9999-12-31';
+    $keydate['begin'] = $begin;
+    $keydate['end']   = $end;
     $ls =  $this->JobModel->GetNameHistoryList($id,$keydate,'desc');
     $history = array();
     foreach ($ls as $row) {

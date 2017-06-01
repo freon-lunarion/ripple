@@ -15,9 +15,11 @@ class PostModel extends CI_Model{
     $this->BaseModel->ChangeRel('BotUp','201',$postId,$newOrg,$validOn,$endDate);
   }
 
-  public function ChangeHolder($postId=0,$newPersId=0,$validOn='',$endDate='9999-12-31')
+  public function ChangeHolder($postId=0,$newPersId=FALSE,$validOn='',$endDate='9999-12-31')
   {
-    $this->BaseModel->ChangeRel('TopDown','301',$postId,$newPersId,$validOn,$endDate);
+    if ($newPersId) {
+      $this->BaseModel->ChangeRel('TopDown','301',$postId,$newPersId,$validOn,$endDate);
+    }
   }
 
   public function ChangeJob($postId=0,$newJobId=0,$validOn='',$endDate='9999-12-31')
@@ -51,12 +53,12 @@ class PostModel extends CI_Model{
 
   public function CountHolder($postId=0,$keyDate='')
   {
-    return $this->BaseModel->CountTopDownRel($postId,'401',$keyDate);
+    return $this->BaseModel->CountTopDownRel($postId,'301',$keyDate);
   }
 
   public function CountJob($postId=0,$keyDate='')
   {
-    return $this->BaseModel->CountBotUpRel($postId,'301',$keyDate);
+    return $this->BaseModel->CountBotUpRel($postId,'401',$keyDate);
   }
 
   public function CountPeerPerson($postId=0,$keyDate='')
