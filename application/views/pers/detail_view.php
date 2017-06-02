@@ -20,6 +20,7 @@
       <th>Change</th>
       <th>Id</th>
       <th>Name</th>
+      <th>Superior</th>
       <th class="text-danger">Delete</th>
     </tr>
   </thead>
@@ -31,6 +32,7 @@
         <td><a href="{chgRel}" class="btn btn-link" title="Change Date">Chg. Date</a>
         <td>{postId}</td>
         <td>{postName}</td>
+        <td><a href="{sprLink}" class="btn btn-link">View</a></td>
         <td><a href="{remRel}" class="btn btn-link" title="Change Date">Delete</a>
           </td>
       </tr>

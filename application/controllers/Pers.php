@@ -18,11 +18,11 @@ class Pers extends CI_Controller{
     $end   = $this->input->post('dt_end');
 
     if ($begin == '') {
-      $begin = date('Y-m-d');
+      $begin = $this->session->userdata('filterBegDa');
     }
 
     if ($end == '') {
-      $end = '9999-12-31';
+      $end   = $this->session->userdata('filterEndDa');
     }
     $rows = $this->PersModel->GetList($begin,$end);
     $data['rows'] = array();
@@ -49,10 +49,7 @@ class Pers extends CI_Controller{
   public function Add()
   {
     $this->load->model('PostModel');
-    $begin = date('Y-m-d');
-    $end   = date('Y-m-d');
-
-    $ls    = $this->PostModel->GetList($begin,$end);
+    $ls    = $this->PostModel->GetList(date('Y-m-d'),date('Y-m-d'));
     $post  = array(''=>'');
     foreach ($ls as $row) {
       $post[$row->id] = $row->id.' - '.$row->name;
@@ -194,6 +191,7 @@ class Pers extends CI_Controller{
   {
     $delimit = site_url($this->ctrlClass.'EditRel/');
     $remove  = site_url($this->ctrlClass.'DeleteRelProcess/');
+    $sprLk   = site_url($this->ctrlClass.'ViewSpr/');
 
     if ($id == 0 && $begin == '' && $end == '') {
       $id    = $this->session->userdata('selectId');
@@ -247,6 +245,7 @@ class Pers extends CI_Controller{
         'postName'  => $row->post_name,
         'chgRel'    => $delimit.$row->post_rel_id,
         'remRel'    => $remove.$row->post_rel_id,
+        'sprLink'   => $sprLk.$row->post_rel_id,
       );
     }
     $data['post']     = $post;
@@ -256,6 +255,29 @@ class Pers extends CI_Controller{
     $data['editDate'] = $this->ctrlClass.'EditDate/';
     $data['editName'] = $this->ctrlClass.'EditName/';
     $this->parser->parse($this->viewDir.'detail_view',$data);
+  }
+
+  public function ViewSpr($relId=0)
+  {
+    $this->load->model(array('PostModel'));
+    $rel = $this->PersModel->GetRelByIdRow($relId);
+    $keydate['begin'] = $this->session->userdata('filterBegDa');
+    $keydate['end']   = $this->session->userdata('filterEndDa');
+    $persObj = $this->PersModel->GetByIdRow($rel->obj_bottom_id,$keydate);
+    $persAtr = $this->PersModel->GetLastName($rel->obj_bottom_id,$keydate);
+    $postAtr = $this->PostModel->GetLastName($rel->obj_top_id,$keydate);
+
+    $spr     = $this->PostModel->GetLastSuperiorPerson($rel->obj_top_id,$keydate);
+    $data['backLink']    = $this->ctrlClass.'View/';
+    $data['persId']      = $rel->obj_bottom_id;
+    $data['persName']    = $persAtr->name;
+    $data['postId']      = $rel->obj_top_id;
+    $data['postName']    = $postAtr->name;
+    $data['sprPersId']   = $spr->person_id;
+    $data['sprPersName'] = $spr->person_name;
+    $data['sprPostId']   = $spr->post_id;
+    $data['sprPostName'] = $spr->post_name;
+    $this->parser->parse($this->viewDir.'superior_view',$data);
   }
 
 }

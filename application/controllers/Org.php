@@ -16,8 +16,8 @@ class Org extends CI_Controller{
   function index()
   {
     $this->session->unset_userdata('selectId');
-    $begin = $this->input->post('dt_begin');
-    $end   = $this->input->post('dt_end');
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
 
     if ($begin == '') {
       $begin = date('Y-m-d');

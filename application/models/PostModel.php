@@ -199,6 +199,24 @@ class PostModel extends CI_Model{
 
   }
 
+  public function GetLastSuperiorPerson($postId=0,$keyDate='')
+  {
+    $count = $this->CountSuperiorPerson($postId,$keyDate);
+    while ($count == 0) {
+      $postId = $this->GetSuperiorPost($postId,$keyDate)->post_id;
+      $count   = $this->CountSuperiorPerson($postId,$keyDate);
+    }
+    $post   = $this->GetLastSuperiorPost($postId,$keyDate,'post');
+    $person = $this->BaseModel->GetLastTopDownRel($post->post_id,'301',$keyDate,'person');
+    $result = array(
+      'post_id'     => $post->post_id,
+      'post_name'   => $post->post_name,
+      'person_id'   => $person->person_id,
+      'person_name' => $person->person_name,
+    );
+    return (Object) $result;
+  }
+
   public function GetLastSuperiorPost($postId=0,$keyDate='')
   {
     return $this->BaseModel->GetLastBotUpRel($postId,'102',$keyDate,'post');
@@ -270,28 +288,6 @@ class PostModel extends CI_Model{
   public function GetSubordinatePostList($postId=0,$keyDate='')
   {
     return $this->BaseModel->GetTopDownRelList($postId,'102',$keyDate,'post');
-  }
-
-  public function GetSuperiorPersonList($postId=0,$keyDate='')
-  {
-    $relCode = array('102','301');
-    $alias   = array('post','person');
-    // $count   = $this->BaseModel->CountBotUpRel($postId,$relCode,$keyDate);
-    $count = $this->CountSuperiorPerson($postId,$keyDate);
-    while ($count == 0) {
-      $postId = $this->GetSuperiorPost($postId,$keyDate)->post_id;
-      $count   = $this->CountSuperiorPerson($postId,$keyDate);
-    }
-    $post   = $this->GetSuperiorPost($postId,$keyDate,'post');
-    $person = $this->BaseModel->GetLastTopDownRel($post->post_id,'301',$keyDate,'person');
-    $result = array(
-      'post_id'     => $post->post_id,
-      'post_name'   => $post->post_name,
-      'person_id'   => $person->person_id,
-      'person_name' => $person->person_name,
-    );
-    return (Object) $result;
-
   }
 
   public function GetSuperiorPostList($postId=0,$keyDate='')
