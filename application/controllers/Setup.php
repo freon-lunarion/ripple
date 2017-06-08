@@ -17,6 +17,7 @@ class Setup extends CI_Controller{
   public function Database($type='')
   {
     $this->load->model(array('SetupModel'));
+    $this->SetupModel->DropTable();
     $this->SetupModel->CreateRefTable();
     $this->SetupModel->CreateTable();
     if ($type == 'demo') {
