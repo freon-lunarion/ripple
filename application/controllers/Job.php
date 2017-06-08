@@ -51,7 +51,7 @@ class Job extends CI_Controller{
       $data['rows'][$i] = $temp;
       $i++;
     }
-    $this->parser->parse('element/obj_tbl',$data);
+    $this->parser->parse('_element/obj_tbl',$data);
   }
 
   public function Add()

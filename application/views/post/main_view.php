@@ -3,6 +3,6 @@
 <h1 class="page-header">Position <small></small></h1>
 <?php echo anchor($addLink,'Add' ,'class="btn btn-default"');?>
 <hr />
-<?php $this->load->view('element/rangedate_filter');?>
-<?php $this->load->view('element/obj_tbl');?>
+<?php $this->load->view('_element/rangedate_filter');?>
+<?php $this->load->view('_element/obj_tbl');?>
 <?php $this->load->view('_template/bottom');?>

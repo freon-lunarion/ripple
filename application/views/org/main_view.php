@@ -14,6 +14,6 @@
   </ul>
 </div>
 <hr />
-<?php $this->load->view('element/rangedate_filter');?>
-<?php $this->load->view('element/obj_tbl');?>
+<?php $this->load->view('_element/rangedate_filter');?>
+<?php $this->load->view('_element/obj_tbl');?>
 <?php $this->load->view('_template/bottom');?>
