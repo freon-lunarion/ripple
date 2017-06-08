@@ -24,6 +24,19 @@ class Job extends CI_Controller{
     if ($end == '') {
       $end = '9999-12-31';
     }
+
+    $data['ajaxUrl'] = $this->ctrlClass.'AjaxGetList';
+    $data['begin'] = $begin;
+    $data['end']   = $end;
+
+    $data['addLink'] = $this->ctrlClass.'Add';
+    $this->parser->parse($this->viewDir.'main_view',$data);
+  }
+
+  public function AjaxGetList()
+  {
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
     $rows = $this->JobModel->GetList($begin,$end);
     $data['rows'] = array();
     $i = 0 ;
@@ -33,17 +46,12 @@ class Job extends CI_Controller{
         'begda'    => $row->begin_date,
         'endda'    => $row->end_date,
         'name'     => $row->name,
-        'viewlink' => anchor($this->ctrlClass.'View/'.$row->id.'/'.$begin.'/'.$end,'View','class="btn btn-link" title="view"'),
+        'viewlink' => anchor($this->ctrlClass.'View/'.$row->id,'View','class="btn btn-link" title="view"'),
       );
       $data['rows'][$i] = $temp;
       $i++;
     }
-
-    $data['begin'] = $begin;
-    $data['end']   = $end;
-
-    $data['addLink'] = $this->ctrlClass.'Add';
-    $this->parser->parse($this->viewDir.'main_view',$data);
+    $this->parser->parse('element/obj_tbl',$data);
   }
 
   public function Add()
@@ -149,21 +157,18 @@ class Job extends CI_Controller{
     redirect($this->ctrlClass.'View/');
   }
 
-
-  public function View($id=0,$begin='',$end='')
+  public function View($id=0)
   {
     $delimit = site_url($this->ctrlClass.'EditRel/');
     $remove  = site_url($this->ctrlClass.'DeleteRelProcess/');
 
-    if ($id == 0 && $begin == '' && $end == '') {
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
+    if ($id == 0 ) {
       $id    = $this->session->userdata('selectId');
-      $begin = $this->session->userdata('filterBegDa');
-      $end   = $this->session->userdata('filterEndDa');
     } else {
       $array = array(
         'selectId' => $id,
-        'filterBegDa' => $begin,
-        'filterEndDa' => $end,
       );
       $this->session->set_userdata($array);
     }

@@ -2,7 +2,8 @@
 <?php echo anchor($backLink,'Back','class="btn btn-default"');?>
 <h1 class="page-header">Job <small>View</small></h1>
 
-<?php $this->load->view('element/rangedate_view.php'); ?>
+<?php //$this->load->view('element/rangedate_view'); ?>
+<?php $this->load->view('element/rangedate_filter'); ?>
 
 <?php $this->load->view('element/obj_detail');?>
 
