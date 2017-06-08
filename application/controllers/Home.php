@@ -22,12 +22,4 @@ class Home extends CI_Controller {
 	{
 		$this->load->view('home_view');
 	}
-
-	// public function Demo()
-	// {
-	// 	$this->load->model(array('BaseModel'));
-	// 	for ($i=51; $i <=81 ; $i++) {
-	// 		$this->BaseModel->Demo($i);
-	// 	}
-	// }
 }
