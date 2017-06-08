@@ -5,9 +5,9 @@
 <?php //$this->load->view('_element/rangedate_view'); ?>
 <?php $this->load->view('_element/rangedate_filter'); ?>
 
-<?php $this->load->view('_element/obj_detail');?>
+<div class="refresh_target" data-ajax="{ajaxUrl}">
 
-<?php $this->load->view('_element/hisname_tbl');?>
+</div>
 
 <h2>Related Position</h2>
 
@@ -38,3 +38,4 @@
 </table>
 <?php echo anchor($backLink,'Back','class="btn btn-default"');?> <?php echo anchor($delLink,'Delete','class="btn btn-danger"');?>
 <?php $this->load->view('_template/bottom');?>
+<script src="<?php echo base_url()?>assets/js/filterDate.js"></script>

@@ -175,6 +175,38 @@ class Job extends CI_Controller{
     $keydate['begin'] = $begin;
     $keydate['end']   = $end;
 
+    $ls = $this->JobModel->GetRelatedPostList($id,$keydate);
+    $post = array();
+
+    foreach ($ls as $row) {
+      $post[] = array(
+        'postRelId' => $row->post_rel_id,
+        'postBegin' => $row->post_begin_date,
+        'postEnd'   => $row->post_end_date,
+        'postId'    => $row->post_id,
+        'postName'  => $row->post_name,
+        'chgRel'    => $delimit.$row->post_rel_id,
+        'remRel'    => $remove.$row->post_rel_id,
+      );
+    }
+    $data['begin']    = $begin;
+    $data['end']      = $end;
+    $data['post']     = $post;
+    $data['backLink'] = $this->ctrlClass;
+    $data['delLink']  = $this->ctrlClass.'DeleteProcess';
+
+    $data['ajaxUrl']  = $this->ctrlClass.'AjaxGetDetail';
+    $this->parser->parse($this->viewDir.'detail_view',$data);
+  }
+
+  public function AjaxGetDetail()
+  {
+    $id    = $this->session->userdata('selectId');
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
+    $keydate['begin'] = $begin;
+    $keydate['end']   = $end;
+
     $obj  = $this->JobModel->GetByIdRow($id);
     $attr = $this->JobModel->GetLastName($id,$keydate);
     $data['begin']    = $begin;
@@ -182,8 +214,10 @@ class Job extends CI_Controller{
     $data['objBegin'] = $obj->begin_date;
     $data['objEnd']   = $obj->end_date;
     $data['objName']  = $attr->name;
-    $keydate['begin'] = $begin;
-    $keydate['end']   = $end;
+    $data['editDate'] = $this->ctrlClass.'EditDate/';
+    $data['editName'] = $this->ctrlClass.'EditName/';
+    $this->parser->parse('_element/obj_detail',$data);
+
     $ls =  $this->JobModel->GetNameHistoryList($id,$keydate,'desc');
     $history = array();
     foreach ($ls as $row) {
@@ -200,27 +234,8 @@ class Job extends CI_Controller{
       );
     }
     $data['history']  = $history;
+    $this->parser->parse('_element/hisname_tbl',$data);
 
-    $ls = $this->JobModel->GetRelatedPostList($id,$keydate);
-    $post = array();
-
-    foreach ($ls as $row) {
-      $post[] = array(
-        'postRelId' => $row->post_rel_id,
-        'postBegin' => $row->post_begin_date,
-        'postEnd'   => $row->post_end_date,
-        'postId'    => $row->post_id,
-        'postName'  => $row->post_name,
-        'chgRel'    => $delimit.$row->post_rel_id,
-        'remRel'    => $remove.$row->post_rel_id,
-      );
-    }
-    $data['post']     = $post;
-    $data['backLink'] = $this->ctrlClass;
-    $data['delLink']  = $this->ctrlClass.'DeleteProcess';
-    $data['editDate'] = $this->ctrlClass.'EditDate/';
-    $data['editName'] = $this->ctrlClass.'EditName/';
-    $this->parser->parse($this->viewDir.'detail_view',$data);
   }
 
 }

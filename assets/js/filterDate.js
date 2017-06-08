@@ -1,3 +1,8 @@
+jQuery(document).ready(function($) {
+  refreshData();
+
+});
+
 $('#btn_date_refresh').on('click', function(event) {
   event.preventDefault();
   /* Act on the event */
