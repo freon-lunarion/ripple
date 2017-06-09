@@ -22,8 +22,21 @@ class Job extends CI_Controller{
     }
 
     if ($end == '') {
-      $end = '9999-12-31';
+      $end = date('Y-m-d');
     }
+
+    $data['ajaxUrl'] = $this->ctrlClass.'AjaxGetList';
+    $data['begin'] = $begin;
+    $data['end']   = $end;
+
+    $data['addLink'] = $this->ctrlClass.'Add';
+    $this->parser->parse($this->viewDir.'main_view',$data);
+  }
+
+  public function AjaxGetList()
+  {
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
     $rows = $this->JobModel->GetList($begin,$end);
     $data['rows'] = array();
     $i = 0 ;
@@ -33,17 +46,12 @@ class Job extends CI_Controller{
         'begda'    => $row->begin_date,
         'endda'    => $row->end_date,
         'name'     => $row->name,
-        'viewlink' => anchor($this->ctrlClass.'View/'.$row->id.'/'.$begin.'/'.$end,'View','class="btn btn-link" title="view"'),
+        'viewlink' => anchor($this->ctrlClass.'View/'.$row->id,'View','class="btn btn-link" title="view"'),
       );
       $data['rows'][$i] = $temp;
       $i++;
     }
-
-    $data['begin'] = $begin;
-    $data['end']   = $end;
-
-    $data['addLink'] = $this->ctrlClass.'Add';
-    $this->parser->parse($this->viewDir.'main_view',$data);
+    $this->parser->parse('_element/obj_tbl',$data);
   }
 
   public function Add()
@@ -149,24 +157,33 @@ class Job extends CI_Controller{
     redirect($this->ctrlClass.'View/');
   }
 
-
-  public function View($id=0,$begin='',$end='')
+  public function View($id=0)
   {
-    $delimit = site_url($this->ctrlClass.'EditRel/');
-    $remove  = site_url($this->ctrlClass.'DeleteRelProcess/');
-
-    if ($id == 0 && $begin == '' && $end == '') {
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
+    if ($id == 0 ) {
       $id    = $this->session->userdata('selectId');
-      $begin = $this->session->userdata('filterBegDa');
-      $end   = $this->session->userdata('filterEndDa');
     } else {
       $array = array(
         'selectId' => $id,
-        'filterBegDa' => $begin,
-        'filterEndDa' => $end,
       );
       $this->session->set_userdata($array);
     }
+
+    $data['begin']    = $begin;
+    $data['end']      = $end;
+    $data['backLink'] = $this->ctrlClass;
+    $data['delLink']  = $this->ctrlClass.'DeleteProcess';
+    $data['ajaxUrl1'] = $this->ctrlClass.'AjaxGetDetail';
+    $data['ajaxUrl2'] = $this->ctrlClass.'AjaxGetRel';
+    $this->parser->parse($this->viewDir.'detail_view',$data);
+  }
+
+  public function AjaxGetDetail()
+  {
+    $id    = $this->session->userdata('selectId');
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
     $keydate['begin'] = $begin;
     $keydate['end']   = $end;
 
@@ -177,8 +194,10 @@ class Job extends CI_Controller{
     $data['objBegin'] = $obj->begin_date;
     $data['objEnd']   = $obj->end_date;
     $data['objName']  = $attr->name;
-    $keydate['begin'] = $begin;
-    $keydate['end']   = $end;
+    $data['editDate'] = $this->ctrlClass.'EditDate/';
+    $data['editName'] = $this->ctrlClass.'EditName/';
+    $this->parser->parse('_element/obj_detail',$data);
+
     $ls =  $this->JobModel->GetNameHistoryList($id,$keydate,'desc');
     $history = array();
     foreach ($ls as $row) {
@@ -195,7 +214,21 @@ class Job extends CI_Controller{
       );
     }
     $data['history']  = $history;
+    $this->parser->parse('_element/hisname_tbl',$data);
 
+  }
+
+  public function AjaxGetRel()
+  {
+    $id    = $this->session->userdata('selectId');
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
+
+    $delimit = site_url($this->ctrlClass.'EditRel/');
+    $remove  = site_url($this->ctrlClass.'DeleteRelProcess/');
+
+    $keydate['begin'] = $begin;
+    $keydate['end']   = $end;
     $ls = $this->JobModel->GetRelatedPostList($id,$keydate);
     $post = array();
 
@@ -211,11 +244,9 @@ class Job extends CI_Controller{
       );
     }
     $data['post']     = $post;
-    $data['backLink'] = $this->ctrlClass;
-    $data['delLink']  = $this->ctrlClass.'DeleteProcess';
-    $data['editDate'] = $this->ctrlClass.'EditDate/';
-    $data['editName'] = $this->ctrlClass.'EditName/';
-    $this->parser->parse($this->viewDir.'detail_view',$data);
+
+    $this->parser->parse($this->viewDir . 'rel_elm',$data);
+
   }
 
 }

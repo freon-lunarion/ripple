@@ -14,17 +14,31 @@ class Pers extends CI_Controller{
   function index()
   {
     $this->session->unset_userdata('selectId');
-    $begin = $this->input->post('dt_begin');
-    $end   = $this->input->post('dt_end');
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
 
     if ($begin == '') {
-      $begin = $this->session->userdata('filterBegDa');
+      $begin = date('Y-m-d');
     }
 
     if ($end == '') {
-      $end   = $this->session->userdata('filterEndDa');
+      $end = date('Y-m-d');
     }
-    $rows = $this->PersModel->GetList($begin,$end);
+
+
+    $data['ajaxUrl'] = $this->ctrlClass.'AjaxGetList';
+    $data['begin']   = $begin;
+    $data['end']     = $end;
+
+    $data['addLink'] = $this->ctrlClass.'Add';
+    $this->parser->parse($this->viewDir.'main_view',$data);
+  }
+
+  public function AjaxGetList()
+  {
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
+    $rows  = $this->PersModel->GetList($begin,$end);
     $data['rows'] = array();
     $i = 0 ;
     foreach ($rows as $row) {
@@ -33,17 +47,12 @@ class Pers extends CI_Controller{
         'begda'    => $row->begin_date,
         'endda'    => $row->end_date,
         'name'     => $row->name,
-        'viewlink' => anchor($this->ctrlClass.'View/'.$row->id.'/'.$begin.'/'.$end,'View','class="btn btn-link" title="view"'),
+        'viewlink' => anchor($this->ctrlClass.'View/'.$row->id,'View','class="btn btn-link" title="view"'),
       );
       $data['rows'][$i] = $temp;
       $i++;
     }
-
-    $data['begin'] = $begin;
-    $data['end']   = $end;
-
-    $data['addLink'] = $this->ctrlClass.'Add';
-    $this->parser->parse($this->viewDir.'main_view',$data);
+    $this->parser->parse('_element/obj_tbl',$data);
   }
 
   public function Add()
@@ -187,73 +196,26 @@ class Pers extends CI_Controller{
     redirect($this->ctrlClass.'View/');
   }
 
-  public function View($id=0,$begin='',$end='')
+  public function View($id=0)
   {
-    $delimit = site_url($this->ctrlClass.'EditRel/');
-    $remove  = site_url($this->ctrlClass.'DeleteRelProcess/');
-    $sprLk   = site_url($this->ctrlClass.'ViewSpr/');
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
 
-    if ($id == 0 && $begin == '' && $end == '') {
+    if ($id == 0 ) {
       $id    = $this->session->userdata('selectId');
-      $begin = $this->session->userdata('filterBegDa');
-      $end   = $this->session->userdata('filterEndDa');
     } else {
       $array = array(
-        'selectId'    => $id,
-        'filterBegDa' => $begin,
-        'filterEndDa' => $end,
+        'selectId' => $id,
       );
       $this->session->set_userdata($array);
     }
-    $keydate['begin'] = $begin;
-    $keydate['end']   = $end;
-
-    $obj  = $this->PersModel->GetByIdRow($id);
-    $attr = $this->PersModel->GetLastName($id,$keydate);
     $data['begin']    = $begin;
     $data['end']      = $end;
-    $data['objBegin'] = $obj->begin_date;
-    $data['objEnd']   = $obj->end_date;
-    $data['objName']  = $attr->name;
-    $keydate['begin'] = $begin;
-    $keydate['end']   = $end;
-    $ls =  $this->PersModel->GetNameHistoryList($id,$keydate,'desc');
-    $history = array();
-    foreach ($ls as $row) {
-      if ($attr->id == $row->id) {
-        $class = 'info';
-      } else {
-        $class = '';
-      }
-      $history[] = array(
-        'historyRow'   => $class,
-        'historyBegin' => $row->begin_date,
-        'historyEnd'   => $row->end_date,
-        'historyName'  => $row->name,
-      );
-    }
-    $data['history']  = $history;
 
-    $ls = $this->PersModel->GetPostList($id,$keydate,'desc');
-    $post = array();
-    foreach ($ls as $row) {
-      $post[] = array(
-        'postRelId' => $row->post_rel_id,
-        'postBegin' => $row->post_begin_date,
-        'postEnd'   => $row->post_end_date,
-        'postId'    => $row->post_id,
-        'postName'  => $row->post_name,
-        'chgRel'    => $delimit.$row->post_rel_id,
-        'remRel'    => $remove.$row->post_rel_id,
-        'sprLink'   => $sprLk.$row->post_rel_id,
-      );
-    }
-    $data['post']     = $post;
     $data['backLink'] = $this->ctrlClass;
     $data['delLink']  = $this->ctrlClass.'DeleteProcess';
-    $data['addPost']  = $this->ctrlClass.'AddPost/';
-    $data['editDate'] = $this->ctrlClass.'EditDate/';
-    $data['editName'] = $this->ctrlClass.'EditName/';
+    $data['ajaxUrl1'] = $this->ctrlClass.'AjaxGetDetail';
+    $data['ajaxUrl2'] = $this->ctrlClass.'AjaxGetRel';
     $this->parser->parse($this->viewDir.'detail_view',$data);
   }
 
@@ -270,6 +232,7 @@ class Pers extends CI_Controller{
     $spr     = $this->PostModel->GetLastSuperiorPerson($rel->obj_top_id,$keydate);
     $data['backLink']    = $this->ctrlClass.'View/';
     $data['persId']      = $rel->obj_bottom_id;
+    
     $data['persName']    = $persAtr->name;
     $data['postId']      = $rel->obj_top_id;
     $data['postName']    = $postAtr->name;
@@ -278,6 +241,75 @@ class Pers extends CI_Controller{
     $data['sprPostId']   = $spr->post_id;
     $data['sprPostName'] = $spr->post_name;
     $this->parser->parse($this->viewDir.'superior_view',$data);
+  }
+
+  public function AjaxGetDetail()
+  {
+    $id    = $this->session->userdata('selectId');
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
+    $keydate['begin'] = $begin;
+    $keydate['end']   = $end;
+    $obj  = $this->PersModel->GetByIdRow($id);
+    $attr = $this->PersModel->GetLastName($id,$keydate);
+
+    $data['objBegin'] = $obj->begin_date;
+    $data['objEnd']   = $obj->end_date;
+    $data['objName']  = $attr->name;
+    $data['editDate'] = $this->ctrlClass.'EditDate/';
+    $data['editName'] = $this->ctrlClass.'EditName/';
+    $this->parser->parse('_element/obj_detail',$data);
+
+    $ls =  $this->PersModel->GetNameHistoryList($id,$keydate,'desc');
+    $history = array();
+    foreach ($ls as $row) {
+      if ($attr->id == $row->id) {
+        $class = 'info';
+      } else {
+        $class = '';
+      }
+      $history[] = array(
+        'historyRow'   => $class,
+        'historyBegin' => $row->begin_date,
+        'historyEnd'   => $row->end_date,
+        'historyName'  => $row->name,
+      );
+    }
+    $data['history']  = $history;
+    $this->parser->parse('_element/hisname_tbl',$data);
+
+  }
+
+  public function AjaxGetRel()
+  {
+    $id    = $this->session->userdata('selectId');
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
+    $keydate['begin'] = $begin;
+    $keydate['end']   = $end;
+    $delimit = site_url($this->ctrlClass.'EditRel/');
+    $remove  = site_url($this->ctrlClass.'DeleteRelProcess/');
+    $sprLk   = site_url($this->ctrlClass.'ViewSpr/');
+
+    $ls = $this->PersModel->GetPostList($id,$keydate,'desc');
+    $post = array();
+    foreach ($ls as $row) {
+      $post[] = array(
+        'postRelId' => $row->post_rel_id,
+        'postBegin' => $row->post_begin_date,
+        'postEnd'   => $row->post_end_date,
+        'postId'    => $row->post_id,
+        'postName'  => $row->post_name,
+        'chgRel'    => $delimit.$row->post_rel_id,
+        'remRel'    => $remove.$row->post_rel_id,
+        'sprLink'   => $sprLk.$row->post_rel_id,
+      );
+    }
+    $data['addPost']  = $this->ctrlClass.'AddPost/';
+
+    $data['post']     = $post;
+    $this->parser->parse($this->viewDir . 'rel_elm',$data);
+
   }
 
 }

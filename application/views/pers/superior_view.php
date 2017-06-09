@@ -12,8 +12,6 @@
 
 <h2>Supervisor</h2>
 <dl class="">
-  <dt>Begin - End</dt>
-  <dd>{begin} - {end}</dd>
   <dt>Position</dt>
   <dd>{sprPostId} - {sprPostName}</dd>
   <dt>Person</dt>

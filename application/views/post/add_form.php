@@ -2,7 +2,7 @@
 <h1 class="page-header">Position <small>Add</small></h1>
 <?php echo form_open($process, 'class="form"'); ?>
 
-  <?php $this->load->view('element/add_form');?>
+  <?php $this->load->view('_element/add_form');?>
   <div class="form-group">
     <label for="txt_name">Parent Organization</label>
     <?php echo form_dropdown('slc_parent',$parentOpt, '','id="slc_parent" class="form-control"'); ?>
@@ -24,7 +24,7 @@
     <label for="txt_name">Employee</label>
     <?php echo form_dropdown('slc_emp',$empOpt, '','id="slc_emp" class="form-control"'); ?>
   </div>
-  <?php $this->load->view('element/form_act'); ?>
+  <?php $this->load->view('_element/form_act'); ?>
 
 </form>
 <?php $this->load->view('_template/bottom');?>

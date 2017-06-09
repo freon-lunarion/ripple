@@ -1,9 +1,9 @@
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
   <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="">
-      <a role="button" data-toggle="collapse" data-parent="#accordion" href="#hisName" aria-expanded="true" aria-controls="hisName">
       <h4 class="panel-title">
-          History of Name
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#hisName" aria-expanded="true" aria-controls="hisName">
+          <i class="fa fa-chevron-right"></i> History of Name
         </a>
       </h4>
     </div>
