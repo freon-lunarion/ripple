@@ -49,7 +49,7 @@ class Post extends CI_Controller{
         'begda'    => $row->begin_date,
         'endda'    => $row->end_date,
         'name'     => $row->name,
-        'viewlink' => anchor($this->ctrlClass.'View/'.$row->id.'/'.$begin.'/'.$end,'View','class="btn btn-link" title="view"'),
+        'viewlink' => anchor($this->ctrlClass.'View/'.$row->id,'View','class="btn btn-link" title="view"'),
       );
       $data['rows'][$i] = $temp;
       $i++;
