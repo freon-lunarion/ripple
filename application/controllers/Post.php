@@ -24,9 +24,23 @@ class Post extends CI_Controller{
     }
 
     if ($end == '') {
-      $end = '9999-12-31';
+      $end = date('Y-m-d');
     }
+
+    $data['ajaxUrl'] = $this->ctrlClass.'AjaxGetList';
+    $data['begin'] = $begin;
+    $data['end']   = $end;
+    $data['addLink'] = $this->ctrlClass.'Add';
+
+    $this->parser->parse($this->viewDir.'main_view',$data);
+  }
+
+  public function AjaxGetList()
+  {
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
     $rows = $this->PostModel->GetList($begin,$end);
+
     $data['rows'] = array();
     $i = 0 ;
     foreach ($rows as $row) {
@@ -40,12 +54,8 @@ class Post extends CI_Controller{
       $data['rows'][$i] = $temp;
       $i++;
     }
+    $this->parser->parse('_element/obj_tbl',$data);
 
-    $data['begin'] = $begin;
-    $data['end']   = $end;
-    $data['addLink'] = $this->ctrlClass.'Add';
-
-    $this->parser->parse($this->viewDir.'main_view',$data);
   }
 
   public function Add()
@@ -106,7 +116,7 @@ class Post extends CI_Controller{
     redirect($this->ctrlClass);
   }
 
-  public function DeleteRel($relId=0)
+  public function DeleteRelProcess($relId=0)
   {
     $this->OrgModel->DeleteRel($relId);
     redirect($this->ctrlClass.'View/');
@@ -370,23 +380,32 @@ class Post extends CI_Controller{
     redirect($this->ctrlClass.'View/');
   }
 
-  public function View($id=0,$begin='',$end='')
+  public function View($id=0)
   {
-    $delimit = site_url($this->ctrlClass.'EditRel/');
-    $remove  = site_url($this->ctrlClass.'DeleteRel/');
-
-    if ($id == 0 && $begin == '' && $end == '') {
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
+    if ($id == 0 ) {
       $id    = $this->session->userdata('selectId');
-      $begin = $this->session->userdata('filterBegDa');
-      $end   = $this->session->userdata('filterEndDa');
     } else {
       $array = array(
-        'selectId'    => $id,
-        'filterBegDa' => $begin,
-        'filterEndDa' => $end,
+        'selectId' => $id,
       );
       $this->session->set_userdata($array);
     }
+    $data['begin']    = $begin;
+    $data['end']      = $end;
+    $data['backLink'] = $this->ctrlClass;
+    $data['delLink']  = $this->ctrlClass.'DeleteProcess';
+    $data['ajaxUrl1'] = $this->ctrlClass.'AjaxGetDetail';
+    $data['ajaxUrl2'] = $this->ctrlClass.'AjaxGetRel';
+    $this->parser->parse($this->viewDir.'detail_view',$data);
+  }
+
+  public function AjaxGetDetail()
+  {
+    $id    = $this->session->userdata('selectId');
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
     $keydate['begin'] = $begin;
     $keydate['end']   = $end;
 
@@ -397,8 +416,12 @@ class Post extends CI_Controller{
     $data['objBegin'] = $obj->begin_date;
     $data['objEnd']   = $obj->end_date;
     $data['objName']  = $attr->name;
-    $keydate['begin'] = $begin;
-    $keydate['end']   = $end;
+
+    $data['editDate'] = $this->ctrlClass.'EditDate/';
+    $data['editName'] = $this->ctrlClass.'EditName/';
+    $this->parser->parse('_element/obj_detail',$data);
+
+
     $ls = $this->PostModel->GetNameHistoryList($id,$keydate,'desc');
     $history = array();
     foreach ($ls as $row) {
@@ -415,6 +438,26 @@ class Post extends CI_Controller{
       );
     }
     $data['history']  = $history;
+    $this->parser->parse('_element/hisname_tbl',$data);
+
+  }
+
+  public function AjaxGetRel()
+  {
+    $id    = $this->session->userdata('selectId');
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
+
+    $delimit = site_url($this->ctrlClass.'EditRel/');
+    $remove  = site_url($this->ctrlClass.'DeleteRelProcess/');
+
+    $keydate['begin'] = $begin;
+    $keydate['end']   = $end;
+    $data['editAss']    = $this->ctrlClass.'EditAssignment/';
+    $data['editHolder'] = $this->ctrlClass.'EditHolder/';
+    $data['editJob']    = $this->ctrlClass.'EditJob/';
+    $data['editMan']    = $this->ctrlClass.'EditManaging/';
+    $data['editSpr']    = $this->ctrlClass.'EditSuperior/';
     if ($this->PostModel->CountSuperiorPost($id,$keydate)) {
       $spr = $this->PostModel->GetLastSuperiorPost($id,$keydate);
       $data['sprPostId']   = $spr->post_id;
@@ -546,15 +589,7 @@ class Post extends CI_Controller{
       );
     }
     $data['ass']     = $ass;
-    $data['backLink']   = $this->ctrlClass;
-    $data['delLink']    = $this->ctrlClass.'DeleteProcess';
-    $data['editAss']    = $this->ctrlClass.'EditAssignment/';
-    $data['editDate']   = $this->ctrlClass.'EditDate/';
-    $data['editHolder'] = $this->ctrlClass.'EditHolder/';
-    $data['editJob']    = $this->ctrlClass.'EditJob/';
-    $data['editMan']    = $this->ctrlClass.'EditManaging/';
-    $data['editName']   = $this->ctrlClass.'EditName/';
-    $data['editSpr']    = $this->ctrlClass.'EditSuperior/';
-    $this->parser->parse($this->viewDir.'detail_view',$data);
+    $this->parser->parse($this->viewDir . 'rel_elm',$data);
+
   }
 }

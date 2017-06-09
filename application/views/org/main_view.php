@@ -3,7 +3,7 @@
 <h1 class="page-header">Organization <small></small></h1>
 <?php echo anchor($addLink,'Add' ,'class="btn btn-default"');?>
 <!-- Single button -->
-<div id="btn_view_mode" class="btn-group">
+<!-- <div id="btn_view_mode" class="btn-group">
   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     View Mode <span class="caret"></span>
   </button>
@@ -12,7 +12,7 @@
     <li><a href="#" data-type="all">All</a></li>
 
   </ul>
-</div>
+</div> -->
 <hr />
 <?php $this->load->view('_element/rangedate_filter');?>
 <div id="tbl_obj" class="refresh_target" data-ajax="{ajaxUrl}"></div>
