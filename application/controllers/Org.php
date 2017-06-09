@@ -24,8 +24,21 @@ class Org extends CI_Controller{
     }
 
     if ($end == '') {
-      $end = '9999-12-31';
+      $end = date('Y-m-d');
     }
+    $data['ajaxUrl'] = $this->ctrlClass.'AjaxGetList';
+
+    $data['begin'] = $begin;
+    $data['end']   = $end;
+    $data['addLink'] = $this->ctrlClass.'Add';
+
+    $this->parser->parse($this->viewDir.'main_view',$data);
+  }
+
+  public function AjaxGetList()
+  {
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
     $rows = $this->OrgModel->GetList($begin,$end);
     $data['rows'] = array();
     $i = 0 ;
@@ -35,17 +48,13 @@ class Org extends CI_Controller{
         'begda'    => $row->begin_date,
         'endda'    => $row->end_date,
         'name'     => $row->name,
-        'viewlink' => anchor($this->ctrlClass.'View/'.$row->id.'/'.$begin.'/'.$end,'View','class="btn btn-link" title="view"'),
+        'viewlink' => anchor($this->ctrlClass.'View/'.$row->id,'View','class="btn btn-link" title="view"'),
       );
       $data['rows'][$i] = $temp;
       $i++;
     }
+    $this->parser->parse('_element/obj_tbl',$data);
 
-    $data['begin'] = $begin;
-    $data['end']   = $end;
-    $data['addLink'] = $this->ctrlClass.'Add';
-
-    $this->parser->parse($this->viewDir.'main_view',$data);
   }
 
   public function Add()
@@ -231,23 +240,35 @@ class Org extends CI_Controller{
     redirect($this->ctrlClass.'View/');
   }
 
-  public function View($id=0,$begin='',$end='')
+  public function View($id=0)
   {
-    $delimit = site_url($this->ctrlClass.'EditRel/');
-    $remove  = site_url($this->ctrlClass.'DeleteRelProcess/');
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
 
-    if ($id == 0 && $begin == '' && $end == '') {
+    if ($id == 0 ) {
       $id    = $this->session->userdata('selectId');
-      $begin = $this->session->userdata('filterBegDa');
-      $end   = $this->session->userdata('filterEndDa');
     } else {
       $array = array(
-        'selectId'    => $id,
-        'filterBegDa' => $begin,
-        'filterEndDa' => $end,
+        'selectId' => $id,
       );
       $this->session->set_userdata($array);
     }
+
+    $data['begin']    = $begin;
+    $data['end']      = $end;
+    $data['ajaxUrl1'] = $this->ctrlClass.'AjaxGetDetail';
+    $data['ajaxUrl2'] = $this->ctrlClass.'AjaxGetRel';
+    $data['backLink'] = $this->ctrlClass;
+    $data['delLink']  = $this->ctrlClass.'DeleteProcess';
+
+    $this->parser->parse($this->viewDir.'detail_view',$data);
+  }
+
+  public function AjaxGetDetail()
+  {
+    $id    = $this->session->userdata('selectId');
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
     $keydate['begin'] = $begin;
     $keydate['end']   = $end;
 
@@ -260,6 +281,10 @@ class Org extends CI_Controller{
     $data['objName']  = $attr->name;
     $keydate['begin'] = $begin;
     $keydate['end']   = $end;
+    $data['editDate']   = $this->ctrlClass.'EditDate/';
+    $data['editName']   = $this->ctrlClass.'EditName/';
+    $this->parser->parse('_element/obj_detail',$data);
+
     $ls = $this->OrgModel->GetNameHistoryList($id,$keydate,'desc');
     $history = array();
     foreach ($ls as $row) {
@@ -276,6 +301,22 @@ class Org extends CI_Controller{
       );
     }
     $data['history']  = $history;
+    $this->parser->parse('_element/hisname_tbl',$data);
+
+  }
+
+  public function AjaxGetRel()
+  {
+    $id    = $this->session->userdata('selectId');
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
+
+    $delimit = site_url($this->ctrlClass.'EditRel/');
+    $remove  = site_url($this->ctrlClass.'DeleteRelProcess/');
+
+    $keydate['begin'] = $begin;
+    $keydate['end']   = $end;
+
     if ($this->OrgModel->CountParentOrg($id,$keydate)) {
       $parent = $this->OrgModel->GetParentOrg($id,$keydate);
       $data['parentId']   = $parent->parent_id;
@@ -348,15 +389,10 @@ class Org extends CI_Controller{
       );
     }
     $data['chief'] = $chief;
-
-    $data['backLink']   = $this->ctrlClass;
-    $data['delLink']    = $this->ctrlClass.'DeleteProcess';
-    $data['editDate']   = $this->ctrlClass.'EditDate/';
-    $data['editName']   = $this->ctrlClass.'EditName/';
     $data['editParent'] = $this->ctrlClass.'EditParent/';
-    $data['editChief']  = $this->ctrlClass.'EditChief/';;
-    $this->parser->parse($this->viewDir.'detail_view',$data);
-  }
+    $data['editChief']  = $this->ctrlClass.'EditChief/';
+    $this->parser->parse($this->viewDir . 'rel_elm',$data);
 
+  }
 
 }

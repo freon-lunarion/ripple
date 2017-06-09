@@ -22,7 +22,7 @@ class Job extends CI_Controller{
     }
 
     if ($end == '') {
-      $end = '9999-12-31';
+      $end = date('Y-m-d');
     }
 
     $data['ajaxUrl'] = $this->ctrlClass.'AjaxGetList';
