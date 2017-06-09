@@ -4,7 +4,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <?php echo link_tag('components/bootstrap/dist/css/bootstrap.min.css'); ?>
-
+  <?php echo link_tag('components/font-awesome/css/font-awesome.min.css'); ?>
+  <?php echo link_tag('components/sweetalert/dist/sweetalert.css'); ?>
 </head>
 <body>
   <div class="container">

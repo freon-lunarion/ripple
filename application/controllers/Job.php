@@ -159,9 +159,6 @@ class Job extends CI_Controller{
 
   public function View($id=0)
   {
-    $delimit = site_url($this->ctrlClass.'EditRel/');
-    $remove  = site_url($this->ctrlClass.'DeleteRelProcess/');
-
     $begin = $this->session->userdata('filterBegDa');
     $end   = $this->session->userdata('filterEndDa');
     if ($id == 0 ) {
@@ -172,30 +169,13 @@ class Job extends CI_Controller{
       );
       $this->session->set_userdata($array);
     }
-    $keydate['begin'] = $begin;
-    $keydate['end']   = $end;
 
-    $ls = $this->JobModel->GetRelatedPostList($id,$keydate);
-    $post = array();
-
-    foreach ($ls as $row) {
-      $post[] = array(
-        'postRelId' => $row->post_rel_id,
-        'postBegin' => $row->post_begin_date,
-        'postEnd'   => $row->post_end_date,
-        'postId'    => $row->post_id,
-        'postName'  => $row->post_name,
-        'chgRel'    => $delimit.$row->post_rel_id,
-        'remRel'    => $remove.$row->post_rel_id,
-      );
-    }
     $data['begin']    = $begin;
     $data['end']      = $end;
-    $data['post']     = $post;
     $data['backLink'] = $this->ctrlClass;
     $data['delLink']  = $this->ctrlClass.'DeleteProcess';
-
-    $data['ajaxUrl']  = $this->ctrlClass.'AjaxGetDetail';
+    $data['ajaxUrl1'] = $this->ctrlClass.'AjaxGetDetail';
+    $data['ajaxUrl2'] = $this->ctrlClass.'AjaxGetRelPos';
     $this->parser->parse($this->viewDir.'detail_view',$data);
   }
 
@@ -235,6 +215,37 @@ class Job extends CI_Controller{
     }
     $data['history']  = $history;
     $this->parser->parse('_element/hisname_tbl',$data);
+
+  }
+
+  public function AjaxGetRelPos()
+  {
+    $id    = $this->session->userdata('selectId');
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
+
+    $delimit = site_url($this->ctrlClass.'EditRel/');
+    $remove  = site_url($this->ctrlClass.'DeleteRelProcess/');
+
+    $keydate['begin'] = $begin;
+    $keydate['end']   = $end;
+    $ls = $this->JobModel->GetRelatedPostList($id,$keydate);
+    $post = array();
+
+    foreach ($ls as $row) {
+      $post[] = array(
+        'postRelId' => $row->post_rel_id,
+        'postBegin' => $row->post_begin_date,
+        'postEnd'   => $row->post_end_date,
+        'postId'    => $row->post_id,
+        'postName'  => $row->post_name,
+        'chgRel'    => $delimit.$row->post_rel_id,
+        'remRel'    => $remove.$row->post_rel_id,
+      );
+    }
+    $data['post']     = $post;
+
+    $this->parser->parse($this->viewDir . 'relPos_elm',$data);
 
   }
 

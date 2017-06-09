@@ -39,5 +39,5 @@
     {/post}
   </tbody>
 </table>
-<?php echo anchor($backLink,'Back','class="btn btn-default"');?> <?php echo anchor($delLink,'Delete','class="btn btn-danger"');?>
+<?php echo anchor($backLink,'Back','class="btn btn-default"');?> <?php echo anchor($delLink,'Delete','class="btn btn-danger btn-delete"');?>
 <?php $this->load->view('_template/bottom');?>
