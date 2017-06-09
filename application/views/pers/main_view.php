@@ -4,5 +4,8 @@
 <?php echo anchor($addLink,'Add' ,'class="btn btn-default"');?>
 <hr />
 <?php $this->load->view('_element/rangedate_filter');?>
-<?php $this->load->view('_element/obj_tbl');?>
+<div id="tbl_obj" class="refresh_target" data-ajax="{ajaxUrl}"></div>
+
 <?php $this->load->view('_template/bottom');?>
+
+<script src="<?php echo base_url()?>assets/js/filterDate.js"></script>

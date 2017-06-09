@@ -175,7 +175,7 @@ class Job extends CI_Controller{
     $data['backLink'] = $this->ctrlClass;
     $data['delLink']  = $this->ctrlClass.'DeleteProcess';
     $data['ajaxUrl1'] = $this->ctrlClass.'AjaxGetDetail';
-    $data['ajaxUrl2'] = $this->ctrlClass.'AjaxGetRelPos';
+    $data['ajaxUrl2'] = $this->ctrlClass.'AjaxGetRel';
     $this->parser->parse($this->viewDir.'detail_view',$data);
   }
 
@@ -218,7 +218,7 @@ class Job extends CI_Controller{
 
   }
 
-  public function AjaxGetRelPos()
+  public function AjaxGetRel()
   {
     $id    = $this->session->userdata('selectId');
     $begin = $this->session->userdata('filterBegDa');
@@ -245,7 +245,7 @@ class Job extends CI_Controller{
     }
     $data['post']     = $post;
 
-    $this->parser->parse($this->viewDir . 'relPos_elm',$data);
+    $this->parser->parse($this->viewDir . 'rel_elm',$data);
 
   }
 

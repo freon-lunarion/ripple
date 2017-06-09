@@ -39,6 +39,10 @@ class Org extends CI_Controller{
   {
     $begin = $this->session->userdata('filterBegDa');
     $end   = $this->session->userdata('filterEndDa');
+
+    $keydate['begin'] = $begin;
+    $keydate['end']   = $end;
+
     $rows = $this->OrgModel->GetList($begin,$end);
     $data['rows'] = array();
     $i = 0 ;
