@@ -39,7 +39,7 @@
               <td><a href="{chgRel}" class="btn btn-link" title="Change Date">Chg. Date</a>
               <td>{childrenId}</td>
               <td>{childrenName}</td>
-              <td><a href="{remRel}" class="btn btn-link" title="Change Date">Delete</a></td>
+              <td><a href="{remRel}" class="btn btn-link btn-delete" title="Delete">Delete</a></td>
             </tr>
           {/children}
         </tbody>
@@ -65,7 +65,7 @@
               <td><a href="{chgRel}" class="btn btn-link" title="Change Date">Chg. Date</a>
               <td>{postId}</td>
               <td>{postName}</td>
-              <td><a href="{remRel}" class="btn btn-link" title="Change Date">Delete</a></td>
+              <td><a href="{remRel}" class="btn btn-link btn-delete" title="Delete">Delete</a></td>
             </tr>
           {/post}
         </tbody>
@@ -83,9 +83,9 @@
       <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
           <div class="panel-heading" role="tab" id="">
-            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#hisParent" aria-expanded="true" aria-controls="hisParent">
             <h4 class="panel-title">
-                History of Parent
+              <a role="button" data-toggle="collapse" data-parent="#accordion" href="#hisParent" aria-expanded="true" aria-controls="hisParent">
+                <i class="fa fa-chevron-right"></i> History of Parent
               </a>
             </h4>
           </div>
@@ -129,9 +129,9 @@
       <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
           <div class="panel-heading" role="tab" id="">
-            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#hisChief" aria-expanded="true" aria-controls="hisChief">
             <h4 class="panel-title">
-                History of Chief
+              <a role="button" data-toggle="collapse" data-parent="#accordion" href="#hisChief" aria-expanded="true" aria-controls="hisChief">
+                <i class="fa fa-chevron-right"></i> History of Chief
               </a>
             </h4>
           </div>
@@ -161,7 +161,7 @@
           </div>
         </div>
       </div>
-      
+
     </div>
   </div>
 

@@ -1,5 +1,6 @@
-$('.btn-delete').click(function(event) {
+$('body').on('click', '.btn-delete', function(event) {
   event.preventDefault();
+
   var url = $(this).attr('href');
   /* Act on the event */
   swal({

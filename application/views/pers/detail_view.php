@@ -33,7 +33,7 @@
         <td>{postId}</td>
         <td>{postName}</td>
         <td><a href="{sprLink}" class="btn btn-link">View</a></td>
-        <td><a href="{remRel}" class="btn btn-link" title="Change Date">Delete</a>
+        <td><a href="{remRel}" class="btn btn-link btn-delete" title="Delete">Delete</a>
           </td>
       </tr>
     {/post}

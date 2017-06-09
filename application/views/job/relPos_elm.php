@@ -19,7 +19,7 @@
         <td><a href="{chgRel}" class="btn btn-link" title="Change Date">Chg. Date</a>
         <td>{postId}</td>
         <td>{postName}</td>
-        <td><a href="{remRel}" class="btn btn-link" title="Change Date">Delete</a>
+        <td><a href="{remRel}" class="btn btn-link btn-delete" title="Change Date">Delete</a>
           </td>
       </tr>
     {/post}

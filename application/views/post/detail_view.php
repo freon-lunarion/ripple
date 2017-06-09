@@ -35,9 +35,9 @@
       <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
           <div class="panel-heading" role="tab" id="">
-            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#hisHolder" aria-expanded="true" aria-controls="hisHolder">
             <h4 class="panel-title">
-                History of Holder
+              <a role="button" data-toggle="collapse" data-parent="#accordion" href="#hisHolder" aria-expanded="true" aria-controls="hisHolder">
+                <i class="fa fa-chevron-right"></i> History of Holder
               </a>
             </h4>
           </div>
@@ -80,9 +80,9 @@
       <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
           <div class="panel-heading" role="tab" id="">
-            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#hisSpr" aria-expanded="true" aria-controls="hisSpr">
             <h4 class="panel-title">
-                History of Superior
+              <a role="button" data-toggle="collapse" data-parent="#accordion" href="#hisSpr" aria-expanded="true" aria-controls="hisSpr">
+                <i class="fa fa-chevron-right"></i> History of Superior
               </a>
             </h4>
           </div>
@@ -139,7 +139,7 @@
 
               <td>{subPostId}</td>
               <td>{subPostName}</td>
-              <td><a href="{remRel}" class="btn btn-link" title="Change Date">Delete</a>
+              <td><a href="{remRel}" class="btn btn-link btn-delete" title="Delete">Delete</a>
 
             </tr>
           {/sub}
@@ -180,9 +180,9 @@
       <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
           <div class="panel-heading" role="tab" id="">
-            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#hisAss" aria-expanded="true" aria-controls="hisAss">
             <h4 class="panel-title">
-                History of Assignment
+              <a role="button" data-toggle="collapse" data-parent="#accordion" href="#hisAss" aria-expanded="true" aria-controls="hisAss">
+                <i class="fa fa-chevron-right"></i> History of Assignment
               </a>
             </h4>
           </div>
@@ -226,9 +226,9 @@
       <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
           <div class="panel-heading" role="tab" id="">
-            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#hisMan" aria-expanded="true" aria-controls="hisMan">
             <h4 class="panel-title">
-                History of Managing
+              <a role="button" data-toggle="collapse" data-parent="#accordion" href="#hisMan" aria-expanded="true" aria-controls="hisMan">
+                <i class="fa fa-chevron-right"></i> History of Managing
               </a>
             </h4>
           </div>
@@ -274,9 +274,9 @@
       <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
           <div class="panel-heading" role="tab" id="">
-            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#hisJob" aria-expanded="true" aria-controls="hisJob">
             <h4 class="panel-title">
-                History of Job Type
+              <a role="button" data-toggle="collapse" data-parent="#accordion" href="#hisJob" aria-expanded="true" aria-controls="hisJob">
+                <i class="fa fa-chevron-right"></i> History of Job Type
               </a>
             </h4>
           </div>
