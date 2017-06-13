@@ -246,11 +246,16 @@ class BaseModel extends CI_Model{
   // Name / Attribute
   public function GetByNameList($name='',$keydate='',$type=NULL)
   {
+    $this->db->select('obj.id');
+    $this->db->select('obj.type');
+    $this->db->select('obj.begin_date');
+    $this->db->select('obj.end_date');
+    $this->db->select('attr.name');
     $this->db->from($this->tblAttr .' attr');
     $this->db->join($this->tblObj . ' obj', 'attr.obj_id = obj.id');
     $this->db->where('attr.is_delete', 0);
     $this->db->where('obj.is_delete', 0);
-    $this->db->like('LOWER(attr.name)', strtolower($name));
+    $this->db->like('LOWER(attr.name)', $name);
 
     if (!is_null($type)) {
       if (!is_array($type)) {
