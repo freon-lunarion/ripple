@@ -339,39 +339,6 @@ class Org extends CI_Controller{
     $this->parser->parse('_element/objStruct_tbl', $data);
   }
 
-  public function AjaxGetList()
-  {
-    if (!$this->session->userdata('filterBegDa') || !$this->session->userdata('filterEndDa')) {
-      $sess = array(
-        'filterBegDa' => date('Y-m-d'),
-        'filterEndDa' => date('Y-m-d'),
-      );
-      $this->session->set_userdata($sess);
-    }
-    $begin = $this->session->userdata('filterBegDa');
-    $end   = $this->session->userdata('filterEndDa');
-
-    $keydate['begin'] = $begin;
-    $keydate['end']   = $end;
-
-    $rows = $this->OrgModel->GetList($begin,$end);
-    $data['rows'] = array();
-    $i = 0 ;
-    foreach ($rows as $row) {
-      $temp = array(
-        'id'       => $row->id,
-        'begda'    => $row->begin_date,
-        'endda'    => $row->end_date,
-        'name'     => $row->name,
-        'viewlink' => anchor($this->ctrlClass.'View/'.$row->id,'View','class="btn btn-link" title="view"'),
-      );
-      $data['rows'][$i] = $temp;
-      $i++;
-    }
-    $this->parser->parse('_element/obj_tbl',$data);
-
-  }
-
   public function AjaxGetRel()
   {
     $id    = $this->session->userdata('selectId');
