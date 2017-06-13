@@ -26,7 +26,7 @@ class Org extends CI_Controller{
     if ($end == '') {
       $end = date('Y-m-d');
     }
-    $data['ajaxUrl'] = $this->ctrlClass.'AjaxGetList';
+    $data['ajaxUrl'] = $this->ctrlClass.'AJaxStruc';
 
     $data['begin'] = $begin;
     $data['end']   = $end;
@@ -35,31 +35,6 @@ class Org extends CI_Controller{
     $this->parser->parse($this->viewDir.'main_view',$data);
   }
 
-  public function AjaxGetList()
-  {
-    $begin = $this->session->userdata('filterBegDa');
-    $end   = $this->session->userdata('filterEndDa');
-
-    $keydate['begin'] = $begin;
-    $keydate['end']   = $end;
-
-    $rows = $this->OrgModel->GetList($begin,$end);
-    $data['rows'] = array();
-    $i = 0 ;
-    foreach ($rows as $row) {
-      $temp = array(
-        'id'       => $row->id,
-        'begda'    => $row->begin_date,
-        'endda'    => $row->end_date,
-        'name'     => $row->name,
-        'viewlink' => anchor($this->ctrlClass.'View/'.$row->id,'View','class="btn btn-link" title="view"'),
-      );
-      $data['rows'][$i] = $temp;
-      $i++;
-    }
-    $this->parser->parse('_element/obj_tbl',$data);
-
-  }
 
   public function Add()
   {
@@ -93,6 +68,8 @@ class Org extends CI_Controller{
     $this->OrgModel->Create($name,$begin,$end,$parent);
     redirect($this->ctrlClass);
   }
+
+
 
   public function EditChief()
   {
@@ -271,6 +248,13 @@ class Org extends CI_Controller{
   public function AjaxGetDetail()
   {
     $id    = $this->session->userdata('selectId');
+    if (!$this->session->userdata('filterBegDa') || !$this->session->userdata('filterEndDa')) {
+      $sess = array(
+        'filterBegDa' => date('Y-m-d'),
+        'filterEndDa' => date('Y-m-d'),
+      );
+      $this->session->set_userdata($sess);
+    }
     $begin = $this->session->userdata('filterBegDa');
     $end   = $this->session->userdata('filterEndDa');
     $keydate['begin'] = $begin;
@@ -306,6 +290,85 @@ class Org extends CI_Controller{
     }
     $data['history']  = $history;
     $this->parser->parse('_element/hisname_tbl',$data);
+
+  }
+
+  public function AJaxStruc()
+  {
+    $id    = $this->input->post('id');
+    if (!$this->session->userdata('filterBegDa') || !$this->session->userdata('filterEndDa')) {
+      $sess = array(
+        'filterBegDa' => date('Y-m-d'),
+        'filterEndDa' => date('Y-m-d'),
+      );
+      $this->session->set_userdata($sess);
+    }
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
+    $date['begin'] = $begin;
+    $date['end']   = $end;
+
+    $bc = $this->OrgModel->GetStruct($id,$date);
+    $data['bc'] = $bc;
+    if ($id > 0) {
+      $children   = $this->OrgModel->GetChildrenOrgList($id,$date);
+      $data['rows'] = array();
+      $i = 0 ;
+      foreach ($children as $row) {
+        $temp = array(
+          'id'       => $row->child_id,
+          'begda'    => $row->child_begin_date,
+          'endda'    => $row->child_end_date,
+          'name'     => $row->child_name,
+          'viewlink' => anchor($this->ctrlClass.'View/'.$row->child_id,'View','class="btn btn-link" title="view"'),
+        );
+        $data['rows'][$i] = $temp;
+        $i++;
+      }
+    } else {
+      $row = $this->OrgModel->GetByIdRow(1,$date);
+      $data['rows'][0] = array(
+        'id'       => $row->id,
+        'begda'    => $row->begin_date,
+        'endda'    => $row->end_date,
+        'name'     => $this->OrgModel->GetLastName(1,$date)->name,
+        'viewlink' => anchor($this->ctrlClass.'View/'.$row->id,'View','class="btn btn-link" title="view"'),
+      );
+    }
+
+    $this->parser->parse('_element/objStruct_tbl', $data);
+  }
+
+  public function AjaxGetList()
+  {
+    if (!$this->session->userdata('filterBegDa') || !$this->session->userdata('filterEndDa')) {
+      $sess = array(
+        'filterBegDa' => date('Y-m-d'),
+        'filterEndDa' => date('Y-m-d'),
+      );
+      $this->session->set_userdata($sess);
+    }
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
+
+    $keydate['begin'] = $begin;
+    $keydate['end']   = $end;
+
+    $rows = $this->OrgModel->GetList($begin,$end);
+    $data['rows'] = array();
+    $i = 0 ;
+    foreach ($rows as $row) {
+      $temp = array(
+        'id'       => $row->id,
+        'begda'    => $row->begin_date,
+        'endda'    => $row->end_date,
+        'name'     => $row->name,
+        'viewlink' => anchor($this->ctrlClass.'View/'.$row->id,'View','class="btn btn-link" title="view"'),
+      );
+      $data['rows'][$i] = $temp;
+      $i++;
+    }
+    $this->parser->parse('_element/obj_tbl',$data);
 
   }
 

@@ -182,4 +182,30 @@ class OrgModel extends CI_Model{
   {
     return $this->BaseModel->GetRelById($relId);
   }
+
+  public function GetStruct($objId=0,$keydate=array())
+  {
+    $obj  = $this->GetByIdRow($objId,$keydate);
+    $attr = $this->GetLastName($objId,$keydate);
+    if ($objId > 0) {
+      $result[0] = array(
+        'id'    => $obj->id,
+        'name'  => $attr->name,
+      );
+      while ($this->CountParentOrg($objId,$keydate)) {
+        $parent = $this->GetParentOrg($objId,$keydate);
+        $result[] = array(
+          'id'    => $parent->parent_id,
+          'name'  => $parent->parent_name,
+        );
+        $objId  = $parent->parent_id;
+      }
+    }
+    $result[] = array(
+      'id'    => 0,
+      'name'  => 'ROOT',
+    );
+
+    return array_reverse($result);
+  }
 }

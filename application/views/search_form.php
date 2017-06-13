@@ -79,7 +79,7 @@
     if(e.keyCode == 13){
       ShowResult();
     } else if (e.keyCode >= 48 && e.keyCode <= 90 && $('#txt_search').val().length > 3) {
-      // keycode 0-9 + a-z 
+      // keycode 0-9 + a-z
       ShowResult();
 
     }
