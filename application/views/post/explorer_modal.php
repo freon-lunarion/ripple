@@ -20,7 +20,7 @@
     StructOrgPost(1);
   })
 
-  $('body').on('click', '.nav-open', function(event) {
+  $('#explor_post').on('click', '.nav-open', function(event) {
     event.preventDefault();
     var id = $(this).data('id');
     StructOrgPost(id);
