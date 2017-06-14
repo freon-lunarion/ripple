@@ -35,7 +35,7 @@
   });
 
   function ReloadList(id) {
-    var ajaxUrl = siteUrl + '/Post/AJaxStruc/explor' ;
+    var ajaxUrl = siteUrl + '/Org/AJaxStruc/post' ;
     $.ajax({
       url: ajaxUrl,
       type: 'POST',

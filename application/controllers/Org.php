@@ -302,20 +302,30 @@ class Org extends CI_Controller{
     $date['end']   = $end;
 
     $bc = $this->OrgModel->GetStruct($id,$date);
-    $data['bc'][0] = array(
-      'id'   => 0,
-      'name' => 'ROOT',
-    );
+    switch (strtolower($mode)) {
+      case 'post':
+        # do nothing
+        break;
+
+      default:
+        $data['bc'][0] = array(
+          'id'   => 0,
+          'name' => 'ROOT',
+        );
+
+        break;
+    }
     foreach ($bc as $row) {
       $data['bc'][] = $row;
     }
     if ($id > 0) {
       $children   = $this->OrgModel->GetChildrenOrgList($id,$date);
-      $data['rows'] = array();
+      $data['org'] = array();
       $i = 0 ;
 
       switch (strtolower($mode)) {
         case 'explor':
+        case 'post':
           foreach ($children as $row) {
             $temp = array(
               'id'       => $row->child_id,
@@ -323,7 +333,7 @@ class Org extends CI_Controller{
               'endda'    => $row->child_end_date,
               'name'     => $row->child_name,
             );
-            $data['rows'][$i] = $temp;
+            $data['org'][$i] = $temp;
             $i++;
           }
           break;
@@ -337,14 +347,14 @@ class Org extends CI_Controller{
               'name'     => $row->child_name,
               'viewlink' => anchor($this->ctrlClass.'View/'.$row->child_id,'View','class="btn btn-link" title="view"'),
             );
-            $data['rows'][$i] = $temp;
+            $data['org'][$i] = $temp;
             $i++;
           }
           break;
       }
     } else {
       $row = $this->OrgModel->GetByIdRow(1,$date);
-      $data['rows'][0] = array(
+      $data['org'][0] = array(
         'id'       => $row->id,
         'begda'    => $row->begin_date,
         'endda'    => $row->end_date,
@@ -353,11 +363,12 @@ class Org extends CI_Controller{
       );
       switch (strtolower($mode)) {
         case 'explor':
-          $data['rows'][0]['viewlink'] = '';
+        case 'post':
+          // do nothing
           break;
 
         default:
-          $data['rows'][0]['viewlink'] = anchor($this->ctrlClass.'View/'.$row->id,'View','class="btn btn-link" title="view"');
+          $data['org'][0]['viewlink'] = anchor($this->ctrlClass.'View/'.$row->id,'View','class="btn btn-link" title="view"');
           break;
       }
     }
@@ -366,7 +377,21 @@ class Org extends CI_Controller{
       case 'explor':
         $this->parser->parse($this->viewDir.'/explorer_content', $data);
         break;
+      case 'post':
+        $i  = 0;
+        $ls = $this->OrgModel->GetPostList($id,$date);
+        foreach ($ls as $row) {
+          $data['post'][$i] = array(
+            'id'    => $row->post_id,
+            'begda' => $row->post_begin_date,
+            'endda' => $row->post_end_date,
+            'name'  => $row->post_name,
+          );
+          $i++;
+        }
+        $this->parser->parse('post/explorer_content', $data);
 
+        break;
       default:
         $this->parser->parse('_element/objStruct_tbl', $data);
         break;

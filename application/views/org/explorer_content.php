@@ -15,7 +15,7 @@
     </tr>
   </thead>
   <tbody>
-    {rows}
+    {org}
       <tr >
         <td>{id}</td>
         <td>{name}</td>
@@ -24,6 +24,6 @@
         <td><a href="#" class="btn btn-link nav-open" data-id="{id}">Open</a></td>
         <td><a href="#" class="btn btn-link nav-select" data-id="{id}" data-dismiss="modal" data-text="{id} - {name}">Select</a></td>
       </tr>
-    {/rows}
+    {/org}
   </tbody>
 </table>
