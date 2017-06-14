@@ -46,14 +46,14 @@ class Org extends CI_Controller{
     if (is_null($end) OR $end == '') {
       $end = date('Y-m-d');
     }
-    $ls     = $this->OrgModel->GetList($begin,$end);
-    $parent = array();
-    foreach ($ls as $row) {
-      $parent[$row->id] = $row->id.' - '.$row->name;
-    }
+    // $ls     = $this->OrgModel->GetList($begin,$end);
+    // $parent = array();
+    // foreach ($ls as $row) {
+    //   $parent[$row->id] = $row->id.' - '.$row->name;
+    // }
     $data['process']    = $this->ctrlClass.'AddProcess';
     $data['ajaxUrl']    = site_url($this->ctrlClass.'AJaxStruc');
-    $data['parentOpt']  = $parent;
+    // $data['parentOpt']  = $parent;
     $data['cancelLink'] = $this->ctrlClass;
 
     $this->load->view($this->viewDir.'add_form',$data);
@@ -152,7 +152,7 @@ class Org extends CI_Controller{
     $newName = $this->input->post('txt_name');
     $id      = $this->session->userdata('selectId');
     $this->OrgModel->ChangeName($id,$newName,$validOn,'9999-12-31');
-    redirect($this->ctrlClass.'View/'.$id.'/'.$validOn.'/9999-12-31');
+    redirect($this->ctrlClass.'View/'.$id);
   }
 
   public function EditParent()
@@ -164,13 +164,8 @@ class Org extends CI_Controller{
     $keydate['end']   = $end;
     $old = $this->OrgModel->GetParentOrg($id,$keydate);
 
-    $ls     = $this->OrgModel->GetList($begin,$end);
-    $parent = array();
-    foreach ($ls as $row) {
-      $parent[$row->id] = $row->id.' - '.$row->name;
-    }
-    $data['parentOpt']  = $parent;
-    $data['parentSlc']  = $old->parent_id;
+    $data['parentId']   = $old->parent_id;
+    $data['parentName'] = $old->parent_name;
     $data['cancelLink'] = $this->ctrlClass.'View/';
     $data['process'] = $this->ctrlClass.'EditParentProcess/';
     $this->load->view($this->viewDir.'parent_form', $data);
@@ -180,8 +175,10 @@ class Org extends CI_Controller{
   {
     $id = $this->session->userdata('selectId');
     $since     = $this->input->post('dt_begin');
-    $newParent = $this->input->post('slc_parent');
+    $newParent = $this->input->post('hdn_parent');
     $this->OrgModel->ChangeParent($id,$newParent,$since,'9999-12-31');
+    redirect($this->ctrlClass.'View/'.$id);
+
   }
 
   public function EditRel($relId=0)
@@ -361,7 +358,7 @@ class Org extends CI_Controller{
       }
     }
     if ($mode == 'explor') {
-      $this->parser->parse($this->viewDir.'/explorer', $data);
+      $this->parser->parse($this->viewDir.'/explorer_content', $data);
 
     } else {
       $this->parser->parse('_element/objStruct_tbl', $data);
