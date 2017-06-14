@@ -75,11 +75,11 @@ class Post extends CI_Controller{
       $super[$row->id] = $row->id.' - '.$row->name;
     }
 
-    $ls     = $this->OrgModel->GetList($begin,$end);
-    $parent = array();
-    foreach ($ls as $row) {
-      $parent[$row->id] = $row->id.' - '.$row->name;
-    }
+    // $ls     = $this->OrgModel->GetList($begin,$end);
+    // $parent = array();
+    // foreach ($ls as $row) {
+    //   $parent[$row->id] = $row->id.' - '.$row->name;
+    // }
     $ls     = $this->JobModel->GetList($begin,$end);
     $job = array();
     foreach ($ls as $row) {
@@ -93,7 +93,7 @@ class Post extends CI_Controller{
     }
     $data['process']    = $this->ctrlClass.'AddProcess';
     $data['superOpt']   = $super;
-    $data['parentOpt']  = $parent;
+    // $data['parentOpt']  = $parent;
     $data['jobOpt']     = $job;
     $data['empOpt']     = $emp;
     $data['cancelLink'] = $this->ctrlClass;
@@ -107,8 +107,8 @@ class Post extends CI_Controller{
     $begin   = $this->input->post('dt_begin');
     $end     = $this->input->post('dt_end');
     $name    = $this->input->post('txt_name');
-    $spr     = $this->input->post('slc_super');
-    $parent  = $this->input->post('slc_parent');
+    $spr     = $this->input->post('hdn_post');
+    $parent  = $this->input->post('hdn_parent');
     $job     = $this->input->post('slc_job');
     $isChief = $this->input->post('chk_chief');
     $emp     = $this->input->post('slc_emp');

@@ -3,7 +3,9 @@
 
   <input type="text" class="form-control readonly" id="txt_parent" name="txt_parent" placeholder="" readonly="readonly">
   <span class="input-group-btn">
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#explor_org">Org ...</button>
+    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#explor_org">
+      <i class="glyphicon glyphicon-option-horizontal  "></i>&nbsp;
+    </button>
 
   </span>
 

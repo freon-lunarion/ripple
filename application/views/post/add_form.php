@@ -5,7 +5,8 @@
   <?php $this->load->view('_element/add_form');?>
   <div class="form-group">
     <label for="txt_name">Parent Organization</label>
-    <?php echo form_dropdown('slc_parent',$parentOpt, '','id="slc_parent" class="form-control"'); ?>
+    <?php $this->load->view('org/explorer_input');?>
+
   </div>
   <div class="checkbox">
     <label>
@@ -14,7 +15,9 @@
   </div>
   <div class="form-group">
     <label for="txt_name">Superior</label>
-    <?php echo form_dropdown('slc_super',$superOpt, '','id="slc_super" class="form-control"'); ?>
+    
+    <?php $this->load->view('post/explorer_input');?>
+
   </div>
   <div class="form-group">
     <label for="txt_name">Job Type</label>
@@ -28,3 +31,5 @@
 
 </form>
 <?php $this->load->view('_template/bottom');?>
+<?php $this->load->view('org/explorer_modal');?>
+<?php $this->load->view('post/explorer_modal');?>

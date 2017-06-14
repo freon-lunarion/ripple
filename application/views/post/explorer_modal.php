@@ -17,16 +17,16 @@
 </div>
 <script>
   $('#explor_post').on('show.bs.modal', function (e) {
-    ReloadList(1);
+    StructOrgPost(1);
   })
 
   $('body').on('click', '.nav-open', function(event) {
     event.preventDefault();
     var id = $(this).data('id');
-    ReloadList(id);
+    StructOrgPost(id);
   });
 
-  $('body').on('click', '.nav-select', function(event) {
+  $('#explor_post').on('click', '.nav-select', function(event) {
     event.preventDefault();
     var id = $(this).data('id');
     var text = $(this).data('text');
@@ -34,7 +34,7 @@
     $('#hdn_post').val(id);
   });
 
-  function ReloadList(id) {
+  function StructOrgPost(id) {
     var ajaxUrl = siteUrl + '/Org/AJaxStruc/post' ;
     $.ajax({
       url: ajaxUrl,

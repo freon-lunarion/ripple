@@ -17,16 +17,16 @@
 </div>
 <script>
   $('#explor_org').on('show.bs.modal', function (e) {
-    ReloadList(0);
+    StructOrg(0);
   })
 
-  $('body').on('click', '.nav-open', function(event) {
+  $('#explor_org').on('click', '.nav-open', function(event) {
     event.preventDefault();
     var id = $(this).data('id');
-    ReloadList(id);
+    StructOrg(id);
   });
 
-  $('body').on('click', '.nav-select', function(event) {
+  $('#explor_org').on('click', '.nav-select', function(event) {
     event.preventDefault();
     var id = $(this).data('id');
     var text = $(this).data('text');
@@ -34,7 +34,7 @@
     $('#hdn_parent').val(id);
   });
 
-  function ReloadList(id) {
+  function StructOrg(id) {
     var ajaxUrl = siteUrl + '/Org/AJaxStruc/explor' ;
     $.ajax({
       url: ajaxUrl,
