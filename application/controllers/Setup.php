@@ -24,6 +24,7 @@ class Setup extends CI_Controller{
       $this->SetupModel->InsertDemoRecords();
 
     }
+    redirect('Home');
   }
 
 }

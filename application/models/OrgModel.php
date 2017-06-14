@@ -187,6 +187,7 @@ class OrgModel extends CI_Model{
   {
     $obj  = $this->GetByIdRow($objId,$keydate);
     $attr = $this->GetLastName($objId,$keydate);
+    $result = array();
     if ($objId > 0) {
       $result[0] = array(
         'id'    => $obj->id,
@@ -201,10 +202,6 @@ class OrgModel extends CI_Model{
         $objId  = $parent->parent_id;
       }
     }
-    $result[] = array(
-      'id'    => 0,
-      'name'  => 'ROOT',
-    );
 
     return array_reverse($result);
   }
