@@ -11,7 +11,7 @@
       <th>Begin</th>
       <th>End</th>
       <th>Open</th>
-      <th>View</th>
+      <th>Select</th>
     </tr>
   </thead>
   <tbody>
@@ -22,7 +22,7 @@
         <td>{begda}</td>
         <td>{endda}</td>
         <td><a href="#" class="btn btn-link nav-open" data-id="{id}">Open</a></td>
-        <td>{viewlink}</td>
+        <td><a href="#" class="btn btn-link nav-select" data-id="{id}" data-dismiss="modal" data-text="{id} - {name}">Select</a></td>
       </tr>
     {/rows}
   </tbody>
