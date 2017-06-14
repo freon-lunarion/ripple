@@ -69,17 +69,7 @@ class Post extends CI_Controller{
     if (is_null($end) OR $end == '') {
       $end = date('Y-m-d');
     }
-    $ls     = $this->PostModel->GetList($begin,$end);
-    $super = array();
-    foreach ($ls as $row) {
-      $super[$row->id] = $row->id.' - '.$row->name;
-    }
 
-    // $ls     = $this->OrgModel->GetList($begin,$end);
-    // $parent = array();
-    // foreach ($ls as $row) {
-    //   $parent[$row->id] = $row->id.' - '.$row->name;
-    // }
     $ls     = $this->JobModel->GetList($begin,$end);
     $job = array();
     foreach ($ls as $row) {
@@ -92,8 +82,6 @@ class Post extends CI_Controller{
       $emp[$row->id] = $row->id.' - '.$row->name;
     }
     $data['process']    = $this->ctrlClass.'AddProcess';
-    $data['superOpt']   = $super;
-    // $data['parentOpt']  = $parent;
     $data['jobOpt']     = $job;
     $data['empOpt']     = $emp;
     $data['cancelLink'] = $this->ctrlClass;
@@ -137,13 +125,13 @@ class Post extends CI_Controller{
     $end    = $this->session->userdata('filterEndDa');
     $keydate['begin'] = $begin;
     $keydate['end']   = $end;
-    $ls     = $this->OrgModel->GetList($begin,$end);
-    $orgOpt = array();
-    foreach ($ls as $row) {
-      $orgOpt[$row->id] = $row->id .' - '.$row->name;
-    }
-    $data['orgOpt'] = $orgOpt;
-    $data['orgSlc'] = $this->PostModel->GetLastAssignmentOrg($id,$keydate)->org_id;
+    // $ls     = $this->OrgModel->GetList($begin,$end);
+    // $orgOpt = array();
+    // foreach ($ls as $row) {
+    //   $orgOpt[$row->id] = $row->id .' - '.$row->name;
+    // }
+    // $data['orgOpt'] = $orgOpt;
+    // $data['orgSlc'] = $this->PostModel->GetLastAssignmentOrg($id,$keydate)->org_id;
 
     $data['cancelLink'] = $this->ctrlClass.'View/';
     $data['process']    = $this->ctrlClass.'EditAssignmentProcess/';
@@ -154,7 +142,7 @@ class Post extends CI_Controller{
   public function EditAssignmentProcess()
   {
     $validOn = $this->input->post('dt_begin');
-    $newOrg  = $this->input->post('slc_org');
+    $newOrg  = $this->input->post('hdn_parent');
     $id      = $this->session->userdata('selectId');
     $this->PostModel->ChangeAssigmentOrg($id,$newOrg,$validOn,'9999-12-31');
     redirect($this->ctrlClass.'View/');
@@ -271,17 +259,17 @@ class Post extends CI_Controller{
     $end    = $this->session->userdata('filterEndDa');
     $keydate['begin'] = $begin;
     $keydate['end']   = $end;
-    $ls     = $this->OrgModel->GetList($begin,$end);
-    $orgOpt = array();
-    foreach ($ls as $row) {
-      $orgOpt[$row->id] = $row->id .' - '.$row->name;
-    }
-    $data['orgOpt'] = $orgOpt;
-    if ($this->PostModel->CountManagingOrg($id,$keydate)) {
-      $data['orgSlc'] = $this->PostModel->GetLastManagingOrg($id,$keydate)->org_id;
-    } else {
-      $data['orgSlc'] = '';
-    }
+    // $ls     = $this->OrgModel->GetList($begin,$end);
+    // $orgOpt = array();
+    // foreach ($ls as $row) {
+    //   $orgOpt[$row->id] = $row->id .' - '.$row->name;
+    // }
+    // $data['orgOpt'] = $orgOpt;
+    // if ($this->PostModel->CountManagingOrg($id,$keydate)) {
+    //   $data['orgSlc'] = $this->PostModel->GetLastManagingOrg($id,$keydate)->org_id;
+    // } else {
+    //   $data['orgSlc'] = '';
+    // }
 
     $data['cancelLink'] = $this->ctrlClass.'View/';
     $data['process']    = $this->ctrlClass.'EditManagingProcess';
@@ -292,7 +280,7 @@ class Post extends CI_Controller{
   public function EditManagingProcess()
   {
     $validOn = $this->input->post('dt_begin');
-    $newOrg  = $this->input->post('slc_org');
+    $newOrg  = $this->input->post('hdn_parent');
     $id      = $this->session->userdata('selectId');
     $this->PostModel->ChangeManagingOrg($id,$newOrg,$validOn,'9999-12-31');
     redirect($this->ctrlClass.'View/');
@@ -357,14 +345,8 @@ class Post extends CI_Controller{
     $keydate['begin'] = $begin;
     $keydate['end']   = $end;
 
-    $ls = $this->PostModel->GetList($begin,$end);
-    $postOpt = array();
-    foreach ($ls as $row) {
-      $postOpt[$row->id] = $row->id .' - '.$row->name;
-    }
-    $post = $this->PostModel->GetLastSuperiorPost($id,$keydate);
-    $data['postOpt']    = $postOpt;
-    $data['postSlc']    = $post->post_id;
+    // $post = $this->PostModel->GetLastSuperiorPost($id,$keydate);
+    // $data['postSlc']    = $post->post_id;
     $data['cancelLink'] = $this->ctrlClass.'View/';
     $data['process']    = $this->ctrlClass.'EditSuperiorProcess/';
     $this->load->view($this->viewDir.'superior_form', $data);
@@ -373,9 +355,9 @@ class Post extends CI_Controller{
 
   public function EditSuperiorProcess()
   {
-    $validOn   = $this->input->post('dt_begin');
-    $newPost = $this->input->post('slc_post');
-    $id        = $this->session->userdata('selectId');
+    $validOn = $this->input->post('dt_begin');
+    $newPost = $this->input->post('hdn_post');
+    $id      = $this->session->userdata('selectId');
     $this->PostModel->ChangeSuperior($id,$newPost,$validOn,'9999-12-31');
     redirect($this->ctrlClass.'View/');
   }

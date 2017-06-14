@@ -9,10 +9,12 @@
 
   <div class="form-group">
     <label for="txt_name">Organization</label>
-    <?php echo form_dropdown('slc_org',$orgOpt, $orgSlc,'id="slc_org" class="form-control"'); ?>
+    <?php $this->load->view('org/explorer_input'); ?>
+
 
   </div>
   <?php $this->load->view('_element/form_act'); ?>
 
 </form>
 <?php $this->load->view('_template/bottom');?>
+<?php $this->load->view('org/explorer_modal'); ?>

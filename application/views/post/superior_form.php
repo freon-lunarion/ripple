@@ -9,10 +9,12 @@
 
   <div class="form-group">
     <label for="txt_name">Superior</label>
-    <?php echo form_dropdown('slc_post',$postOpt, $postSlc,'id="slc_post" class="form-control"'); ?>
+    <?php $this->load->view('post/explorer_input');?>
+
 
   </div>
   <?php $this->load->view('_element/form_act'); ?>
 
 </form>
 <?php $this->load->view('_template/bottom');?>
+<?php $this->load->view('post/explorer_modal');?>
