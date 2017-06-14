@@ -289,6 +289,7 @@ class Org extends CI_Controller{
   public function AJaxStruc($mode="")
   {
     $id    = $this->input->post('id');
+
     if (!$this->session->userdata('filterBegDa') || !$this->session->userdata('filterEndDa')) {
       $sess = array(
         'filterBegDa' => date('Y-m-d'),
@@ -302,7 +303,7 @@ class Org extends CI_Controller{
     $date['end']   = $end;
 
     $bc = $this->OrgModel->GetStruct($id,$date);
-    switch (strtolower($mode)) {
+    switch (strtolower($mode) ) {
       case 'post':
         # do nothing
         break;
@@ -318,14 +319,28 @@ class Org extends CI_Controller{
     foreach ($bc as $row) {
       $data['bc'][] = $row;
     }
-    if ($id > 0) {
+    if ($id > 0 && $id != '') {
       $children   = $this->OrgModel->GetChildrenOrgList($id,$date);
-      $data['org'] = array();
       $i = 0 ;
 
       switch (strtolower($mode)) {
         case 'explor':
+          $data['org']  = array();
+
+          foreach ($children as $row) {
+            $temp = array(
+              'id'       => $row->child_id,
+              'begda'    => $row->child_begin_date,
+              'endda'    => $row->child_end_date,
+              'name'     => $row->child_name,
+            );
+            $data['org'][$i] = $temp;
+            $i++;
+          }
+          break;
         case 'post':
+          $data['org']  = array();
+
           foreach ($children as $row) {
             $temp = array(
               'id'       => $row->child_id,
@@ -339,6 +354,8 @@ class Org extends CI_Controller{
           break;
 
         default:
+          $data['rows'] = array();
+
           foreach ($children as $row) {
             $temp = array(
               'id'       => $row->child_id,
@@ -347,28 +364,46 @@ class Org extends CI_Controller{
               'name'     => $row->child_name,
               'viewlink' => anchor($this->ctrlClass.'View/'.$row->child_id,'View','class="btn btn-link" title="view"'),
             );
-            $data['org'][$i] = $temp;
+            $data['rows'][$i] = $temp;
             $i++;
           }
           break;
       }
     } else {
       $row = $this->OrgModel->GetByIdRow(1,$date);
-      $data['org'][0] = array(
-        'id'       => $row->id,
-        'begda'    => $row->begin_date,
-        'endda'    => $row->end_date,
-        'name'     => $this->OrgModel->GetLastName(1,$date)->name,
-        'viewlink' => '',
-      );
+
       switch (strtolower($mode)) {
         case 'explor':
+          $data['org'][0] = array(
+            'id'       => $row->id,
+            'begda'    => $row->begin_date,
+            'endda'    => $row->end_date,
+            'name'     => $this->OrgModel->GetLastName(1,$date)->name,
+            'viewlink' => '',
+          );
+          break;
         case 'post':
           // do nothing
+
+          $data['org'][0] = array(
+            'id'       => $row->id,
+            'begda'    => $row->begin_date,
+            'endda'    => $row->end_date,
+            'name'     => $this->OrgModel->GetLastName(1,$date)->name,
+            'viewlink' => '',
+          );
           break;
 
         default:
-          $data['org'][0]['viewlink'] = anchor($this->ctrlClass.'View/'.$row->id,'View','class="btn btn-link" title="view"');
+
+          $data['rows'][0] = array(
+            'id'       => $row->id,
+            'begda'    => $row->begin_date,
+            'endda'    => $row->end_date,
+            'name'     => $this->OrgModel->GetLastName(1,$date)->name,
+            'viewlink' => anchor($this->ctrlClass.'View/'.$row->id,'View','class="btn btn-link" title="view"'),
+          );
+
           break;
       }
     }

@@ -9,6 +9,7 @@
 <?php $this->load->view('_template/bottom');?>
  <script src="<?php echo base_url()?>assets/js/filterDate.js"></script>
 <script>
+  
   $('body').on('click', '.nav-open', function(event) {
     event.preventDefault();
     var id = $(this).data('id');
