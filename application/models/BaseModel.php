@@ -14,6 +14,17 @@ class BaseModel extends CI_Model{
   }
 
   // Object
+
+  /**
+   * [Create Object with name attribute]
+   * [Membuat Object dengan nama]
+   * @method Create
+   * @param  string $type  [Object Type refer to ref_obj_type table]
+   * @param  string $name  [max:150 char(s)]
+   * @param  string $begin [yyyy-mm-dd]
+   * @param  string $end   [yyyy-mm-dd]
+   */
+
   public function Create($type='',$name='',$begin='1990-01-01',$end='9999-12-31')
   {
     $data = array(
@@ -32,6 +43,16 @@ class BaseModel extends CI_Model{
     $this->InsertOn($this->tblAttr, $data);
     return $objId;
   }
+
+  /**
+   * [Change Object's name]
+   * [Mengganti Nama Object]
+   * @method ChangeName
+   * @param  integer    $objId   [ID Object]
+   * @param  string     $newName [nama baru]
+   * @param  string     $validOn [tanggal mulai]
+   * @param  string     $endDate [yyyy-mm-dd]
+   */
 
   public function ChangeName($objId=0,$newName='',$validOn='',$endDate='9999-12-31')
   {
@@ -58,6 +79,15 @@ class BaseModel extends CI_Model{
     );
     $this->InsertOn($this->tblAttr,$data);
   }
+
+  /**
+   * [Change Object's Date]
+   * [Mengganti Tanggal berlaku Object]
+   * @method ChangeDate
+   * @param  integer    $objId     [description]
+   * @param  string     $beginDate [description]
+   * @param  string     $endDate   [description]
+   */
 
   public function ChangeDate($objId=0,$beginDate='',$endDate='')
   {
