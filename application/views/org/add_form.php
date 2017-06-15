@@ -4,11 +4,12 @@
 
   <?php $this->load->view('_element/add_form');?>
   <div class="form-group">
-    <label for="txt_name">Parent</label>
-    <?php echo form_dropdown('slc_parent',$parentOpt, '','id="slc_parent" class="form-control"'); ?>
+    <label for="">Parent</label>
+    <?php $this->load->view('_element/orgStruct_input');?>
 
   </div>
   <?php $this->load->view('_element/form_act'); ?>
 
 </form>
 <?php $this->load->view('_template/bottom');?>
+<?php $this->load->view('_element/orgStruct_modal');?>

@@ -6,13 +6,14 @@
     <label for="dt_begin">Since </label>
     <input type="date" class="form-control" name="dt_begin" id="dt_begin" value="<?php echo date('Y-m-d')?>" >
   </div>
-
   <div class="form-group">
-    <label for="txt_name">Parent</label>
-    <?php echo form_dropdown('slc_parent',$parentOpt, $parentSlc,'id="slc_parent" class="form-control"'); ?>
-
+    <label for="">Parent</label>
+    <?php $this->load->view('_element/orgStruct_input');?>
   </div>
+
   <?php $this->load->view('_element/form_act'); ?>
 
 </form>
 <?php $this->load->view('_template/bottom');?>
+
+<?php $this->load->view('_element/orgStruct_modal');?>

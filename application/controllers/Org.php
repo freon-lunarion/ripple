@@ -26,7 +26,7 @@ class Org extends CI_Controller{
     if ($end == '') {
       $end = date('Y-m-d');
     }
-    $data['ajaxUrl'] = $this->ctrlClass.'AjaxGetList';
+    $data['ajaxUrl'] = $this->ctrlClass.'AJaxStruc';
 
     $data['begin'] = $begin;
     $data['end']   = $end;
@@ -35,31 +35,6 @@ class Org extends CI_Controller{
     $this->parser->parse($this->viewDir.'main_view',$data);
   }
 
-  public function AjaxGetList()
-  {
-    $begin = $this->session->userdata('filterBegDa');
-    $end   = $this->session->userdata('filterEndDa');
-
-    $keydate['begin'] = $begin;
-    $keydate['end']   = $end;
-
-    $rows = $this->OrgModel->GetList($begin,$end);
-    $data['rows'] = array();
-    $i = 0 ;
-    foreach ($rows as $row) {
-      $temp = array(
-        'id'       => $row->id,
-        'begda'    => $row->begin_date,
-        'endda'    => $row->end_date,
-        'name'     => $row->name,
-        'viewlink' => anchor($this->ctrlClass.'View/'.$row->id,'View','class="btn btn-link" title="view"'),
-      );
-      $data['rows'][$i] = $temp;
-      $i++;
-    }
-    $this->parser->parse('_element/obj_tbl',$data);
-
-  }
 
   public function Add()
   {
@@ -71,13 +46,11 @@ class Org extends CI_Controller{
     if (is_null($end) OR $end == '') {
       $end = date('Y-m-d');
     }
-    $ls     = $this->OrgModel->GetList($begin,$end);
-    $parent = array();
-    foreach ($ls as $row) {
-      $parent[$row->id] = $row->id.' - '.$row->name;
-    }
+
     $data['process']    = $this->ctrlClass.'AddProcess';
-    $data['parentOpt']  = $parent;
+    $data['ajaxUrl']    = site_url($this->ctrlClass.'AJaxStruc');
+    $data['orgId']      = '';
+    $data['orgName']    = '';
     $data['cancelLink'] = $this->ctrlClass;
 
     $this->load->view($this->viewDir.'add_form',$data);
@@ -89,10 +62,11 @@ class Org extends CI_Controller{
     $begin  = $this->input->post('dt_begin');
     $end    = $this->input->post('dt_end');
     $name   = $this->input->post('txt_name');
-    $parent = $this->input->post('slc_parent');
+    $parent = $this->input->post('hdn_org');
     $this->OrgModel->Create($name,$begin,$end,$parent);
     redirect($this->ctrlClass);
   }
+
 
   public function EditChief()
   {
@@ -105,16 +79,12 @@ class Org extends CI_Controller{
     }
     $keydate['begin'] = $begin;
     $keydate['end']   = $end;
-    $ls = $this->PostModel->GetList($begin,$end);
-    $chiefOpt = array();
-    foreach ($ls as $row) {
-      $chiefOpt[$row->id] = $row->id .' - '.$row->name;
-    }
-    $chief = $this->OrgModel->GetLastChiefPost($id,$keydate);
-    $data['chiefOpt']   = $chiefOpt;
-    $data['chiefSlc']   = $chief->post_id;
-    $data['begin']      = date('Y-m-d');
 
+    $old = $this->OrgModel->GetLastChiefPost($id,$keydate);
+
+    $data['begin']      = date('Y-m-d');
+    $data['postId']     = $old->post_id;
+    $data['postName']   = $old->post_name;
     $data['cancelLink'] = $this->ctrlClass.'View/';
     $data['process']    = $this->ctrlClass.'EditChiefProcess';
     $this->load->view($this->viewDir.'chief_form', $data);
@@ -124,7 +94,7 @@ class Org extends CI_Controller{
   public function EditChiefProcess()
   {
     $validOn  = $this->input->post('dt_begin');
-    $newChief = $this->input->post('slc_chief');
+    $newChief = $this->input->post('hdn_post');
     $id       = $this->session->userdata('selectId');
     $this->OrgModel->ChangeChiefPost($id,$newChief,$validOn,'9999-12-31');
     redirect($this->ctrlClass.'View/');
@@ -175,7 +145,7 @@ class Org extends CI_Controller{
     $newName = $this->input->post('txt_name');
     $id      = $this->session->userdata('selectId');
     $this->OrgModel->ChangeName($id,$newName,$validOn,'9999-12-31');
-    redirect($this->ctrlClass.'View/'.$id.'/'.$validOn.'/9999-12-31');
+    redirect($this->ctrlClass.'View/'.$id);
   }
 
   public function EditParent()
@@ -187,13 +157,8 @@ class Org extends CI_Controller{
     $keydate['end']   = $end;
     $old = $this->OrgModel->GetParentOrg($id,$keydate);
 
-    $ls     = $this->OrgModel->GetList($begin,$end);
-    $parent = array();
-    foreach ($ls as $row) {
-      $parent[$row->id] = $row->id.' - '.$row->name;
-    }
-    $data['parentOpt']  = $parent;
-    $data['parentSlc']  = $old->parent_id;
+    $data['orgId']   = $old->parent_id;
+    $data['orgName'] = $old->parent_name;
     $data['cancelLink'] = $this->ctrlClass.'View/';
     $data['process'] = $this->ctrlClass.'EditParentProcess/';
     $this->load->view($this->viewDir.'parent_form', $data);
@@ -203,8 +168,10 @@ class Org extends CI_Controller{
   {
     $id = $this->session->userdata('selectId');
     $since     = $this->input->post('dt_begin');
-    $newParent = $this->input->post('slc_parent');
+    $newParent = $this->input->post('hdn_org');
     $this->OrgModel->ChangeParent($id,$newParent,$since,'9999-12-31');
+    redirect($this->ctrlClass.'View/'.$id);
+
   }
 
   public function EditRel($relId=0)
@@ -271,6 +238,13 @@ class Org extends CI_Controller{
   public function AjaxGetDetail()
   {
     $id    = $this->session->userdata('selectId');
+    if (!$this->session->userdata('filterBegDa') || !$this->session->userdata('filterEndDa')) {
+      $sess = array(
+        'filterBegDa' => date('Y-m-d'),
+        'filterEndDa' => date('Y-m-d'),
+      );
+      $this->session->set_userdata($sess);
+    }
     $begin = $this->session->userdata('filterBegDa');
     $end   = $this->session->userdata('filterEndDa');
     $keydate['begin'] = $begin;
@@ -306,6 +280,64 @@ class Org extends CI_Controller{
     }
     $data['history']  = $history;
     $this->parser->parse('_element/hisname_tbl',$data);
+
+  }
+
+  public function AJaxStruc($mode="")
+  {
+    $id    = $this->input->post('id');
+    if (!$this->session->userdata('filterBegDa') || !$this->session->userdata('filterEndDa')) {
+      $sess = array(
+        'filterBegDa' => date('Y-m-d'),
+        'filterEndDa' => date('Y-m-d'),
+      );
+      $this->session->set_userdata($sess);
+    }
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
+    $date['begin'] = $begin;
+    $date['end']   = $end;
+
+    $bc = $this->OrgModel->GetStruct($id,$date);
+    $data['bc'][0] = array(
+      'id'   => 0,
+      'name' => 'ROOT',
+    );
+
+    foreach ($bc as $row) {
+      $data['bc'][] = $row;
+    }
+    if ($id > 0 && $id != '') {
+      $children   = $this->OrgModel->GetChildrenOrgList($id,$date);
+      $i = 0 ;
+      $data['rows'] = array();
+
+      foreach ($children as $row) {
+        $temp = array(
+          'id'       => $row->child_id,
+          'begda'    => $row->child_begin_date,
+          'endda'    => $row->child_end_date,
+          'name'     => $row->child_name,
+          'viewlink' => anchor($this->ctrlClass.'View/'.$row->child_id,'View','class="btn btn-link" title="view"'),
+        );
+        $data['rows'][$i] = $temp;
+        $i++;
+      }
+
+    } else {
+      $row = $this->OrgModel->GetByIdRow(1,$date);
+      $data['rows'][0] = array(
+        'id'       => $row->id,
+        'begda'    => $row->begin_date,
+        'endda'    => $row->end_date,
+        'name'     => $this->OrgModel->GetLastName(1,$date)->name,
+        'viewlink' => anchor($this->ctrlClass.'View/'.$row->id,'View','class="btn btn-link" title="view"'),
+      );
+
+    }
+
+    $this->parser->parse('org/struct_content', $data);
+
 
   }
 
