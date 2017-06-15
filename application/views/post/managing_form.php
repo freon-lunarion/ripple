@@ -9,7 +9,7 @@
 
   <div class="form-group">
     <label for="txt_name">Organization</label>
-    <?php $this->load->view('org/explorer_input'); ?>
+    <?php $this->load->view('_element/orgStruct_input'); ?>
 
 
   </div>
@@ -17,4 +17,4 @@
 
 </form>
 <?php $this->load->view('_template/bottom');?>
-<?php $this->load->view('org/explorer_modal'); ?>
+<?php $this->load->view('_element/orgStruct_modal'); ?>

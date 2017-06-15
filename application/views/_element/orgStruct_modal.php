@@ -30,26 +30,20 @@
     event.preventDefault();
     var id = $(this).data('id');
     var text = $(this).data('text');
-    $('#txt_parent').val(text);
-    $('#hdn_parent').val(id);
+    $('#txt_org').val(text);
+    $('#hdn_org').val(id);
   });
 
   function StructOrg(id) {
-    var ajaxUrl = siteUrl + '/Org/AJaxStruc/explor' ;
+    var ajaxUrl = siteUrl + '/Ajax/ShowOrgStrucSelection/' ;
     $.ajax({
       url: ajaxUrl,
       type: 'POST',
       dataType: 'html',
-      data: {id: id}
+      data: {id: id,mode: 'org'}
     })
     .done(function(respond) {
       $('#org_exp').html(respond);
-    })
-    .fail(function() {
-      console.log("error");
-    })
-    .always(function() {
-      console.log("complete");
     });
 
   }

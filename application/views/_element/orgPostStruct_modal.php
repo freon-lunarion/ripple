@@ -4,7 +4,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Position Explorer</h4>
+        <h4 class="modal-title" id="myModalLabel">Organization Position</h4>
       </div>
       <div class="modal-body" id="post_exp">
 
@@ -35,21 +35,15 @@
   });
 
   function StructOrgPost(id) {
-    var ajaxUrl = siteUrl + '/Org/AJaxStruc/post' ;
+    var ajaxUrl = siteUrl + '/Ajax/ShowOrgStrucSelection' ;
     $.ajax({
       url: ajaxUrl,
       type: 'POST',
       dataType: 'html',
-      data: {id: id}
+      data: {id: id,mode:'post'}
     })
     .done(function(respond) {
       $('#post_exp').html(respond);
-    })
-    .fail(function() {
-      console.log("error");
-    })
-    .always(function() {
-      console.log("complete");
     });
 
   }

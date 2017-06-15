@@ -8,9 +8,7 @@
   </div>
   <div class="form-group">
     <label for="">Parent</label>
-    <?php $this->load->view('org/explorer_input');?>
-
-
+    <?php $this->load->view('_element/orgStruct_input');?>
   </div>
 
   <?php $this->load->view('_element/form_act'); ?>
@@ -18,4 +16,4 @@
 </form>
 <?php $this->load->view('_template/bottom');?>
 
-<?php $this->load->view('org/explorer_modal');?>
+<?php $this->load->view('_element/orgStruct_modal');?>

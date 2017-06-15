@@ -9,7 +9,7 @@
 <?php $this->load->view('_template/bottom');?>
  <script src="<?php echo base_url()?>assets/js/filterDate.js"></script>
 <script>
-  
+
   $('body').on('click', '.nav-open', function(event) {
     event.preventDefault();
     var id = $(this).data('id');
@@ -17,7 +17,6 @@
   });
 
   function ReloadList(id) {
-    // var ajaxUrl = siteUrl + '/' + elm.data('ajax') ;
     var ajaxUrl = siteUrl + '/Org/AJaxStruc' ;
     $.ajax({
       url: ajaxUrl,
@@ -26,14 +25,10 @@
       data: {id: id}
     })
     .done(function(respond) {
-      // console.log("success");
       $('#tbl_obj').html(respond);
     })
     .fail(function() {
       console.log("error");
-    })
-    .always(function() {
-      console.log("complete");
     });
 
   }
