@@ -3,9 +3,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class BaseModel extends CI_Model{
 
-  public $tblObj  = 'obj';
-  public $tblAttr = 'obj_attribute';
-  public $tblRel  = 'obj_rel';
+  public $tblObj  = 'obj'; // table for defining object
+  public $tblAttr = 'obj_attribute'; // table for object name (attribute)
+  public $tblRel  = 'obj_rel'; // table for relation between object(s)
 
   public function __construct()
   {
@@ -82,7 +82,7 @@ class BaseModel extends CI_Model{
 
   /**
    * [Change Object's Date]
-   * [Mengganti Tanggal berlaku Object]
+   * [Mengubah Tanggal (Begin & End) Berlaku Object]
    * @method ChangeDate
    * @param  integer    $objId     [description]
    * @param  string     $beginDate [description]
@@ -150,6 +150,14 @@ class BaseModel extends CI_Model{
     $this->db->update($this->tblRel, $dataEnd);
   }
 
+  /**
+   * [Change End Date of Object]
+   * [Mengubah End Date dari Object]
+   * @method Delimit
+   * @param  integer $objId   [description]
+   * @param  string  $endDate [yyyy-mm-dd]
+   */
+
   public function Delimit($objId=0,$endDate='')
   {
     $old = $this->GetByIdRow($objId);
@@ -163,26 +171,32 @@ class BaseModel extends CI_Model{
 
     // Delimit Object
     $this->ChangeOn($this->tblObj,$objId,$data);
-    // TODO Delimit Attribut terakhir yang masih aktif
-    // $attrId = $this->GetLastAttr($objId,$endDate)->id;
-    // $this->db->where('id',$attrId);
+
+    // Delimit Attribut terakhir yang masih aktif
     $this->db->where('obj_id', $objId);
     $this->db->where('is_delete', FALSE);
     $this->db->where('end_date ', $old->end_date);
     $this->db->update($this->tblAttr,$data);
 
-    // TODO Delimit semua relasi topDown yang masih aktif
+    // Delimit semua relasi topDown yang masih aktif
     $this->db->where('obj_top_id', $objId);
     $this->db->where('is_delete', FALSE);
     $this->db->where('end_date ', $old->end_date);
     $this->db->update($this->tblRel, $data);
 
-    // TODO Delimit semua relasi botUp yang masih aktif
+    // Delimit semua relasi botUp yang masih aktif
     $this->db->where('obj_bottom_id', $objId);
     $this->db->where('is_delete', FALSE);
     $this->db->where('end_date ', $old->end_date);
     $this->db->update($this->tblRel, $data);
   }
+
+  /**
+   * [(Soft) Delete Object/ give Deleted status to object]
+   * [memberikan tanda Deleted kepada obejct]
+   * @method Delete
+   * @param  integer $id [description]
+   */
 
   public function Delete($id=0)
   {
@@ -192,12 +206,28 @@ class BaseModel extends CI_Model{
     $this->DeleteOn($this->tblRel,$id,'obj_bottom_id');
   }
 
+
+  /**
+   * [Get a record of Object by ID]
+   * [Mendapat (satu) record dari Object berdasarkan ID]
+   * @method GetByIdRow
+   * @param  integer    $id [description]
+   */
+
   public function GetByIdRow($id=0)
   {
     $this->db->where('is_delete', 0);
     $this->db->where('id', $id);
     return $this->db->get($this->tblObj, 1, 0)->row();
   }
+
+  /**
+   * [Get Record(s) of Object by Type and (range) date]
+   * [Mendapatkan (beberapa) record dari Object berdasarkan Type dan (range) tanggal]
+   * @method GetList
+   * @param  string  $type    [3 chars]
+   * @param  string  $keydate [single or begin+end date]
+   */
 
   public function GetList($type='',$keydate='')
   {
@@ -271,9 +301,16 @@ class BaseModel extends CI_Model{
 
     return $this->db->get($this->tblObj)->result();
   }
-  // ---------------------------------------------------------------------------
 
-  // Name / Attribute
+  /**
+   * [Get Record(s) of Object by their name]
+   * [Medapatkan (beberapa) Record dari Object berdasarkan namanya]
+   * @method GetByNameList
+   * @param  string        $name    [name of object]
+   * @param  string        $keydate [single or range date]
+   * @param  [type]        $type    [object type, 3 char]
+   */
+
   public function GetByNameList($name='',$keydate='',$type=NULL)
   {
     $this->db->select('obj.id');
@@ -340,6 +377,16 @@ class BaseModel extends CI_Model{
     }
     return $this->db->get()->result();
   }
+  // ---------------------------------------------------------------------------
+
+  // Name / Attribute
+  /**
+   * [Get the latest Atrribute (name) of Object]
+   * [Medapatkan nama terakhir dari Object]
+   * @method GetLastAttr
+   * @param  integer     $objId   [description]
+   * @param  string      $keydate [single or range date]
+   */
 
   public function GetLastAttr($objId=0,$keydate='')
   {
@@ -375,6 +422,15 @@ class BaseModel extends CI_Model{
     $this->db->order_by('end_date','desc');
     return $this->db->get($this->tblAttr)->row();
   }
+
+  /**
+   * [Get List of Atrribute (name) of object]
+   * [Mendapatkan Dafatra nama dari object]
+   * @method GetAttrList
+   * @param  integer     $objId   [description]
+   * @param  string      $keydate [single pr range date]
+   * @param  string      $sort    ["asc" or "desc"]
+   */
 
   public function GetAttrList($objId=0,$keydate='',$sort='asc')
   {
@@ -413,6 +469,17 @@ class BaseModel extends CI_Model{
   // ---------------------------------------------------------------------------
 
   // Relation
+  /**
+   * [Create Relation between Objects]
+   * [Membuat Relasi antar-Object]
+   * @method CreateRel
+   * @param  string    $relCode  [description]
+   * @param  integer   $topObjId [description]
+   * @param  integer   $botObjId [description]
+   * @param  string    $begin    [description]
+   * @param  string    $end      [description]
+   */
+
   public function CreateRel($relCode='',$topObjId=0,$botObjId=0,$begin='1990-01-01',$end='9999-12-31')
   {
     $data = array(
@@ -424,6 +491,18 @@ class BaseModel extends CI_Model{
     );
     $objId = $this->InsertOn($this->tblRel, $data);
   }
+
+  /**
+   * [Change a Relation of Object with other object]
+   * [Mengubah relasi sebuah object dengan object lainnya]
+   * @method ChangeRel
+   * @param  string    $mode    ["BOTUP" or "TOPDOWN"]
+   * @param  string    $relCode [reference to ref_obj_rel]
+   * @param  string    $refId   [Object ID ]
+   * @param  string    $newId   [Other Object (Id)]
+   * @param  string    $validOn [new Begin Date]
+   * @param  string    $endDate [yyyy-mm-dd]
+   */
 
   public function ChangeRel($mode='BOTUP',$relCode='',$refId='',$newId='',$validOn='',$endDate='9999-12-31')
   {
@@ -443,12 +522,13 @@ class BaseModel extends CI_Model{
     }
     $this->db->where('is_delete', FALSE);
     $this->db->order_by('end_date');
-    $relId = $this->db->get($this->tblRel, 1, 0)->row()->id;
+    $relId = $this->db->get($this->tblRel, 1, 0)->row()->id; // get id of relation
 
     $data     = array(
-      'end_date' => date('Y-m-d',strtotime($validOn . '-1 days')),
+      'end_date' => date('Y-m-d',strtotime($validOn . '-1 days')), // set end date of old relation, 1 day before new relation begin
     );
-    $this->ChangeOn($this->tblRel,$relId,$data);
+    $this->ChangeOn($this->tblRel,$relId,$data); // change end date of relation by relation id
+
     if ($newId == TRUE && $newId !='' && $newId > 0) {
       switch (strtoupper($mode)) {
         case 'BOTUP':
@@ -470,9 +550,18 @@ class BaseModel extends CI_Model{
         );
         break;
       }
-      $this->InsertOn($this->tblRel,$data);
+      $this->InsertOn($this->tblRel,$data); //create new relation
     }
   }
+
+  /**
+   * [Change Begin & End Date  of Relation ]
+   * [Mengubah Tanggal Mulai dan Selesai dari Relation ]
+   * @method ChangeRelDate
+   * @param  integer       $relId     [description]
+   * @param  string        $beginDate [description]
+   * @param  string        $endDate   [description]
+   */
 
   public function ChangeRelDate($relId=0,$beginDate='',$endDate='')
   {
@@ -484,10 +573,25 @@ class BaseModel extends CI_Model{
     $this->ChangeOn($this->tblRel,$relId,$data);
   }
 
+  /**
+   * [Change End Date  of Relation]
+   * [Mengubah Tanggal Selesai dari Relation ]
+   * @method DelimitRel
+   * @param  integer    $relId   [description]
+   * @param  string     $endDate [description]
+   */
+
   public function DelimitRel($relId=0,$endDate='')
   {
     $this->DelimitOn($this->tblRel,$relId,$endDate);
   }
+
+  /**
+   * [(Soft) Delete Relation / Give Deleted status]
+   * [Memberikan Status Deleted/ Terhapus]
+   * @method DeleteRel
+   * @param  integer   $relId [description]
+   */
 
   public function DeleteRel($relId=0)
   {
@@ -1320,6 +1424,22 @@ class BaseModel extends CI_Model{
   // ---------------------------------------------------------------------------
 
   // Basic
+  /*
+   * Basic query functions to manipulate data on table.
+   * Set some field(s) data as meta data
+   */
+ /*
+  * fungsi - fungsi dasar untuk memanipulasi data pada table
+  * data beberapa kolom telah ditentukan, sebagai meta data
+  */
+
+ /**
+  * [Memasukan data pada table]
+  * @method InsertOn
+  * @param  string   $tbl  [table's name]
+  * @param  array    $data [description]
+  */
+
   public function InsertOn($tbl='',$data=array())
   {
     $data['create_time'] = date('Y-m-d H:i:s');
@@ -1328,6 +1448,14 @@ class BaseModel extends CI_Model{
 
     return $this->db->insert_id();
   }
+
+  /**
+   * [Mengubah data pada table]
+   * @method ChangeOn
+   * @param  string   $tbl  [table's name]
+   * @param  integer  $id   [record's id]
+   * @param  array    $data [description]
+   */
 
   public function ChangeOn($tbl='',$id=0,$data=array())
   {
@@ -1339,6 +1467,14 @@ class BaseModel extends CI_Model{
     }
     $this->db->update($tbl, $data);
   }
+
+  /**
+   * [Mengubah data tanggal berlaku pada table]
+   * @method DelimitOn
+   * @param  string    $tbl     [table's name]
+   * @param  integer   $id      [record's id]
+   * @param  string    $endDate [description]
+   */
 
   public function DelimitOn($tbl='',$id=0,$endDate='')
   {
@@ -1353,6 +1489,14 @@ class BaseModel extends CI_Model{
     }
     $this->db->update($tbl, $data);
   }
+
+  /**
+   * [Give Deleted Status]
+   * @method DeleteOn
+   * @param  string   $tbl   [table's name]
+   * @param  integer  $id    [description]
+   * @param  string   $field [description]
+   */
 
   public function DeleteOn($tbl='',$id=0,$field='id')
   {
