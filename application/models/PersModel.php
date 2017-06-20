@@ -79,6 +79,11 @@ class PersModel extends CI_Model{
     return $this->BaseModel->GetList('EMP',$keydate);
   }
 
+  public function GetByNameList($name='',$keydate='')
+  {
+    return $this->BaseModel->GetByNameList($name,$keydate,'EMP');
+  }
+
   public function GetNameHistoryList($objId=0,$keyDate='',$sort)
   {
     return $this->BaseModel->GetAttrList($objId,$keyDate,$sort);

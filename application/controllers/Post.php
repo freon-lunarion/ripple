@@ -193,12 +193,11 @@ class Post extends CI_Controller{
     }
 
     if ($this->PostModel->CountHolder($id,$keydate)) {
-      $holder = $this->PostModel->GetLastHolder($id,$keydate);
       $emp = $this->PostModel->GetLastHolder($id,$keydate)->person_id;
     } else {
       $emp = '';
     }
-    $emp = $this->PostModel->GetLastHolder($id,$keydate);
+
     $data['empOpt']   = $empOpt;
     $data['empSlc']   = $emp;
     $data['cancelLink'] = $this->ctrlClass.'View/';
@@ -210,7 +209,7 @@ class Post extends CI_Controller{
   public function EditHolderProcess()
   {
     $validOn   = $this->input->post('dt_begin');
-    $newHolder = $this->input->post('slc_emp');
+    $newHolder = $this->input->post('rd_emp');
     $id        = $this->session->userdata('selectId');
     $this->PostModel->ChangeHolder($id,$newHolder,$validOn,'9999-12-31');
     redirect($this->ctrlClass.'View/');

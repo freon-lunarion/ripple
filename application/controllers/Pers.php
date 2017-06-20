@@ -76,13 +76,9 @@ class Pers extends CI_Controller{
     $this->load->model('PostModel');
     $begin = $this->session->userdata('filterBegDa');
     $end   = $this->session->userdata('filterEndDa');
-    $ls    = $this->PostModel->GetList($begin,$end);
-    $post  = array();
-    foreach ($ls as $row) {
-      $post[$row->id] = $row->id.' - '.$row->name;
-    }
-    $data['postOpt']    = $post;
-    $data['postSlc']    = '';
+    
+    $data['postId']     = '';
+    $data['postName']   = '';
     $data['begin']      = date('Y-m-d');
     $data['end']        = '9999-12-31';
     $data['cancelLink'] = $this->ctrlClass.'View/';
@@ -232,7 +228,7 @@ class Pers extends CI_Controller{
     $spr     = $this->PostModel->GetLastSuperiorPerson($rel->obj_top_id,$keydate);
     $data['backLink']    = $this->ctrlClass.'View/';
     $data['persId']      = $rel->obj_bottom_id;
-    
+
     $data['persName']    = $persAtr->name;
     $data['postId']      = $rel->obj_top_id;
     $data['postName']    = $postAtr->name;

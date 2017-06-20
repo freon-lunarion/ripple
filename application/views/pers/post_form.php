@@ -4,13 +4,10 @@
 
   <?php $this->load->view('_element/date_form');?>
 
+  <?php $this->load->view('_element/orgPostStruct_input'); ?>
 
-  <div class="form-group">
-    <label for="txt_name">Position</label>
-    <?php echo form_dropdown('slc_post',$postOpt, $postSlc,'id="slc_parent" class="form-control"'); ?>
-
-  </div>
   <?php $this->load->view('_element/form_act'); ?>
 
 </form>
 <?php $this->load->view('_template/bottom');?>
+<?php $this->load->view('_element/orgPostStruct_modal'); ?>
