@@ -3,6 +3,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class PersModel extends CI_Model{
 
+  private $objType   = 'EMP';
+  // Relation Code (Ref to ref_obj_rel)
+  private $relStruct = '101';
+  private $relReport = '102';
+  private $relAssign = '201';
+  private $relChief  = '202';
+  private $relHold   = '301';
+  private $relJob    = '401';
+
   public function __construct()
   {
     parent::__construct();
@@ -15,7 +24,7 @@ class PersModel extends CI_Model{
     if ($beginDate == '') {
       $beginDate = date('Y-m-d');
     }
-    $this->BaseModel->CreateRel('301',$postId,$persId,$beginDate,$endDate);
+    $this->BaseModel->CreateRel($this->$relHold,$postId,$persId,$beginDate,$endDate);
   }
 
   public function ChangePost($relId=0,$beginDate='',$endDate='9999-12-31')
@@ -23,7 +32,7 @@ class PersModel extends CI_Model{
     if ($beginDate == '') {
       $beginDate = date('Y-m-d');
     }
-    $this->BaseModel->CreateRel('301',$postId,$persId,$beginDate,$endDate,$order);
+    $this->BaseModel->CreateRel($this->$relHold,$postId,$persId,$beginDate,$endDate,$order);
   }
 
   public function ChangeName($persId=0,$newName='',$validOn='',$endDate='9999-12-31')
@@ -38,7 +47,7 @@ class PersModel extends CI_Model{
 
   public function CountPost($persId=0,$keyDate='')
   {
-    return $this->BaseModel->CountBotUpRel($persId,'301',$keyDate);
+    return $this->BaseModel->CountBotUpRel($persId,$this->$relHold,$keyDate);
   }
 
   public function Create($name='',$postId=FALSE,$beginDate='',$endDate='9999-12-31')
@@ -46,9 +55,9 @@ class PersModel extends CI_Model{
     if ($beginDate == '') {
       $beginDate = date('Y-m-d');
     }
-    $persId = $this->BaseModel->Create('EMP',$name,$beginDate,$endDate);
+    $persId = $this->BaseModel->Create($this->objType,$name,$beginDate,$endDate);
     if ($postId) {
-      $this->BaseModel->CreateRel('301',$postId,$persId,$beginDate,$endDate);
+      $this->BaseModel->CreateRel($this->$relHold,$postId,$persId,$beginDate,$endDate);
     }
   }
 
@@ -76,12 +85,12 @@ class PersModel extends CI_Model{
   {
     $keydate['begin'] = $beginDate;
     $keydate['end']   = $endDate;
-    return $this->BaseModel->GetList('EMP',$keydate);
+    return $this->BaseModel->GetList($this->objType,$keydate);
   }
 
   public function GetByNameList($name='',$keydate='')
   {
-    return $this->BaseModel->GetByNameList($name,$keydate,'EMP');
+    return $this->BaseModel->GetByNameList($name,$keydate,$this->objType);
   }
 
   public function GetNameHistoryList($objId=0,$keyDate='',$sort)
@@ -91,7 +100,7 @@ class PersModel extends CI_Model{
 
   public function GetPostList($persId=0,$keyDate='',$order = 'asc')
   {
-    return $this->BaseModel->GetBotUpRelList($persId,'301',$keyDate,'post' ,$order);
+    return $this->BaseModel->GetBotUpRelList($persId,$this->$relHold,$keyDate,'post' ,$order);
   }
 
   public function GetRelByIdRow($relId=0)
