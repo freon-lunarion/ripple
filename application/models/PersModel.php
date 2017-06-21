@@ -100,7 +100,7 @@ class PersModel extends CI_Model{
 
   public function GetPostList($persId=0,$keyDate='',$order = 'asc')
   {
-    return $this->BaseModel->GetBotUpRelList($persId,$this->$relHold,$keyDate,'post' ,$order);
+    return $this->BaseModel->GetBotUpRelList($persId,$this->relHold,$keyDate,'post' ,$order);
   }
 
   public function GetRelByIdRow($relId=0)

@@ -50,7 +50,7 @@ class PostModel extends CI_Model{
     $this->BaseModel->ChangeRelDate($relId,$beginDate,$endDate);
   }
 
-  public function ChangeSuperior($postId=0,$newPost=0,$validOn='',$endDate='9999-12-31')
+  public function ChangeSupervisor($postId=0,$newPost=0,$validOn='',$endDate='9999-12-31')
   {
     $this->BaseModel->ChangeRel('BotUp',$this->relReport,$postId,$newOrg,$validOn,$endDate);
   }
@@ -72,11 +72,10 @@ class PostModel extends CI_Model{
 
   public function CountPeerPerson($postId=0,$keyDate='')
   {
-    $chief = $this->GetLastSuperiorPost($postId,$keyDate);
+    $chief = $this->GetLastSupervisor($postId,$keyDate);
     if ($chief) {
       $relCode = array($this->relReport,$this->relHold);
       return ($this->BaseModel->CountTopDownRel($chief->post_id,$relCode,$keyDate) - 1);
-      # code...
     } else {
       return false;
     }
@@ -85,7 +84,7 @@ class PostModel extends CI_Model{
 
   public function CountPeerPost($postId=0,$keyDate='')
   {
-    $chiefId = $this->GetSuperiorPost($postId,$keyDate)->post_id;
+    $chiefId = $this->GetSupervisor($postId,$keyDate)->post_id;
     return   ($this->BaseModel->CountTopDownRel($chiefId,$this->relReport,$keyDate) - 1);
 
   }
@@ -107,20 +106,7 @@ class PostModel extends CI_Model{
     return $this->BaseModel->CountTopDownRel($postId,$this->relReport,$keyDate);
   }
 
-  public function CountSuperiorPerson($postId=0,$keyDate='')
-  {
-    $res = $this->BaseModel->CountBotUpRel($postId,$this->relReport,$keyDate);
-    if ($res) {
-      $sprId = $this->BaseModel->GetLastBotUpRel($postId,$this->relReport,$keyDate)->obj_id;
-
-      return $this->BaseModel->CountTopDownRel($sprId,$this->relHold,$keyDate);
-    } else {
-      return 0;
-    }
-
-  }
-
-  public function CountSuperiorPost($postId=0,$keyDate='')
+  public function CountSupervisor($postId=0,$keyDate='')
   {
     return $this->BaseModel->CountBotUpRel($postId,$this->relReport,$keyDate);
   }
@@ -137,10 +123,7 @@ class PostModel extends CI_Model{
     $this->BaseModel->CreateRel($this->relJob,$jobId,$postId,$beginDate,$endDate);
     if ($empId) {
       $this->BaseModel->CreateRel($this->relHold,$postId,$empId,$beginDate,$endDate);
-
     }
-
-
     return $postId;
   }
 
@@ -208,25 +191,31 @@ class PostModel extends CI_Model{
 
   }
 
-  public function GetLastSuperiorPerson($postId=0,$keyDate='')
+  public function GetReportTo($postId=0,$keyDate='')
   {
-    $count = $this->CountSuperiorPerson($postId,$keyDate);
-    while ($count == 0) {
-      $postId = $this->GetSuperiorPost($postId,$keyDate)->post_id;
-      $count   = $this->CountSuperiorPerson($postId,$keyDate);
+    // TODO check "Reporting To" / "Supervisor" relation
+    if ($this->BaseModel->CountBotUpRel($postId,$this->relReport,$keyDate) == TRUE) {
+      $spr = $this->BaseModel->GetLastBotUpRel($postId,$this->relReport,$keyDate,'post');
+    } else {
+      // TODO Check status "Chief"
+      $orgId = $this->BaseModel->GetLastBotUpRel($postId,$this->relAssign,$keyDate,'org')->org_id;
+      if ($this->BaseModel->CountBotUpRel($postId,$this->relChief,$keyDate) == TRUE) {
+        $orgId = $this->BaseModel->GetLastBotUpRel($orgId,$this->relStruct,$keyDate,'org')->org_id;
+      }
+      // TODO Search chief post of organization
+      $spr = $this->BaseModel->GetLastTopDownRel($orgId,$this->relChief,$keyDate,'post');
+
     }
-    $post   = $this->GetLastSuperiorPost($postId,$keyDate,'post');
-    $person = $this->BaseModel->GetLastTopDownRel($post->post_id,$this->relHold,$keyDate,'person');
-    $result = array(
-      'post_id'     => $post->post_id,
-      'post_name'   => $post->post_name,
-      'person_id'   => $person->person_id,
-      'person_name' => $person->person_name,
-    );
-    return (Object) $result;
+
+    // Check Holder of position
+    if ($this->BaseModel->CountTopDownRel($spr->post_id,$this->relHold,$keyDate) == TRUE) {
+      return $spr;
+    } else {
+      return $this->GetReportTo($spr->post_id,$keyDate);
+    }
   }
 
-  public function GetLastSuperiorPost($postId=0,$keyDate='')
+  public function GetLastSupervisor($postId=0,$keyDate='')
   {
     return $this->BaseModel->GetLastBotUpRel($postId,$this->relReport,$keyDate,'post');
   }
@@ -250,7 +239,7 @@ class PostModel extends CI_Model{
 
   public function GetPeerPostList($postId=0,$keyDate='')
   {
-    $chiefId = $this->GetLastSuperiorPost($postId,$keyDate)->post_id;
+    $chiefId = $this->GetLastSupervisor($postId,$keyDate)->post_id;
     $list = $this->BaseModel->GetTopDownRelList($chiefId,$this->relReport,$keyDate,'post');
 
     $result = array();
@@ -265,7 +254,7 @@ class PostModel extends CI_Model{
 
   public function GetPeerPersonList($postId=0,$keyDate='')
   {
-    $chiefId = $this->GetSuperiorPost($postId,$keyDate)->post_id;
+    $chiefId = $this->GetSupervisor($postId,$keyDate)->post_id;
     $relCode = array($this->relReport,$this->relHold);
     $alias   = array('post','person');
 
@@ -299,7 +288,7 @@ class PostModel extends CI_Model{
     return $this->BaseModel->GetTopDownRelList($postId,$this->relReport,$keyDate,'post');
   }
 
-  public function GetSuperiorPostList($postId=0,$keyDate='')
+  public function GetSupervisorList($postId=0,$keyDate='')
   {
     return $this->BaseModel->GetBotUpRelList($postId,$this->relReport,$keyDate,'post');
   }
