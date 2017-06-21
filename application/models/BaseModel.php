@@ -133,21 +133,17 @@ class BaseModel extends CI_Model{
 
     // Delimit Object
     $this->ChangeOn($this->tblObj,$objId,$data);
-    // TODO Delimit Attribut terakhir yang masih aktif
-    // $attrId = $this->GetLastAttr($objId,$endDate)->id;
-    // $this->db->where('id',$attrId);
+
     $this->db->where('obj_id', $objId);
     $this->db->where('is_delete', FALSE);
     $this->db->where('end_date ', $old->end_date);
     $this->db->update($this->tblAttr,$data);
 
-    // TODO Delimit semua relasi topDown yang masih aktif
     $this->db->where('obj_top_id', $objId);
     $this->db->where('is_delete', FALSE);
     $this->db->where('end_date ', $old->end_date);
     $this->db->update($this->tblRel, $data);
 
-    // TODO Delimit semua relasi botUp yang masih aktif
     $this->db->where('obj_bottom_id', $objId);
     $this->db->where('is_delete', FALSE);
     $this->db->where('end_date ', $old->end_date);
@@ -175,7 +171,6 @@ class BaseModel extends CI_Model{
       $keydate = date('Y-m-d');
     }
     // Sub Query 1
-
     $this->db->select('sub.name');
     $this->db->where('sub.is_delete', FALSE);
     $this->db->where('sub.obj_id = obj.id');

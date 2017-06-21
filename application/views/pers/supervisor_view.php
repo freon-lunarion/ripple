@@ -13,9 +13,9 @@
 <h2>Supervisor</h2>
 <dl class="">
   <dt>Position</dt>
-  <dd>{sprPostId} - {sprPostName}</dd>
+  <dd><a href="{viewPost}" title="View Position" class="btn btn-link">{sprPostId} - {sprPostName}</a></dd>
   <dt>Person</dt>
-  <dd>{sprPersId} - {sprPersName}</dd>
+  <dd><a href="{viewPers}" title="View Person" class="btn btn-link">{sprPersId} - {sprPersName}</a></dd>
 </dl>
 
 <?php $this->load->view('_template/bottom');?>
