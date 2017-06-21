@@ -200,7 +200,9 @@ class PostModel extends CI_Model{
       // TODO Check status "Chief"
       $orgId = $this->BaseModel->GetLastBotUpRel($postId,$this->relAssign,$keyDate,'org')->org_id;
       if ($this->BaseModel->CountBotUpRel($postId,$this->relChief,$keyDate) == TRUE) {
-        $orgId = $this->BaseModel->GetLastBotUpRel($orgId,$this->relStruct,$keyDate,'org')->org_id;
+        if ($this->BaseModel->CountBotUpRel($orgId,$this->relStruct,$keyDate)) {
+          $orgId = $this->BaseModel->GetLastBotUpRel($orgId,$this->relStruct,$keyDate,'org')->org_id;
+        }
       }
       // TODO Search chief post of organization
       $spr = $this->BaseModel->GetLastTopDownRel($orgId,$this->relChief,$keyDate,'post');
