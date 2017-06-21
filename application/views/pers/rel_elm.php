@@ -12,7 +12,7 @@
       <th>Change</th>
       <th>Id</th>
       <th>Name</th>
-      <th>Superior</th>
+      <th>Supervisor</th>
       <th class="text-danger">Delete</th>
     </tr>
   </thead>

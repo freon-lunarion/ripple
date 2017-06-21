@@ -6,6 +6,7 @@
   <?php echo link_tag('components/bootstrap/dist/css/bootstrap.min.css'); ?>
   <?php echo link_tag('components/font-awesome/css/font-awesome.min.css'); ?>
   <?php echo link_tag('components/sweetalert/dist/sweetalert.css'); ?>
+
 </head>
 <body>
   <div class="container">

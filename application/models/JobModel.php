@@ -3,6 +3,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class JobModel extends CI_Model{
 
+  private $objType   = 'JOB';
+  // Relation Code (Ref to ref_obj_rel)
+  private $relStruct = '101';
+  private $relReport = '102';
+  private $relAssign = '201';
+  private $relChief  = '202';
+  private $relHold   = '301';
+  private $relJob    = '401';
+
   public function __construct()
   {
     parent::__construct();
@@ -21,18 +30,18 @@ class JobModel extends CI_Model{
 
   public function CountRelatedPerson($objId=0,$keyDate='')
   {
-    $relCode = array('401','301');
+    $relCode = array($this->relJob,$this->relHold);
     return $this->BaseModel->CountTopDownRel($objId,$relCode,$keyDate);
   }
 
   public function CountRelatedPost($objId=0,$keyDate='')
   {
-    return $this->BaseModel->CountTopDownRel($objId,'401',$keyDate);
+    return $this->BaseModel->CountTopDownRel($objId,$this->relJob,$keyDate);
   }
 
   public function Create($name='',$beginDate='1990-01-01',$endDate='9999-12-31')
   {
-    return $this->BaseModel->Create('JOB',$name,$beginDate,$endDate);
+    return $this->BaseModel->Create($this->objType,$name,$beginDate,$endDate);
   }
 
   public function Delete($objId=0)
@@ -64,7 +73,7 @@ class JobModel extends CI_Model{
   {
     $keydate['begin'] = $beginDate;
     $keydate['end']   = $endDate;
-    return $this->BaseModel->GetList('JOB',$keydate);
+    return $this->BaseModel->GetList($this->objType,$keydate);
   }
 
   public function GetNameHistoryList($objId=0,$keyDate='',$sort)
@@ -79,14 +88,14 @@ class JobModel extends CI_Model{
 
   public function GetRelatedPersonList($objId=0,$keyDate='')
   {
-    $relCode = array('401','301');
+    $relCode = array($this->relJob,$this->relHold);
     $alias   = array('post','person');
     return $this->BaseModel->GetTopDownRelList($objId,$relCode,$keyDate,$alias);
   }
 
   public function GetRelatedPostList($objId=0,$keyDate='')
   {
-    return $this->BaseModel->GetTopDownRelList($objId,'401',$keyDate,'post');
+    return $this->BaseModel->GetTopDownRelList($objId,$this->relJob,$keyDate,'post');
   }
 
 

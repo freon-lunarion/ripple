@@ -4,7 +4,7 @@
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active"><a href="#holder" aria-controls="holder" role="tab" data-toggle="tab">Holder</a></li>
     <li role="presentation"><a href="#subordinate" aria-controls="subordinate" role="tab" data-toggle="tab">Subordinate</a></li>
-    <li role="presentation"><a href="#superior" aria-controls="superior" role="tab" data-toggle="tab">Superior</a></li>
+    <li role="presentation"><a href="#supervisor" aria-controls="supervisor" role="tab" data-toggle="tab">Supervisor</a></li>
     <li role="presentation"><a href="#peer" aria-controls="peer" role="tab" data-toggle="tab">Peer</a></li>
     <li role="presentation"><a href="#asssignment" aria-controls="asssignment" role="tab" data-toggle="tab">Assignment</a></li>
     <li role="presentation"><a href="#managing" aria-controls="managing" role="tab" data-toggle="tab">Managing</a></li>
@@ -59,10 +59,10 @@
       </div>
 
     </div>
-    <div role="tabpanel" class="tab-pane" id="superior">
+    <div role="tabpanel" class="tab-pane" id="supervisor">
       <dl class="">
         <dt>Position ID</dt>
-        <dd>{sprPostId} <?php echo anchor($editSpr,'Change','class="btn btn-link" title="Change Superior"');?></dd>
+        <dd>{sprPostId} <?php echo anchor($editSpr,'Change','class="btn btn-link" title="Change Supervisor"');?></dd>
         <dt>Position Name</dt>
         <dd>{sprPostName}</dd>
 
@@ -72,7 +72,7 @@
           <div class="panel-heading" role="tab" id="">
             <h4 class="panel-title">
               <a role="button" data-toggle="collapse" data-parent="#accordion" href="#hisSpr" aria-expanded="true" aria-controls="hisSpr">
-                <i class="fa fa-chevron-right"></i> History of Superior
+                <i class="fa fa-chevron-right"></i> History of Supervisor
               </a>
             </h4>
           </div>

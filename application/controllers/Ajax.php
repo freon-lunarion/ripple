@@ -114,9 +114,9 @@ class Ajax extends CI_Controller{
         foreach ($ls as $row) {
           $data['post'][$i] = array(
             'id'    => $row->post_id,
+            'name'  => $row->post_name,
             'begda' => $row->post_begin_date,
             'endda' => $row->post_end_date,
-            'name'  => $row->post_name,
           );
           $i++;
         }
@@ -126,4 +126,36 @@ class Ajax extends CI_Controller{
     }
   }
 
+  public function ShowEmployeeSelection()
+  {
+    $this->load->model(array('PersModel'));
+
+    $query = $this->input->post('query');
+
+    $mode  = strtolower($this->input->post('mode')); // [org,post]
+    if (!$this->session->userdata('filterBegDa') || !$this->session->userdata('filterEndDa')) {
+      $sess = array(
+        'filterBegDa' => date('Y-m-d'),
+        'filterEndDa' => date('Y-m-d'),
+      );
+      $this->session->set_userdata($sess);
+    }
+    $begin = $this->session->userdata('filterBegDa');
+    $end   = $this->session->userdata('filterEndDa');
+    $date  = array(
+      'begin' => $begin,
+      'end'   => $end,
+    );
+
+    $ls   = $this->PersModel->GetByNameList($query,$date);
+    $data['emp'] = array();
+    foreach ($ls as $row) {
+      $data['emp'][] = array(
+        'id'   => $row->id,
+        'name' => $row->name,
+      );
+    }
+    $this->parser->parse('_element/empSelection_content', $data);
+
+  }
 }

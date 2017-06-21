@@ -1,7 +1,7 @@
 <?php $this->load->view('_template/top');?>
 <?php echo anchor($backLink,'Back','class="btn btn-default"');?>
 
-<h1 class="page-header">Person <small>Superior</small></h1>
+<h1 class="page-header">Person <small>Supervisor</small></h1>
 
 <dl class="">
   <dt>Person</dt>

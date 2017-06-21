@@ -193,12 +193,11 @@ class Post extends CI_Controller{
     }
 
     if ($this->PostModel->CountHolder($id,$keydate)) {
-      $holder = $this->PostModel->GetLastHolder($id,$keydate);
       $emp = $this->PostModel->GetLastHolder($id,$keydate)->person_id;
     } else {
       $emp = '';
     }
-    $emp = $this->PostModel->GetLastHolder($id,$keydate);
+
     $data['empOpt']   = $empOpt;
     $data['empSlc']   = $emp;
     $data['cancelLink'] = $this->ctrlClass.'View/';
@@ -210,7 +209,7 @@ class Post extends CI_Controller{
   public function EditHolderProcess()
   {
     $validOn   = $this->input->post('dt_begin');
-    $newHolder = $this->input->post('slc_emp');
+    $newHolder = $this->input->post('rd_emp');
     $id        = $this->session->userdata('selectId');
     $this->PostModel->ChangeHolder($id,$newHolder,$validOn,'9999-12-31');
     redirect($this->ctrlClass.'View/');
@@ -335,7 +334,7 @@ class Post extends CI_Controller{
     redirect($this->ctrlClass.'View/');
   }
 
-  public function EditSuperior()
+  public function EditSupervisor()
   {
     $id    = $this->session->userdata('selectId');
     $begin = $this->session->userdata('filterBegDa');
@@ -347,21 +346,21 @@ class Post extends CI_Controller{
     $keydate['begin'] = $begin;
     $keydate['end']   = $end;
 
-    $post = $this->PostModel->GetLastSuperiorPost($id,$keydate);
+    $post = $this->PostModel->GetLastSupervisor($id,$keydate);
     $data['postId']     = $post->post_id;
     $data['postName']   = $post->post_name;
     $data['cancelLink'] = $this->ctrlClass.'View/';
-    $data['process']    = $this->ctrlClass.'EditSuperiorProcess/';
-    $this->load->view($this->viewDir.'superior_form', $data);
+    $data['process']    = $this->ctrlClass.'EditSupervisorProcess/';
+    $this->load->view($this->viewDir.'supervisor_form', $data);
 
   }
 
-  public function EditSuperiorProcess()
+  public function EditSupervisorProcess()
   {
     $validOn = $this->input->post('dt_begin');
     $newPost = $this->input->post('hdn_post');
     $id      = $this->session->userdata('selectId');
-    $this->PostModel->ChangeSuperior($id,$newPost,$validOn,'9999-12-31');
+    $this->PostModel->ChangeSupervisor($id,$newPost,$validOn,'9999-12-31');
     redirect($this->ctrlClass.'View/');
   }
 
@@ -442,9 +441,9 @@ class Post extends CI_Controller{
     $data['editHolder'] = $this->ctrlClass.'EditHolder/';
     $data['editJob']    = $this->ctrlClass.'EditJob/';
     $data['editMan']    = $this->ctrlClass.'EditManaging/';
-    $data['editSpr']    = $this->ctrlClass.'EditSuperior/';
-    if ($this->PostModel->CountSuperiorPost($id,$keydate)) {
-      $spr = $this->PostModel->GetLastSuperiorPost($id,$keydate);
+    $data['editSpr']    = $this->ctrlClass.'EditSupervisor/';
+    if ($this->PostModel->CountSupervisor($id,$keydate)) {
+      $spr = $this->PostModel->GetLastSupervisor($id,$keydate);
       $data['sprPostId']   = $spr->post_id;
       $data['sprPostName'] = $spr->post_name;
     } else {
@@ -452,7 +451,7 @@ class Post extends CI_Controller{
       $data['sprPostName'] = '-';
     }
 
-    $ls = $this->PostModel->GetSuperiorPostList($id,$keydate);
+    $ls = $this->PostModel->GetSupervisorList($id,$keydate);
     $spr = array();
     foreach ($ls as $row) {
       $spr[] = array(

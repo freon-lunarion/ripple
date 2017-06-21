@@ -3,6 +3,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class OrgModel extends CI_Model{
 
+  private $objType   = 'ORG';
+  // Relation Code (Ref to ref_obj_rel)
+  private $relStruct = '101';
+  private $relReport = '102';
+  private $relAssign = '201';
+  private $relChief  = '202';
+  private $relHold   = '301';
+  private $relJob    = '401';
+
   public function __construct()
   {
     parent::__construct();
@@ -13,7 +22,7 @@ class OrgModel extends CI_Model{
 
   public function ChangeChiefPost($orgId,$newPost=0,$validOn='',$endDate='9999-12-31')
   {
-    $this->BaseModel->ChangeRel('TOPDOWN','202',$orgId,$newPost,$validOn,$endDate);
+    $this->BaseModel->ChangeRel('TOPDOWN',$this->relChief,$orgId,$newPost,$validOn,$endDate);
   }
 
   public function ChangeName($orgId=0,$newName='',$validOn='',$endDate='9999-12-31')
@@ -23,7 +32,7 @@ class OrgModel extends CI_Model{
 
   public function ChangeParent($orgId=0,$newParent=0,$validOn='',$endDate='9999-12-31')
   {
-    $this->BaseModel->ChangeRel('BOTUP','101',$orgId,$newParent,$validOn,$endDate);
+    $this->BaseModel->ChangeRel('BOTUP',$this->relStruct,$orgId,$newParent,$validOn,$endDate);
   }
 
   public function ChangeRelDate($relId=0,$beginDate='',$endDate='')
@@ -33,42 +42,42 @@ class OrgModel extends CI_Model{
 
   public function CountChiefPost($orgId=0,$keyDate='')
   {
-    return $this->BaseModel->CountTopDownRel($orgId,'201',$keyDate);
+    return $this->BaseModel->CountTopDownRel($orgId,$this->relAssign,$keyDate);
   }
 
   public function CountChiefPerson($orgId=0,$keyDate='')
   {
-    $relCode = array('202','301');
+    $relCode = array($this->relChief,$this->relHold);
     return $this->BaseModel->CountTopDownRel($orgId,$relCode,$keyDate);
 
   }
 
   public function CountChildrenOrg($orgId=0,$keyDate='')
   {
-    return $this->BaseModel->CountTopDownRel($orgId,'101',$keyDate);
+    return $this->BaseModel->CountTopDownRel($orgId,$this->relStruct,$keyDate);
   }
 
   public function CountParentOrg($orgId=0,$keyDate='')
   {
-    return $this->BaseModel->CountBotUpRel($orgId,'101',$keyDate);
+    return $this->BaseModel->CountBotUpRel($orgId,$this->relStruct,$keyDate);
   }
 
   public function CountPerson($orgId=0,$keyDate='')
   {
-    $relCode = array('201','301');
+    $relCode = array($this->relAssign,$this->relHold);
     return $this->BaseModel->CountTopDownRel($orgId,$relCode,$keyDate);
   }
 
   public function CountPost($orgId=0,$keyDate='')
   {
-    return $this->BaseModel->CountTopDownRel($orgId,'201',$keyDate);
+    return $this->BaseModel->CountTopDownRel($orgId,$this->relAssign,$keyDate);
   }
 
   public function Create($name='',$beginDate='1990-01-01',$endDate='9999-12-31',$parentOrg=0)
   {
-    $orgId = $this->BaseModel->Create('ORG',$name,$beginDate,$endDate);
+    $orgId = $this->BaseModel->Create($this->objType,$name,$beginDate,$endDate);
 
-    $this->BaseModel->CreateRel('101',$parentOrg,$orgId,$beginDate,$endDate);
+    $this->BaseModel->CreateRel($this->relStruct,$parentOrg,$orgId,$beginDate,$endDate);
 
     return $orgId;
   }
@@ -95,7 +104,7 @@ class OrgModel extends CI_Model{
 
   public function GetChiefPersonList($orgId=0,$keyDate='')
   {
-    $relCode = array('202','301');
+    $relCode = array($this->relChief,$this->relHold);
     $alias   = array('post','person');
     $count   = $this->BaseModel->CountTopDownRel($orgId,$relCode,$keyDate);
     while ($count == 0) {
@@ -110,16 +119,16 @@ class OrgModel extends CI_Model{
 
   public function GetChiefPostList($orgId=0,$keyDate='')
   {
-    return $this->BaseModel->GetTopDownRelList($orgId,'202',$keyDate,'post');
+    return $this->BaseModel->GetTopDownRelList($orgId,$this->relChief,$keyDate,'post');
   }
 
   public function GetChildrenOrgList($orgId=0,$keyDate='')
   {
-    return $this->BaseModel->GetTopDownRelList($orgId,'101',$keyDate,'child');
+    return $this->BaseModel->GetTopDownRelList($orgId,$this->relStruct,$keyDate,'child');
   }
   public function GetLastChiefPerson($orgId=0,$keyDate='')
   {
-    $relCode = array('202','301');
+    $relCode = array($this->relChief,$this->relHold);
     $alias   = array('post','person');
     $count   = $this->BaseModel->CountTopDownRel($orgId,$relCode,$keyDate);
     while ($count == 0) {
@@ -134,7 +143,7 @@ class OrgModel extends CI_Model{
 
   public function GetLastChiefPost($orgId=0,$keyDate='')
   {
-    return $this->BaseModel->GetLastTopDownRel($orgId,'202',$keyDate,'post');
+    return $this->BaseModel->GetLastTopDownRel($orgId,$this->relChief,$keyDate,'post');
   }
 
   public function GetLastName($orgId=0,$keyDate='')
@@ -146,7 +155,7 @@ class OrgModel extends CI_Model{
   {
     $keydate['begin'] = $beginDate;
     $keydate['end']   = $endDate;
-    return $this->BaseModel->GetList('ORG',$keydate);
+    return $this->BaseModel->GetList($this->objType,$keydate);
   }
 
   public function GetNameHistoryList($orgId=0,$keyDate='')
@@ -156,17 +165,17 @@ class OrgModel extends CI_Model{
 
   public function GetParentOrg($orgId=0,$keyDate='')
   {
-    return $this->BaseModel->GetLastBotUpRel($orgId,'101',$keyDate,'parent');
+    return $this->BaseModel->GetLastBotUpRel($orgId,$this->relStruct,$keyDate,'parent');
   }
 
   public function GetParentOrgList($orgId=0,$keyDate='')
   {
-    return $this->BaseModel->GetBotUpRelList($orgId,'101',$keyDate,'parent');
+    return $this->BaseModel->GetBotUpRelList($orgId,$this->relStruct,$keyDate,'parent');
   }
 
   public function GetPersonList($orgId=0,$keyDate='')
   {
-    $relCode = array('201','301');
+    $relCode = array($this->relAssign,$this->relHold);
     $alias   = array('post','person');
     return $this->BaseModel->GetTopDownRelList($orgId,$relCode,$keyDate,$alias);
 
@@ -174,7 +183,7 @@ class OrgModel extends CI_Model{
 
   public function GetPostList($orgId=0,$keyDate='')
   {
-    return $this->BaseModel->GetTopDownRelList($orgId,'201',$keyDate,'post');
+    return $this->BaseModel->GetTopDownRelList($orgId,$this->relAssign,$keyDate,'post');
 
   }
 

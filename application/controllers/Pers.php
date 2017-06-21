@@ -76,13 +76,9 @@ class Pers extends CI_Controller{
     $this->load->model('PostModel');
     $begin = $this->session->userdata('filterBegDa');
     $end   = $this->session->userdata('filterEndDa');
-    $ls    = $this->PostModel->GetList($begin,$end);
-    $post  = array();
-    foreach ($ls as $row) {
-      $post[$row->id] = $row->id.' - '.$row->name;
-    }
-    $data['postOpt']    = $post;
-    $data['postSlc']    = '';
+
+    $data['postId']     = '';
+    $data['postName']   = '';
     $data['begin']      = date('Y-m-d');
     $data['end']        = '9999-12-31';
     $data['cancelLink'] = $this->ctrlClass.'View/';
@@ -229,18 +225,19 @@ class Pers extends CI_Controller{
     $persAtr = $this->PersModel->GetLastName($rel->obj_bottom_id,$keydate);
     $postAtr = $this->PostModel->GetLastName($rel->obj_top_id,$keydate);
 
-    $spr     = $this->PostModel->GetLastSuperiorPerson($rel->obj_top_id,$keydate);
+    $sprPost = $this->PostModel->GetReportTo($rel->obj_top_id,$keydate);
+    $sprPers = $this->PostModel->GetLastHolder($sprPost->post_id,$keydate);
     $data['backLink']    = $this->ctrlClass.'View/';
     $data['persId']      = $rel->obj_bottom_id;
-    
+
     $data['persName']    = $persAtr->name;
     $data['postId']      = $rel->obj_top_id;
     $data['postName']    = $postAtr->name;
-    $data['sprPersId']   = $spr->person_id;
-    $data['sprPersName'] = $spr->person_name;
-    $data['sprPostId']   = $spr->post_id;
-    $data['sprPostName'] = $spr->post_name;
-    $this->parser->parse($this->viewDir.'superior_view',$data);
+    $data['sprPersId']   = $sprPers->person_id;
+    $data['sprPersName'] = $sprPers->person_name;
+    $data['sprPostId']   = $sprPost->post_id;
+    $data['sprPostName'] = $sprPost->post_name;
+    $this->parser->parse($this->viewDir.'supervisor_view',$data);
   }
 
   public function AjaxGetDetail()

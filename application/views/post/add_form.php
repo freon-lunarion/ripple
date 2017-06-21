@@ -14,7 +14,7 @@
     </label>
   </div>
   <div class="form-group">
-    <label for="txt_name">Superior</label>
+    <label for="txt_name">Supervisor</label>
     
     <?php $this->load->view('_element/orgPostStruct_input');?>
 
