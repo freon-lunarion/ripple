@@ -237,6 +237,9 @@ class Pers extends CI_Controller{
     $data['sprPersName'] = $sprPers->person_name;
     $data['sprPostId']   = $sprPost->post_id;
     $data['sprPostName'] = $sprPost->post_name;
+    $data['viewPost']    = site_url('Post/View/'.$sprPost->post_id);
+    $data['viewPers']    = site_url('Pers/View/'.$sprPers->person_id);
+
     $this->parser->parse($this->viewDir.'supervisor_view',$data);
   }
 
@@ -284,9 +287,10 @@ class Pers extends CI_Controller{
     $end   = $this->session->userdata('filterEndDa');
     $keydate['begin'] = $begin;
     $keydate['end']   = $end;
-    $delimit = site_url($this->ctrlClass.'EditRel/');
-    $remove  = site_url($this->ctrlClass.'DeleteRelProcess/');
-    $sprLk   = site_url($this->ctrlClass.'ViewSpr/');
+    $delimit  = site_url($this->ctrlClass.'EditRel/');
+    $remove   = site_url($this->ctrlClass.'DeleteRelProcess/');
+    $sprLk    = site_url($this->ctrlClass.'ViewSpr/');
+    $viewPost = site_url('Post/View/');
 
     $ls = $this->PersModel->GetPostList($id,$keydate,'desc');
     $post = array();
@@ -300,6 +304,7 @@ class Pers extends CI_Controller{
         'chgRel'    => $delimit.$row->post_rel_id,
         'remRel'    => $remove.$row->post_rel_id,
         'sprLink'   => $sprLk.$row->post_rel_id,
+        'viewPost'  => $viewPost.$row->post_rel_id,
       );
     }
     $data['addPost']  = $this->ctrlClass.'AddPost/';
