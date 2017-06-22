@@ -347,10 +347,8 @@ class Org extends CI_Controller{
     $begin = $this->session->userdata('filterBegDa');
     $end   = $this->session->userdata('filterEndDa');
 
-    $delimit  = site_url($this->ctrlClass.'EditRel/');
-    $remove   = site_url($this->ctrlClass.'DeleteRelProcess/');
-    $viewOrg  = site_url('Org/View/');
-    $viewPost = site_url('Post/View/');
+    $delimit = site_url($this->ctrlClass.'EditRel/');
+    $remove  = site_url($this->ctrlClass.'DeleteRelProcess/');
 
     $keydate['begin'] = $begin;
     $keydate['end']   = $end;
@@ -372,8 +370,6 @@ class Org extends CI_Controller{
         'parentEnd'   => $row->parent_end_date,
         'parentId'    => $row->parent_id,
         'parentName'  => $row->parent_name,
-        'viewOrg'     => $viewOrg.$row->parent_id,
-
       );
 
     }
@@ -390,7 +386,6 @@ class Org extends CI_Controller{
           'childrenName'  => $row->child_name,
           'chgRel'        => $delimit.$row->child_rel_id,
           'remRel'        => $remove.$row->child_rel_id,
-          'viewOrg'       => $viewOrg.$row->child_id,
         );
       }
     }
@@ -406,8 +401,6 @@ class Org extends CI_Controller{
           'postName'  => $row->post_name,
           'chgRel'    => $delimit.$row->post_rel_id,
           'remRel'    => $remove.$row->post_rel_id,
-          'viewPost'  => $viewPost.$row->post_id,
-
         );
       }
     }
@@ -429,8 +422,6 @@ class Org extends CI_Controller{
         'chiefEnd'   => $row->post_end_date,
         'chiefId'    => $row->post_id,
         'chiefName'  => $row->post_name,
-        'viewPost'   => $viewPost.$row->post_id,
-
       );
     }
     $data['chief'] = $chief;

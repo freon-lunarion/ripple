@@ -27,8 +27,8 @@
               <td>{childrenBegin}</td>
               <td>{childrenEnd}</td>
               <td><a href="{chgRel}" class="btn btn-link" title="Change Date">Chg. Date</a>
-              <td><a href="{viewOrg}" class="btn btn-link" title="View Org">{childrenId}</a></td>
-              <td><a href="{viewOrg}" class="btn btn-link" title="View Org">{childrenName}</a></td>
+              <td>{childrenId}</td>
+              <td>{childrenName}</td>
               <td><a href="{remRel}" class="btn btn-link btn-delete" title="Delete">Delete</a></td>
             </tr>
           {/children}
@@ -53,8 +53,8 @@
               <td>{postBegin}</td>
               <td>{postEnd}</td>
               <td><a href="{chgRel}" class="btn btn-link" title="Change Date">Chg. Date</a>
-              <td><a href="{viewPost}" class="btn btn-link" title="View Position">{postId}</a></td>
-              <td><a href="{viewPost}" class="btn btn-link" title="View Position">{postName}</a></td>
+              <td>{postId}</td>
+              <td>{postName}</td>
               <td><a href="{remRel}" class="btn btn-link btn-delete" title="Delete">Delete</a></td>
             </tr>
           {/post}
@@ -95,8 +95,8 @@
                     <tr class="{historyRow}">
                       <td>{parentBegin}</td>
                       <td>{parentEnd}</td>
-                      <td><a href="{viewOrg}" class="btn btn-link" title="View Org">{parentId}</a></td>
-                      <td><a href="{viewOrg}" class="btn btn-link" title="View Org">{parentName}</a></td>
+                      <td>{parentId}</td>
+                      <td>{parentName}</td>
                     </tr>
                   {/parent}
                 </tbody>
@@ -141,8 +141,8 @@
                     <tr class="{historyRow}">
                       <td>{chiefBegin}</td>
                       <td>{chiefEnd}</td>
-                      <td><a href="{viewPost}" class="btn btn-link" title="View Position">{chiefId}</a></td>
-                      <td><a href="{viewPost}" class="btn btn-link" title="View Position">{chiefName}</a></td>
+                      <td>{chiefId}</td>
+                      <td>{chiefName}</td>
                     </tr>
                   {/chief}
                 </tbody>

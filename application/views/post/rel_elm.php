@@ -47,8 +47,8 @@
                     <tr class="{historyRow}">
                       <td>{holderBegin}</td>
                       <td>{holderEnd}</td>
-                      <td><a href="{viewPers}" class="btn btn-link" title="View Person">{holderId}</a></td>
-                      <td><a href="{viewPers}" class="btn btn-link" title="View Person">{holderName}</a></td>
+                      <td>{holderId}</td>
+                      <td>{holderName}</td>
                     </tr>
                   {/holder}
                 </tbody>
@@ -93,8 +93,8 @@
                   <tr>
                     <th>{sprBegin}</th>
                     <th>{sprEnd}</th>
-                    <th><a href="{viewPost}" class="btn btn-link" title="View Position">{sprId}</a></th>
-                    <th><a href="{viewPost}" class="btn btn-link" title="View Position">{sprName}</a></th>
+                    <th>{sprId}</th>
+                    <th>{sprName}</th>
 
                   </tr>
                   {/spr}
@@ -127,8 +127,8 @@
               <td>{subEnd}</td>
               <td><a href="{chgRel}" class="btn btn-link" title="Change Date">Chg. Date</a>
 
-              <td><a href="{viewPost}" class="btn btn-link" title="View Position">{subPostId}</a></td>
-              <td><a href="{viewPost}" class="btn btn-link" title="View Position">{subPostName}</a></td>
+              <td>{subPostId}</td>
+              <td>{subPostName}</td>
               <td><a href="{remRel}" class="btn btn-link btn-delete" title="Delete">Delete</a>
 
             </tr>
@@ -152,8 +152,8 @@
             <tr class="">
               <td>{peerBegin}</td>
               <td>{peerEnd}</td>
-              <td><a href="{viewPost}" class="btn btn-link" title="View Position">{peerPostId}</a></td>
-              <td><a href="{viewPost}" class="btn btn-link" title="View Position">{peerPostName}</a></td>
+              <td>{peerPostId}</td>
+              <td>{peerPostName}</td>
             </tr>
           {/peer}
         </tbody>
@@ -192,8 +192,8 @@
                     <tr class="{assRow}">
                       <td>{assBegin}</td>
                       <td>{assEnd}</td>
-                      <td><a href="{viewOrg}" class="btn btn-link" title="View Organization">{assId}</a></td>
-                      <td><a href="{viewOrg}" class="btn btn-link" title="View Organization">{assName}</a></td>
+                      <td>{assId}</td>
+                      <td>{assName}</td>
                     </tr>
                   {/ass}
                 </tbody>
@@ -238,8 +238,8 @@
                     <tr class="manRow">
                       <td>{manBegin}</td>
                       <td>{manEnd}</td>
-                      <td><a href="{viewOrg}" class="btn btn-link" title="View Organization">{manId}</a></td>
-                      <td><a href="{viewOrg}" class="btn btn-link" title="View Organization">{manName}</a></td>
+                      <td>{manId}</td>
+                      <td>{manName}</td>
                     </tr>
                   {/man}
                 </tbody>
@@ -287,8 +287,8 @@
                       <td>{jobBegin}</td>
                       <td>{jobEnd}</td>
 
-                      <td><a href="{viewJob}" class="btn btn-link" title="View Job">{jobId}</a></td>
-                      <td><a href="{viewJob}" class="btn btn-link" title="View Job">{jobName}</a></td>
+                      <td>{jobId}</td>
+                      <td>{jobName}</td>
                     </tr>
                   {/job}
                 </tbody>

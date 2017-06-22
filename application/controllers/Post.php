@@ -435,11 +435,6 @@ class Post extends CI_Controller{
     $delimit = site_url($this->ctrlClass.'EditRel/');
     $remove  = site_url($this->ctrlClass.'DeleteRelProcess/');
 
-    $viewOrg  = site_url('Org/View/');
-    $viewPost = site_url('Post/View/');
-    $viewPers = site_url('Pers/View/');
-    $viewJob  = site_url('Job/View/');
-
     $keydate['begin'] = $begin;
     $keydate['end']   = $end;
     $data['editAss']    = $this->ctrlClass.'EditAssignment/';
@@ -464,8 +459,6 @@ class Post extends CI_Controller{
         'sprEnd'   => $row->post_end_date,
         'sprId'    => $row->post_id,
         'sprName'  => $row->post_name,
-        'viewPost' => $viewPost.$row->post_id,
-
       );
     }
     $data['spr'] = $spr;
@@ -490,8 +483,6 @@ class Post extends CI_Controller{
         'holderEnd'   => $row->person_end_date,
         'holderId'    => $row->person_id,
         'holderName'  => $row->person_name,
-        'viewPers'    => $viewPers.$row->person_id,
-
       );
     }
     $data['holder'] = $holder;
@@ -510,8 +501,6 @@ class Post extends CI_Controller{
         'jobEnd'   => $row->job_end_date,
         'jobId'    => $row->job_id,
         'jobName'  => $row->job_name,
-        'viewJob'  => $viewJob.$row->job_id,
-
       );
     }
     $data['job'] = $job;
@@ -526,7 +515,7 @@ class Post extends CI_Controller{
         'subPostName' => $row->post_name,
         'chgRel'      => $delimit.$row->post_rel_id,
         'remRel'      => $remove.$row->post_rel_id,
-        'viewPost'    => $viewPost.$row->post_id,
+
       );
     }
     $data['sub'] = $sub;
@@ -540,7 +529,6 @@ class Post extends CI_Controller{
           'peerEnd'      => $row->post_end_date,
           'peerPostId'   => $row->post_id,
           'peerPostName' => $row->post_name,
-          'viewPost'     => $viewPost.$row->post_id,
         );
       }
     }
@@ -562,8 +550,6 @@ class Post extends CI_Controller{
           'manEnd'   => $row->org_end_date,
           'manId'    => $row->org_id,
           'manName'  => $row->org_name,
-          'viewOrg'  => $viewOrg.$row->org_id,
-
         );
       }
       $data['man']     = $man;
@@ -584,7 +570,6 @@ class Post extends CI_Controller{
         'assEnd'   => $row->org_end_date,
         'assId'    => $row->org_id,
         'assName'  => $row->org_name,
-        'viewOrg'  => $viewOrg.$row->org_id,
       );
     }
     $data['ass']     = $ass;
