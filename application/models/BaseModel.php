@@ -171,29 +171,16 @@ class BaseModel extends CI_Model{
 
     // Delimit Object
     $this->ChangeOn($this->tblObj,$objId,$data);
-
-<<<<<<< HEAD
-    // Delimit Attribut terakhir yang masih aktif
-=======
->>>>>>> dev
     $this->db->where('obj_id', $objId);
     $this->db->where('is_delete', FALSE);
     $this->db->where('end_date ', $old->end_date);
     $this->db->update($this->tblAttr,$data);
 
-<<<<<<< HEAD
-    // Delimit semua relasi topDown yang masih aktif
-=======
->>>>>>> dev
     $this->db->where('obj_top_id', $objId);
     $this->db->where('is_delete', FALSE);
     $this->db->where('end_date ', $old->end_date);
     $this->db->update($this->tblRel, $data);
 
-<<<<<<< HEAD
-    // Delimit semua relasi botUp yang masih aktif
-=======
->>>>>>> dev
     $this->db->where('obj_bottom_id', $objId);
     $this->db->where('is_delete', FALSE);
     $this->db->where('end_date ', $old->end_date);
