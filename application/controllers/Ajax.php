@@ -15,6 +15,7 @@ class Ajax extends CI_Controller{
   }
   /**
    * [Set (Range) Date Filter in session]
+   * [Memasang filter tanggal di session]
    * @method SetFilterDate
    */
 
@@ -32,6 +33,11 @@ class Ajax extends CI_Controller{
     $this->session->set_userdata('filterEndDa',$end);
   }
 
+  /**
+   * [Show Organization Structure Selection on Dialog/ Modal Box]
+   * [Menampilkan Pilihan Structur Organisasi Pada Kotak Dialog/ Modal]
+   * @method ShowOrgStrucSelection
+   */
 
   public function ShowOrgStrucSelection()
   {
