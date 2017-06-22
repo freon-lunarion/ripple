@@ -241,6 +241,7 @@ class Job extends CI_Controller{
         'postName'  => $row->post_name,
         'chgRel'    => $delimit.$row->post_rel_id,
         'remRel'    => $remove.$row->post_rel_id,
+        'viewPost'  => site_url('Post/View/'.$row->post_id),
       );
     }
     $data['post']     = $post;
