@@ -37,7 +37,7 @@ class PersModel extends CI_Model{
 
   public function ChangeName($persId=0,$newName='',$validOn='',$endDate='9999-12-31')
   {
-    $this->BaseModel->ChangeName($persId,$newName,$validOn,$endDate);
+    $this->BaseModel->ChangeAttr($persId,$newName,$validOn,$endDate);
   }
 
   public function ChangeRelDate($relId=0,$beginDate='',$endDate='')

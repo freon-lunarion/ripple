@@ -37,7 +37,7 @@ class PostModel extends CI_Model{
   }
   public function ChangeName($postId = 0, $newName='',$validOn='',$endDate='9999-12-31')
   {
-    $this->BaseModel->ChangeName($postId,$newName,$validOn,$endDate);
+    $this->BaseModel->ChangeAttr($postId,$newName,$validOn,$endDate);
   }
 
   public function ChangeManagingOrg($postId=0,$newOrg=0,$validOn='',$endDate='9999-12-31')

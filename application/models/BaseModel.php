@@ -45,42 +45,6 @@ class BaseModel extends CI_Model{
   }
 
   /**
-   * [Change Object's name]
-   * [Mengganti Nama Object]
-   * @method ChangeName
-   * @param  integer    $objId   [ID Object]
-   * @param  string     $newName [nama baru]
-   * @param  string     $validOn [tanggal mulai]
-   * @param  string     $endDate [yyyy-mm-dd]
-   */
-
-  public function ChangeName($objId=0,$newName='',$validOn='',$endDate='9999-12-31')
-  {
-    if ($validOn == '') {
-      $validOn = date('Y-m-d');
-    }
-
-    $this->db->select('id');
-    $this->db->where('obj_id', $objId);
-    $this->db->order_by('end_date','desc');
-    $row    = $this->db->get($this->tblAttr)->row();
-
-    $attId    = $row->id;
-    $data     = array(
-      'end_date' => date('Y-m-d',strtotime($validOn . '-1 days')),
-    );
-    $this->ChangeOn($this->tblAttr,$attId,$data);
-
-    $data = array(
-      'obj_id'     => $objId,
-      'name'       => $newName,
-      'begin_date' => $validOn,
-      'end_date'   => $endDate,
-    );
-    $this->InsertOn($this->tblAttr,$data);
-  }
-
-  /**
    * [Change Object's Date]
    * [Mengubah Tanggal (Begin & End) Berlaku Object]
    * @method ChangeDate
@@ -460,6 +424,42 @@ class BaseModel extends CI_Model{
     }
     $this->db->order_by('end_date',$sort);
     return $this->db->get($this->tblAttr)->result();
+  }
+
+  /**
+   * [Change Object's attribute (name)]
+   * [Mengganti Atribut Object (nama)]
+   * @method ChangeAttr
+   * @param  integer    $objId   [ID Object]
+   * @param  string     $newName [nama baru]
+   * @param  string     $validOn [tanggal mulai]
+   * @param  string     $endDate [yyyy-mm-dd]
+   */
+
+  public function ChangeAttr($objId=0,$newName='',$validOn='',$endDate='9999-12-31')
+  {
+    if ($validOn == '') {
+      $validOn = date('Y-m-d');
+    }
+
+    $this->db->select('id');
+    $this->db->where('obj_id', $objId);
+    $this->db->order_by('end_date','desc');
+    $row    = $this->db->get($this->tblAttr)->row();
+
+    $attId    = $row->id;
+    $data     = array(
+      'end_date' => date('Y-m-d',strtotime($validOn . '-1 days')),
+    );
+    $this->ChangeOn($this->tblAttr,$attId,$data);
+
+    $data = array(
+      'obj_id'     => $objId,
+      'name'       => $newName,
+      'begin_date' => $validOn,
+      'end_date'   => $endDate,
+    );
+    $this->InsertOn($this->tblAttr,$data);
   }
   // ---------------------------------------------------------------------------
 

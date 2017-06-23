@@ -27,7 +27,7 @@ class OrgModel extends CI_Model{
 
   public function ChangeName($orgId=0,$newName='',$validOn='',$endDate='9999-12-31')
   {
-    $this->BaseModel->ChangeName($orgId,$newName,$validOn,$endDate);
+    $this->BaseModel->ChangeAttr($orgId,$newName,$validOn,$endDate);
   }
 
   public function ChangeParent($orgId=0,$newParent=0,$validOn='',$endDate='9999-12-31')
