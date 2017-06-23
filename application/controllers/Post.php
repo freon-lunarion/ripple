@@ -156,8 +156,9 @@ class Post extends CI_Controller{
       redirect($this->ctrlClass);
     }
     $old = $this->PostModel->GetByIdRow($id);
-    $data['end']   = $old->end_date;
-
+    $data['end']    = $old->end_date;
+    $data['begin']  = $old->begin_date;
+    $data['hidden'] = array();
     $data['cancelLink'] = $this->ctrlClass.'View/';
     $data['process'] = $this->ctrlClass.'EditDateProcess';
     $this->load->view($this->viewDir.'date_form', $data);

@@ -187,13 +187,22 @@ class Job extends CI_Controller{
     $keydate['begin'] = $begin;
     $keydate['end']   = $end;
 
+    $data = array(
+      'objBegin' => '',
+      'objEnd'   => '',
+      'objName'  => '',
+    );
     $obj  = $this->JobModel->GetByIdRow($id);
-    $attr = $this->JobModel->GetLastName($id,$keydate);
+    if ($obj) {
+      $attr = $this->JobModel->GetLastName($id,$keydate);
+      $data = array(
+        'objBegin' => $obj->begin_date,
+        'objEnd'   => $obj->end_date,
+        'objName'  => $attr->name,
+      );
+    }
     $data['begin']    = $begin;
     $data['end']      = $end;
-    $data['objBegin'] = $obj->begin_date;
-    $data['objEnd']   = $obj->end_date;
-    $data['objName']  = $attr->name;
     $data['editDate'] = $this->ctrlClass.'EditDate/';
     $data['editName'] = $this->ctrlClass.'EditName/';
     $this->parser->parse('_element/obj_detail',$data);

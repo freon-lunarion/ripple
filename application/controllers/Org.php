@@ -107,11 +107,12 @@ class Org extends CI_Controller{
       redirect($this->ctrlClass);
     }
     $old = $this->OrgModel->GetByIdRow($id);
-    $data['end']   = $old->end_date;
-
+    $data['hidden']     = array();
+    $data['end']        = $old->end_date;
+    $data['begin']      = $old->begin_date;
     $data['cancelLink'] = $this->ctrlClass.'View/';
-    $data['process'] = $this->ctrlClass.'EditDateProcess';
-    $this->load->view('_element/date_form', $data);
+    $data['process']    = $this->ctrlClass.'EditDateProcess';
+    $this->load->view($this->viewDir.'date_form', $data);
 
   }
 
@@ -135,7 +136,7 @@ class Org extends CI_Controller{
     $data['name']       = $old->name;
     $data['cancelLink'] = $this->ctrlClass.'View/';
     $data['process']    = $this->ctrlClass.'EditNameProcess';
-    $this->load->view('_element/name_form', $data);
+    $this->load->view($this->viewDir.'name_form', $data);
 
   }
 
@@ -185,7 +186,7 @@ class Org extends CI_Controller{
     $data['end']     = $old->end_date;
     $data['cancelLink'] = $this->ctrlClass.'View/';
 
-    $this->load->view('_element/date_form', $data);
+    $this->load->view($this->viewDir.'/date_form', $data);
   }
 
   public function EditRelProcess()
