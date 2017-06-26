@@ -3,7 +3,7 @@
   <li><?php echo anchor('Job','Job')?></li>
   <li><?php echo anchor('Org','Organization')?></li>
   <li><?php echo anchor('Post','Position')?></li>
-  <li><?php echo anchor('Pers','Person')?></li>
+  <li><?php echo anchor('Emp','Employee')?></li>
   <hr />
   <li><?php echo anchor('Exp/Search','Search')?></li>
   <hr />

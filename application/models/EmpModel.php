@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class PersModel extends CI_Model{
+class EmpModel extends CI_Model{
 
   private $objType   = 'EMP';
   // Relation Code (Ref to ref_obj_rel)

@@ -1,14 +1,14 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Pers extends CI_Controller{
+class Emp extends CI_Controller{
 
-  private $viewDir   = 'pers/';
-  private $ctrlClass = 'Pers/';
+  private $viewDir   = 'emp/';
+  private $ctrlClass = 'Emp/';
   public function __construct()
   {
     parent::__construct();
-    $this->load->model('PersModel'); // BaseModel is included
+    $this->load->model('EmpModel'); // BaseModel is included
   }
 
   function index()
@@ -38,7 +38,7 @@ class Pers extends CI_Controller{
   {
     $begin = $this->session->userdata('filterBegDa');
     $end   = $this->session->userdata('filterEndDa');
-    $rows  = $this->PersModel->GetList($begin,$end);
+    $rows  = $this->EmpModel->GetList($begin,$end);
     $data['rows'] = array();
     $i = 0 ;
     foreach ($rows as $row) {
@@ -93,7 +93,7 @@ class Pers extends CI_Controller{
     $begin  = $this->input->post('dt_begin');
     $end    = $this->input->post('dt_end');
     $postId = $this->input->post('slc_post');
-    $this->PersModel->AddPost($persId,$postId,$begin,$end);
+    $this->EmpModel->AddPost($persId,$postId,$begin,$end);
     redirect($this->ctrlClass);
   }
 
@@ -102,7 +102,7 @@ class Pers extends CI_Controller{
     $begin = $this->input->post('dt_begin');
     $end   = $this->input->post('dt_end');
     $name  = $this->input->post('txt_name');
-    $this->PersModel->Create($name,$begin,$end);
+    $this->EmpModel->Create($name,$begin,$end);
     redirect($this->ctrlClass);
   }
 
@@ -116,7 +116,7 @@ class Pers extends CI_Controller{
 
   public function DeleteRelProcess($relId=0)
   {
-    $this->PersModel->DeleteRel($relId);
+    $this->EmpModel->DeleteRel($relId);
     redirect($this->ctrlClass.'View/');
   }
 
@@ -126,7 +126,7 @@ class Pers extends CI_Controller{
     if ($id == '') {
       redirect($this->ctrlClass);
     }
-    $old = $this->PersModel->GetByIdRow($id);
+    $old = $this->EmpModel->GetByIdRow($id);
     $data['begin'] = $old->begin_date;
     $data['end']   = $old->end_date;
 
@@ -141,7 +141,7 @@ class Pers extends CI_Controller{
   {
     $id  = $this->session->userdata('selectId');
     $end = $this->input->post('dt_end');
-    $this->PersModel->Delimit($id,$end);
+    $this->EmpModel->Delimit($id,$end);
     redirect($this->ctrlClass.'View/');
   }
 
@@ -151,7 +151,7 @@ class Pers extends CI_Controller{
     if ($id == '') {
       redirect($this->ctrlClass);
     }
-    $old                = $this->PersModel->GetLastName($id);
+    $old                = $this->EmpModel->GetLastName($id);
     $data['begin']      = date('Y-m-d');
     $data['name']       = $old->name;
     $data['cancelLink'] = $this->ctrlClass.'View/';
@@ -165,7 +165,7 @@ class Pers extends CI_Controller{
     $validOn = $this->input->post('dt_begin');
     $newName = $this->input->post('txt_name');
     $id      = $this->session->userdata('selectId');
-    $this->PersModel->ChangeName($id,$newName,$validOn,'9999-12-31');
+    $this->EmpModel->ChangeName($id,$newName,$validOn,'9999-12-31');
     redirect($this->ctrlClass.'View/'.$id.'/'.$validOn.'/9999-12-31');
   }
 
@@ -174,7 +174,7 @@ class Pers extends CI_Controller{
     $data['hidden']  = array(
       'rel_id' => $relId
     );
-    $old = $this->PersModel->GetRelByIdRow($relId);
+    $old = $this->EmpModel->GetRelByIdRow($relId);
     $data['process'] = $this->ctrlClass.'EditRelProcess';
     $data['begin']   = $old->begin_date;
     $data['end']     = $old->end_date;
@@ -188,7 +188,7 @@ class Pers extends CI_Controller{
     $relId = $this->input->post('rel_id');
     $begin = $this->input->post('dt_begin');
     $end   = $this->input->post('dt_end');
-    $this->PersModel->ChangeRelDate($relId,$begin,$end);
+    $this->EmpModel->ChangeRelDate($relId,$begin,$end);
     redirect($this->ctrlClass.'View/');
   }
 
@@ -218,11 +218,11 @@ class Pers extends CI_Controller{
   public function ViewSpr($relId=0)
   {
     $this->load->model(array('PostModel'));
-    $rel = $this->PersModel->GetRelByIdRow($relId);
+    $rel = $this->EmpModel->GetRelByIdRow($relId);
     $keydate['begin'] = $this->session->userdata('filterBegDa');
     $keydate['end']   = $this->session->userdata('filterEndDa');
-    $persObj = $this->PersModel->GetByIdRow($rel->obj_bottom_id,$keydate);
-    $persAtr = $this->PersModel->GetLastName($rel->obj_bottom_id,$keydate);
+    $persObj = $this->EmpModel->GetByIdRow($rel->obj_bottom_id,$keydate);
+    $persAtr = $this->EmpModel->GetLastName($rel->obj_bottom_id,$keydate);
     $postAtr = $this->PostModel->GetLastName($rel->obj_top_id,$keydate);
 
     $sprPost = $this->PostModel->GetReportTo($rel->obj_top_id,$keydate);
@@ -250,8 +250,8 @@ class Pers extends CI_Controller{
     $end   = $this->session->userdata('filterEndDa');
     $keydate['begin'] = $begin;
     $keydate['end']   = $end;
-    $obj  = $this->PersModel->GetByIdRow($id);
-    $attr = $this->PersModel->GetLastName($id,$keydate);
+    $obj  = $this->EmpModel->GetByIdRow($id);
+    $attr = $this->EmpModel->GetLastName($id,$keydate);
 
     $data['objBegin'] = $obj->begin_date;
     $data['objEnd']   = $obj->end_date;
@@ -260,7 +260,7 @@ class Pers extends CI_Controller{
     $data['editName'] = $this->ctrlClass.'EditName/';
     $this->parser->parse('_element/obj_detail',$data);
 
-    $ls =  $this->PersModel->GetNameHistoryList($id,$keydate,'desc');
+    $ls =  $this->EmpModel->GetNameHistoryList($id,$keydate,'desc');
     $history = array();
     foreach ($ls as $row) {
       if ($attr->id == $row->id) {
@@ -292,7 +292,7 @@ class Pers extends CI_Controller{
     $sprLk    = site_url($this->ctrlClass.'ViewSpr/');
     $viewPost = site_url('Post/View/');
 
-    $ls = $this->PersModel->GetPostList($id,$keydate,'desc');
+    $ls = $this->EmpModel->GetPostList($id,$keydate,'desc');
     $post = array();
     foreach ($ls as $row) {
       $post[] = array(

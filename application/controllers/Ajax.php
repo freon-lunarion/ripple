@@ -128,7 +128,7 @@ class Ajax extends CI_Controller{
 
   public function ShowEmployeeSelection()
   {
-    $this->load->model(array('PersModel'));
+    $this->load->model(array('EmpModel'));
 
     $query = $this->input->post('query');
 
@@ -147,7 +147,7 @@ class Ajax extends CI_Controller{
       'end'   => $end,
     );
 
-    $ls   = $this->PersModel->GetByNameList($query,$date);
+    $ls   = $this->EmpModel->GetByNameList($query,$date);
     $data['emp'] = array();
     foreach ($ls as $row) {
       $data['emp'][] = array(
